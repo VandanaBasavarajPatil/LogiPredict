@@ -1,0 +1,607 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Prediction Page</title>
+
+    <!-- BOOTSTRAP CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- BOOTSTRAP ICONS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- CUSTOM CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+</head>
+
+<body>
+
+<div class="d-flex">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar bg-dark text-white p-3">
+
+        <!-- LOGO -->
+        <h2 class="logo mb-4">
+            LogiPredict
+        </h2>
+
+        <!-- MENU -->
+        <ul class="nav flex-column gap-2">
+
+            <!-- DASHBOARD -->
+            <li class="nav-item">
+
+                <a href="{% url 'dashboard' %}"
+                   class="nav-link text-white d-flex align-items-center">
+
+                    <i class="bi bi-grid fs-4 me-2"></i>
+
+                    <span>Dashboard</span>
+
+                </a>
+
+            </li>
+
+
+
+            <!-- CREATE SHIPMENT -->
+            <li class="nav-item">
+
+                <a href="{% url 'shipment' %}"
+                   class="nav-link text-white d-flex align-items-center">
+
+                    <i class="bi bi-plus-square fs-4 me-2"></i>
+
+                    <span>Create Shipment</span>
+
+                </a>
+
+            </li>
+
+
+
+            <!-- PREDICTIONS -->
+            <li class="nav-item">
+
+                <a href="{% url 'prediction' %}"
+                   class="nav-link active-menu text-white d-flex align-items-center">
+
+                    <i class="bi bi-broadcast fs-4 me-2"></i>
+
+                    <span>Predictions</span>
+
+                </a>
+
+            </li>
+
+
+
+            <!-- TRACKING -->
+            <li class="nav-item">
+
+                <a href="#"
+                   class="nav-link text-white d-flex align-items-center">
+
+                    <i class="bi bi-truck fs-4 me-2"></i>
+
+                    <span>Tracking</span>
+
+                </a>
+
+            </li>
+
+
+
+            <!-- ANALYTICS -->
+            <li class="nav-item">
+
+                <a href="#"
+                   class="nav-link text-white d-flex align-items-center">
+
+                    <i class="bi bi-bar-chart fs-4 me-2"></i>
+
+                    <span>Analytics</span>
+
+                </a>
+
+            </li>
+
+
+
+            <!-- ALERTS -->
+            <li class="nav-item">
+
+                <a href="#"
+                   class="nav-link text-white d-flex align-items-center">
+
+                    <i class="bi bi-bell fs-4 me-2"></i>
+
+                    <span>Alerts</span>
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+
+
+    <!-- CONTENT AREA -->
+    <div class="content-area flex-grow-1">
+
+        <!-- TOP NAVBAR -->
+        <div class="container-fluid px-0">
+
+            <div class="row g-0">
+
+                <div class="col-12">
+
+                    <div class="top-navbar border d-flex justify-content-between align-items-center p-4">
+
+                        <!-- LEFT -->
+                        <h2 class="main-title m-0">
+                            Operational Intelligence
+                        </h2>
+
+                        <!-- RIGHT -->
+                        <div class="d-flex align-items-center gap-4">
+
+                            <div class="d-flex align-items-center gap-2">
+
+                                <i class="bi bi-search fs-3"></i>
+
+                                <span class="search-text">
+                                    Search
+                                </span>
+
+                            </div>
+
+                            <i class="bi bi-person-circle fs-1"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+  
+   
+    <!-- PREDICTION PAGE CONTENT -->
+<div class="container-fluid py-4 px-4">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+
+        <div>
+
+            <p class="text-primary fw-bold text-uppercase mb-2">
+                ✦ AI Prediction Results
+            </p>
+
+            <h1 class="display-4 fw-bold">
+                Shipment #TRK-8829 Analysis
+            </h1>
+
+        </div>
+
+        <!-- BUTTONS -->
+        <div class="d-flex gap-3">
+
+            <button class="btn btn-outline-dark btn-lg px-4 py-3 rounded-4">
+                Export Report
+            </button>
+
+            <button class="btn btn-primary btn-lg px-4 py-3 rounded-4">
+                Re-run Simulation
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- TOP ANALYSIS SECTION -->
+    <div class="row g-4">
+
+        <!-- LEFT BIG CARD -->
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm rounded-4 p-5 h-100 text-center">
+
+                <!-- CIRCLE -->
+                <div class="mx-auto mb-4">
+
+                    <div class="rounded-circle border border-5 border-danger d-flex flex-column justify-content-center align-items-center"
+                         style="width:300px;height:300px;">
+
+                        <h1 class="fw-bold display-2">
+                            80%
+                        </h1>
+
+                        <h3 class="text-secondary">
+                            Delay Probability
+                        </h3>
+
+                    </div>
+
+                </div>
+
+                <!-- BADGE -->
+                <div class="mb-4">
+
+                    <span class="badge bg-danger px-4 py-3 fs-4 rounded-pill">
+
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+
+                        High Risk Category
+
+                    </span>
+
+                </div>
+
+                <!-- TEXT -->
+                <p class="fs-3 text-secondary">
+
+                    Predicted delay is primarily driven by impending storm surge
+                    in the Northeast Corridor.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- RIGHT SIDE -->
+        <div class="col-lg-8">
+
+            <div class="row g-4">
+
+                <!-- CARD 1 -->
+                <div class="col-md-6">
+
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+
+                        <h5 class="text-uppercase text-secondary fw-bold mb-4">
+                            Expected Delay Duration
+                        </h5>
+
+                        <h1 class="display-3 fw-bold">
+
+                            4.5
+
+                            <span class="fs-1 text-secondary">
+                                Hours
+                            </span>
+
+                        </h1>
+
+                        <p class="text-danger fs-4 mt-5">
+
+                            ↗ +1.2h from previous estimate
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CARD 2 -->
+                <div class="col-md-6">
+
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+
+                        <h5 class="text-uppercase text-secondary fw-bold mb-4">
+                            Route Risk Score
+                        </h5>
+
+                        <h1 class="display-3 fw-bold text-danger">
+
+                            8.2
+
+                            <span class="text-dark fs-1">
+                                / 10
+                            </span>
+
+                        </h1>
+
+                        <!-- PROGRESS -->
+                        <div class="progress mt-5"
+                             style="height:14px;">
+
+                            <div class="progress-bar bg-danger"
+                                 style="width:82%"></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CARD 3 -->
+                <div class="col-md-6">
+
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100 text-center">
+
+                        <h5 class="text-uppercase text-secondary fw-bold mb-4">
+                            Traffic Congestion Impact
+                        </h5>
+
+                        <div class="mx-auto mt-4">
+
+                            <div class="rounded-circle border border-5 border-warning d-flex align-items-center justify-content-center"
+                                 style="width:220px;height:220px;">
+
+                                <h1 class="fw-bold">
+                                    Medium
+                                </h1>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CARD 4 -->
+                <div class="col-md-6">
+
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100 text-center">
+
+                        <h5 class="text-uppercase text-secondary fw-bold mb-4">
+                            Atmospheric Conditions
+                        </h5>
+
+                        <div class="mx-auto mt-4">
+
+                            <div class="rounded-circle border border-5 border-danger d-flex align-items-center justify-content-center"
+                                 style="width:220px;height:220px;">
+
+                                <h1 class="fw-bold">
+                                    Severe
+                                </h1>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- AI ACTIONS -->
+    <div class="mt-5">
+
+        <h1 class="fw-bold mb-4">
+            AI Recommended Actions
+        </h1>
+
+        <div class="row g-4">
+
+            <!-- CARD 1 -->
+            <div class="col-lg-4">
+
+                <div class="card border-0 shadow-sm rounded-4 p-5 h-100">
+
+                    <div class="mb-4">
+
+                        <i class="bi bi-sign-turn-right-fill text-primary fs-1"></i>
+
+                    </div>
+
+                    <h1 class="fw-bold mb-4">
+                        Change Route
+                    </h1>
+
+                    <p class="fs-4 text-secondary">
+
+                        Divert to the Southern corridor via I-95.
+                        Estimated time saving:
+
+                        <span class="text-primary fw-bold">
+                            1.5 hours
+                        </span>
+
+                    </p>
+
+                    <button class="btn btn-primary btn-lg mt-4 rounded-4 py-3">
+                        APPLY DIVERSION
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CARD 2 -->
+            <div class="col-lg-4">
+
+                <div class="card border-0 shadow-sm rounded-4 p-5 h-100">
+
+                    <div class="mb-4">
+
+                        <i class="bi bi-envelope text-secondary fs-1"></i>
+
+                    </div>
+
+                    <h1 class="fw-bold mb-4">
+                        Notify Customer
+                    </h1>
+
+                    <p class="fs-4 text-secondary">
+
+                        Send automated ETA update to Global Logistics Inc.
+                        regarding the 4-hour delay.
+
+                    </p>
+
+                    <button class="btn btn-outline-primary btn-lg mt-4 rounded-4 py-3">
+                        SEND NOTIFICATION
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CARD 3 -->
+            <div class="col-lg-4">
+
+                <div class="card border-0 shadow-sm rounded-4 p-5 h-100">
+
+                    <div class="mb-4">
+
+                        <i class="bi bi-house-gear-fill text-warning fs-1"></i>
+
+                    </div>
+
+                    <h1 class="fw-bold mb-4">
+                        Adjust Loading
+                    </h1>
+
+                    <p class="fs-4 text-secondary">
+
+                        Push the back-end warehouse schedule by 2 hours
+                        to avoid idle workforce costs.
+
+                    </p>
+
+                    <button class="btn btn-outline-dark btn-lg mt-4 rounded-4 py-3">
+                        SYNC SCHEDULE
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- MODEL CONFIDENCE -->
+    <div class="card border-0 shadow-sm rounded-4 p-5 mt-5">
+
+        <div class="d-flex align-items-center gap-3 mb-5">
+
+            <i class="bi bi-info-circle text-primary fs-1"></i>
+
+            <h3 class="fw-bold text-uppercase m-0">
+                Model Confidence Context
+            </h3>
+
+        </div>
+
+
+
+        <div class="row">
+
+            <!-- ITEM 1 -->
+            <div class="col-md-3">
+
+                <p class="text-secondary fs-4">
+                    Confidence Score
+                </p>
+
+                <h1 class="fw-bold display-4">
+                    94%
+                </h1>
+
+            </div>
+
+
+
+            <!-- ITEM 2 -->
+            <div class="col-md-3">
+
+                <p class="text-secondary fs-4">
+                    Data Freshness
+                </p>
+
+                <h1 class="fw-bold display-4">
+                    2 mins ago
+                </h1>
+
+            </div>
+
+
+
+            <!-- ITEM 3 -->
+            <div class="col-md-3">
+
+                <p class="text-secondary fs-4">
+                    Affected Units
+                </p>
+
+                <h1 class="fw-bold display-4">
+                    12 Ships
+                </h1>
+
+            </div>
+
+
+
+            <!-- ITEM 4 -->
+            <div class="col-md-3">
+
+                <p class="text-secondary fs-4">
+                    Historical Accuracy
+                </p>
+
+                <h1 class="fw-bold display-4">
+                    98.2%
+                </h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- BOOTSTRAP JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
