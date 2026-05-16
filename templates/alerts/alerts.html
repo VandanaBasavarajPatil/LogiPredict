@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,68 +9,409 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Alerts</title>
+    <title>System Alerts</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet">
 
-    <!-- Icons -->
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <!-- CSS -->
-    <link rel="stylesheet"
-          href="{% static 'css/style.css' %}">
+<style>
+
+/* ================= BODY ================= */
+
+body{
+    margin:0;
+    padding:0;
+    overflow-x:hidden;
+    background:#f4f7fb;
+    font-family:Inter,sans-serif;
+}
+
+
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+    width:240px;
+    min-width:240px;
+    height:100vh;
+    background:#061238;
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:1000;
+    padding:22px 18px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+
+
+/* ================= CONTENT ================= */
+
+.content-area{
+    margin-left:240px;
+    width:calc(100% - 240px);
+    min-height:100vh;
+}
+
+
+
+/* ================= LOGO ================= */
+
+.logo-section{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.logo-icon{
+    font-size:22px;
+    color:#2563ff;
+}
+
+.logo-text{
+    font-size:20px;
+    font-weight:700;
+    color:#2563ff;
+}
+
+
+
+/* ================= MENU ================= */
+
+.sidebar-menu{
+    gap:6px;
+}
+
+
+
+/* ================= LINKS ================= */
+
+.sidebar-link{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    color:#d1d5db !important;
+    text-decoration:none;
+    padding:12px 16px;
+    border-radius:14px;
+    transition:0.2s;
+    font-size:16px;
+    font-weight:500;
+}
+
+.sidebar-link i{
+    font-size:16px;
+}
+
+.sidebar-link:hover{
+    background:#102454;
+    color:white !important;
+}
+
+
+
+/* ================= ACTIVE ================= */
+
+.active-menu{
+    background:#102454;
+    color:white !important;
+}
+
+
+
+/* ================= PROFILE ================= */
+
+.sidebar-bottom{
+    margin-top:20px;
+}
+
+.profile-box{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 12px;
+}
+
+.profile-circle{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#162754;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-size:14px;
+    font-weight:700;
+}
+
+.profile-name{
+    color:white;
+    font-size:13px;
+    font-weight:600;
+}
+
+.profile-role{
+    color:#94a3b8;
+    font-size:11px;
+}
+
+
+
+/* ================= TOPBAR ================= */
+
+.topbar{
+    height:80px;
+    background:white;
+    border-bottom:1px solid #e5e7eb;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 32px;
+}
+
+
+
+/* ================= SEARCH ================= */
+
+.search-box{
+    width:430px;
+    height:44px;
+    background:white;
+    border:1px solid #dbe2ea;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    padding:0 14px;
+}
+
+.search-box input{
+    border:none;
+    outline:none;
+    background:transparent;
+    width:100%;
+    margin-left:10px;
+    font-size:13px;
+}
+
+
+
+/* ================= AI STATUS ================= */
+
+.ai-status{
+    background:#ebfff4;
+    border:1px solid #b7ebd2;
+    border-radius:12px;
+    padding:9px 16px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.ai-dot{
+    width:8px;
+    height:8px;
+    background:#22c55e;
+    border-radius:50%;
+}
+
+
+
+/* ================= PAGE ================= */
+
+.page-wrapper{
+    padding:28px;
+}
+
+
+
+/* ================= TITLE ================= */
+
+.page-title{
+    font-size:34px;
+    font-weight:700;
+    color:#0f172a;
+}
+
+.page-subtitle{
+    font-size:15px;
+    color:#64748b;
+}
+
+
+
+/* ================= ALERT CARD ================= */
+
+.alert-card{
+    background:white;
+    border-radius:24px;
+    overflow:hidden;
+    box-shadow:0 2px 10px rgba(0,0,0,0.04);
+    margin-bottom:24px;
+}
+
+.alert-left{
+    padding:24px;
+    min-height:100%;
+}
+
+.alert-right{
+    padding:24px;
+}
+
+
+
+/* ================= SCROLL ================= */
+
+::-webkit-scrollbar{
+    width:5px;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#cbd5e1;
+    border-radius:10px;
+}
+
+</style>
 
 </head>
 
 <body>
 
-<div class="d-flex">
 
-    <!-- SIDEBAR -->
-    <div class="sidebar bg-dark text-white p-3">
 
-        <h2 class="logo mb-5">
-            LogiPredict
-        </h2>
+<!-- ================= SIDEBAR ================= -->
 
-        <ul class="nav flex-column gap-2">
+<div class="sidebar">
+
+    <!-- TOP -->
+
+    <div>
+
+        <!-- LOGO -->
+
+        <div class="logo-section">
+
+            <i class="bi bi-truck logo-icon"></i>
+
+            <span class="logo-text">
+                LogiPredict
+            </span>
+
+        </div>
+
+
+
+        <!-- MENU -->
+
+        <ul class="nav flex-column sidebar-menu">
+
+            <!-- DASHBOARD -->
 
             <li class="nav-item">
+
                 <a href="{% url 'dashboard' %}"
-                   class="nav-link text-white">
-                    Dashboard
+                   class="nav-link sidebar-link">
+
+                    <i class="bi bi-grid"></i>
+
+                    <span>Dashboard</span>
+
                 </a>
+
             </li>
 
+
+
+            <!-- SHIPMENTS -->
+
             <li class="nav-item">
+
                 <a href="{% url 'shipment' %}"
-                   class="nav-link text-white">
-                    Create Shipment
+                   class="nav-link sidebar-link">
+
+                    <i class="bi bi-box-seam"></i>
+
+                    <span>Shipments</span>
+
                 </a>
+
             </li>
 
+
+
+            <!-- PREDICTIONS -->
+
             <li class="nav-item">
+
                 <a href="{% url 'prediction' %}"
-                   class="nav-link text-white">
-                    Predictions
+                   class="nav-link sidebar-link">
+
+                    <i class="bi bi-cpu"></i>
+
+                    <span>Predictions</span>
+
                 </a>
+
             </li>
 
+
+
+            <!-- TRACKING -->
+
             <li class="nav-item">
+
+                <a href="{% url 'tracking' %}"
+                   class="nav-link sidebar-link">
+
+                    <i class="bi bi-send"></i>
+
+                    <span>Tracking</span>
+
+                </a>
+
+            </li>
+
+
+
+            <!-- ANALYTICS -->
+
+            <li class="nav-item">
+
                 <a href="{% url 'analytics' %}"
-                   class="nav-link text-white">
-                    Analytics
+                   class="nav-link sidebar-link">
+
+                    <i class="bi bi-bar-chart"></i>
+
+                    <span>Analytics</span>
+
                 </a>
+
             </li>
 
+
+
+            <!-- ALERTS -->
+
             <li class="nav-item">
+
                 <a href="{% url 'alerts' %}"
-                   class="nav-link active-menu text-white">
-                    Alerts
+                   class="nav-link sidebar-link active-menu">
+
+                    <i class="bi bi-bell"></i>
+
+                    <span>Alerts</span>
+
                 </a>
+
             </li>
 
         </ul>
@@ -80,206 +420,24 @@
 
 
 
-    <!-- CONTENT -->
-    <div class="content-area">
+    <!-- BOTTOM -->
 
-        <!-- TOPBAR -->
-        <div class="top-navbar border-bottom d-flex justify-content-between align-items-center px-4 py-3">
+    <div class="sidebar-bottom">
 
-            <h2>
-                Alert Center
-            </h2>
+        <div class="profile-box">
 
-            <button class="btn btn-primary px-4">
-                <i class="bi bi-bell-fill me-2"></i>
-                New Alert
-            </button>
-
-        </div>
-        <!-- ALERTS PAGE CONTENT -->
-<div class="container-fluid py-4 px-4">
-
-    <!-- PAGE HEADER -->
-    <div class="row mb-5">
-
-        <!-- LEFT -->
-        <div class="col-lg-7">
-
-            <h1 class="display-4 fw-bold mb-3">
-                Alerts & Notifications
-            </h1>
-
-            <p class="fs-2 text-secondary">
-
-                Real-time intelligence and risk assessments
-                for your global supply chain.
-
-            </p>
-
-        </div>
-
-        <!-- RIGHT FILTERS -->
-        <div class="col-lg-5">
-
-            <div class="alert-filter-box p-3">
-
-                <div class="d-flex gap-3 flex-wrap">
-
-                    <button class="btn btn-light active-filter px-4 py-3">
-                        All
-                    </button>
-
-                    <button class="btn filter-btn px-4 py-3">
-                        High Risk
-                    </button>
-
-                    <button class="btn filter-btn px-4 py-3">
-                        Weather
-                    </button>
-
-                    <button class="btn filter-btn px-4 py-3">
-                        Traffic
-                    </button>
-
-                </div>
-
+            <div class="profile-circle">
+                JD
             </div>
 
-        </div>
+            <div>
 
-    </div>
-
-
-
-    <!-- TOP ALERT CARDS -->
-    <div class="row g-4 mb-5">
-
-        <!-- MAIN ALERT -->
-        <div class="col-lg-8">
-
-            <div class="card border-0 shadow-sm alert-main-card p-4">
-
-                <!-- TOP -->
-                <div class="d-flex justify-content-between align-items-start mb-4">
-
-                    <div class="d-flex gap-4">
-
-                        <!-- ICON -->
-                        <div class="alert-icon danger-icon">
-
-                            <i class="bi bi-exclamation-triangle-fill"></i>
-
-                        </div>
-
-                        <!-- TITLE -->
-                        <div>
-
-                            <span class="badge bg-danger rounded-pill px-4 py-2 fs-6 mb-3">
-                                CRITICAL RISK
-                            </span>
-
-                            <h1 class="fw-bold">
-                                High Risk Shipment Delayed
-                            </h1>
-
-                        </div>
-
-                    </div>
-
-                    <span class="text-secondary fs-3">
-                        2m ago
-                    </span>
-
+                <div class="profile-name">
+                    J. Director
                 </div>
 
-
-
-                <!-- INNER BOX -->
-                <div class="alert-inner-box p-4 mb-4">
-
-                    <div class="row align-items-center">
-
-                        <!-- LEFT -->
-                        <div class="col-lg-9">
-
-                            <h3 class="fw-bold text-primary mb-3">
-                                #LP-9283-A
-                                <span class="text-secondary fw-normal">
-                                    • Rotterdam Port
-                                </span>
-                            </h3>
-
-                            <p class="fs-3 text-secondary">
-
-                                AI predicts a delay of
-                                <span class="text-danger fw-bold">
-                                    >24h
-                                </span>
-
-                                due to sudden port congestion and labor
-                                slowdowns. Immediate intervention required.
-
-                            </p>
-
-                        </div>
-
-                        <!-- RIGHT -->
-                        <div class="col-lg-3 text-center">
-
-                            <div class="confidence-circle mx-auto">
-
-                                <div class="confidence-inner">
-
-                                    <h2 class="fw-bold text-danger">
-                                        94%
-                                    </h2>
-
-                                </div>
-
-                            </div>
-
-                            <h5 class="mt-3 fw-bold text-secondary">
-                                CONFIDENCE
-                            </h5>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- BUTTONS -->
-                <div class="d-flex justify-content-between align-items-center">
-
-                    <div class="d-flex gap-3">
-
-                        <button class="btn btn-primary btn-lg px-5">
-
-                            <i class="bi bi-sign-turn-right me-2"></i>
-
-                            Reroute Now
-
-                        </button>
-
-                        <button class="btn btn-link fs-3 text-decoration-none">
-                            View Details
-                        </button>
-
-                    </div>
-
-                    <!-- USERS -->
-                    <div class="d-flex">
-
-                        <img src="https://i.pravatar.cc/50?img=1"
-                             class="rounded-circle user-avatar">
-
-                        <img src="https://i.pravatar.cc/50?img=2"
-                             class="rounded-circle user-avatar overlap-avatar">
-
-                    </div>
-
+                <div class="profile-role">
+                    Logistics Dir.
                 </div>
 
             </div>
@@ -288,269 +446,14 @@
 
 
 
-        <!-- WEATHER ALERT -->
-        <div class="col-lg-4">
+        <a href="#"
+           class="nav-link sidebar-link mt-2">
 
-            <div class="card border-0 shadow-sm weather-card p-4 h-100">
+            <i class="bi bi-box-arrow-right"></i>
 
-                <!-- TOP -->
-                <div class="d-flex justify-content-between mb-5">
+            <span>Logout</span>
 
-                    <div class="weather-icon">
-
-                        <i class="bi bi-hurricane"></i>
-
-                    </div>
-
-                    <span class="text-secondary fs-3">
-                        15m ago
-                    </span>
-
-                </div>
-
-                <h3 class="text-warning-emphasis mb-4">
-                    WEATHER ALERT
-                </h3>
-
-                <h2 class="mb-4">
-                    Severe Storm Alert:
-                    North Sea
-                </h2>
-
-                <p class="fs-3 text-secondary mb-5">
-
-                    Force 9 winds detected. Shipping lanes are seeing
-                    40% reduction in vessel speed.
-
-                </p>
-
-                <hr>
-
-                <div class="d-flex justify-content-between align-items-center mt-4">
-
-                    <a href="#"
-                       class="text-decoration-none fs-3">
-
-                        View Impacted Shipments
-
-                    </a>
-
-                    <i class="bi bi-arrow-right fs-3 text-primary"></i>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- SMALL ALERTS -->
-    <div class="row g-4 mb-5">
-
-        <!-- CARD 1 -->
-        <div class="col-lg-4">
-
-            <div class="card border-0 shadow-sm small-alert-card p-4">
-
-                <div class="d-flex justify-content-between mb-4">
-
-                    <div class="small-alert-icon bg-primary-subtle">
-
-                        <i class="bi bi-sign-turn-right-fill text-primary"></i>
-
-                    </div>
-
-                    <span class="fs-3 text-secondary">
-                        45m ago
-                    </span>
-
-                </div>
-
-                <h3 class="text-uppercase text-secondary mb-4">
-                    Traffic Congestion
-                </h3>
-
-                <h2 class="mb-4">
-                    A10 Highway Gridlock
-                </h2>
-
-                <p class="fs-3 text-secondary mb-5">
-
-                    Sudden congestion on A10 due to accident
-                    at exit 14. 5 trucks stationary.
-
-                </p>
-
-                <button class="btn btn-outline-dark btn-lg">
-                    Adjust ETA
-                </button>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- CARD 2 -->
-        <div class="col-lg-4">
-
-            <div class="card border-0 shadow-sm small-alert-card p-4">
-
-                <div class="d-flex justify-content-between mb-4">
-
-                    <div class="small-alert-icon bg-primary-subtle">
-
-                        <i class="bi bi-stars text-primary"></i>
-
-                    </div>
-
-                    <span class="fs-3 text-secondary">
-                        3h ago
-                    </span>
-
-                </div>
-
-                <h3 class="text-uppercase text-primary mb-4">
-                    System Update
-                </h3>
-
-                <h2 class="mb-4">
-                    AI Model V4.2 Deployed
-                </h2>
-
-                <p class="fs-3 text-secondary mb-5">
-
-                    Predictive accuracy increased by 12.4%.
-                    All dashboards updated.
-
-                </p>
-
-                <a href="#"
-                   class="fs-3 text-decoration-none">
-
-                    Read Release Notes
-
-                    <i class="bi bi-box-arrow-up-right ms-2"></i>
-
-                </a>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- CARD 3 -->
-        <div class="col-lg-4">
-
-            <div class="card border-0 shadow-sm small-alert-card p-4">
-
-                <div class="d-flex justify-content-between mb-4">
-
-                    <div class="small-alert-icon bg-secondary-subtle">
-
-                        <i class="bi bi-wrench-adjustable text-dark"></i>
-
-                    </div>
-
-                    <span class="fs-3 text-secondary">
-                        4h ago
-                    </span>
-
-                </div>
-
-                <h2 class="mb-4">
-                    Vehicle Maintenance
-                </h2>
-
-                <p class="fs-3 text-secondary mb-5">
-
-                    Truck #DE-991 requires tire pressure sensor
-                    check before next route.
-
-                </p>
-
-                <button class="btn btn-outline-dark">
-                    Schedule
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- PREDICTIVE OVERVIEW -->
-    <div class="card border-0 shadow-sm overview-card p-5">
-
-        <div class="row align-items-center">
-
-            <!-- LEFT -->
-            <div class="col-lg-8">
-
-                <h4 class="text-primary mb-4">
-
-                    <i class="bi bi-activity me-2"></i>
-
-                    PREDICTIVE OVERVIEW
-
-                </h4>
-
-                <h1 class="fw-bold mb-5">
-                    Weekly Intelligence Digest
-                </h1>
-
-                <p class="fs-2 text-secondary mb-5">
-
-                    Based on congestion trends and weather forecasting,
-                    we anticipate a 15% increase in lead times for the
-                    East Coast corridor next week.
-
-                </p>
-
-                <div class="d-flex gap-4">
-
-                    <button class="btn btn-primary btn-lg px-5">
-                        Download Full Forecast
-                    </button>
-
-                    <button class="btn btn-light btn-lg px-5">
-                        Dismiss
-                    </button>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- RIGHT -->
-            <div class="col-lg-4 text-center">
-
-                <div class="network-circle mx-auto">
-
-                    <div class="network-inner">
-
-                        <h1 class="display-2 fw-bold text-primary">
-                            82%
-                        </h1>
-
-                        <h4 class="fw-bold text-secondary">
-                            NETWORK HEALTH
-                        </h4>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
+        </a>
 
     </div>
 
@@ -558,18 +461,355 @@
 
 
 
-     
-            
+<!-- ================= CONTENT ================= -->
 
-           
-
-
-
-               
+<div class="content-area">
 
 
 
-              
+    <!-- ================= TOPBAR ================= -->
+
+    <div class="topbar">
+
+        <!-- SEARCH -->
+
+        <div class="search-box">
+
+            <i class="bi bi-search text-secondary"></i>
+
+            <input type="text"
+                   placeholder="Search alerts...">
+
+        </div>
+
+
+
+        <!-- RIGHT -->
+
+        <div class="d-flex align-items-center gap-3">
+
+            <!-- AI STATUS -->
+
+            <div class="ai-status">
+
+                <div class="ai-dot"></div>
+
+                <span class="fw-semibold text-success"
+                      style="font-size:13px;">
+
+                    AI Online
+
+                </span>
+
+            </div>
+
+
+
+            <!-- NOTIFICATION -->
+
+            <div class="position-relative">
+
+                <i class="bi bi-bell text-secondary"
+                   style="font-size:18px;"></i>
+
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= PAGE ================= -->
+
+    <div class="page-wrapper">
+
+        <!-- HEADER -->
+
+        <div class="d-flex justify-content-between align-items-start mb-4">
+
+            <div>
+
+                <h1 class="page-title mb-1">
+                    System Alerts
+                </h1>
+
+                <p class="page-subtitle mb-0">
+
+                    AI-generated warnings and operational notifications.
+
+                </p>
+
+            </div>
+
+
+
+            <!-- STATUS -->
+
+            <div class="d-flex gap-2">
+
+                <div class="px-3 py-2 rounded-3
+                            border border-danger-subtle
+                            bg-danger-subtle">
+
+                    <span class="text-danger fw-semibold"
+                          style="font-size:13px;">
+
+                        3 Critical
+
+                    </span>
+
+                </div>
+
+
+
+                <div class="px-3 py-2 rounded-3
+                            border border-warning-subtle
+                            bg-warning-subtle">
+
+                    <span class="text-warning fw-semibold"
+                          style="font-size:13px;">
+
+                        3 Warning
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= CRITICAL CARD ================= -->
+
+        <div class="alert-card">
+
+            <div class="row g-0">
+
+                <!-- LEFT -->
+
+                <div class="col-md-3 bg-danger-subtle border-end">
+
+                    <div class="alert-left d-flex flex-column justify-content-between">
+
+                        <div class="d-flex align-items-center gap-3">
+
+                            <i class="bi bi-exclamation-triangle text-danger"
+                               style="font-size:28px;"></i>
+
+                            <span class="fw-bold"
+                                  style="font-size:18px;">
+
+                                Critical
+
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="mt-5">
+
+                            <div class="text-secondary mb-3"
+                                 style="font-size:13px;">
+
+                                20/10/2025, 13:45:00
+
+                            </div>
+
+                            <span class="badge bg-white text-dark px-3 py-2"
+                                  style="font-size:12px;">
+
+                                SHP-8291A
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- RIGHT -->
+
+                <div class="col-md-9">
+
+                    <div class="alert-right">
+
+                        <h3 class="mb-4"
+                            style="
+                            font-size:20px;
+                            line-height:1.6;
+                            ">
+
+                            Typhoon warning in South China Sea.
+                            Expected path intersects with 3 active routes.
+
+                        </h3>
+
+
+
+                        <!-- AI BOX -->
+
+                        <div class="bg-light border rounded-4 p-4 mb-4">
+
+                            <div class="d-flex gap-3">
+
+                                <i class="bi bi-send text-primary"
+                                   style="font-size:20px;"></i>
+
+                                <div style="font-size:14px;line-height:1.8;">
+
+                                    <span class="fw-bold text-primary">
+
+                                        AI Action:
+
+                                    </span>
+
+                                    Reroute SHP-8291A and SHP-7729C
+                                    via southern corridor.
+                                    Estimated delay: +2 days.
+                                    Cost impact: Low.
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <hr>
+
+
+
+                        <!-- BUTTONS -->
+
+                        <div class="d-flex justify-content-end gap-3">
+
+                            <button class="btn btn-light px-4 py-2"
+                                    style="font-size:14px;">
+
+                                Acknowledge
+
+                            </button>
+
+
+
+                            <button class="btn btn-danger px-4 py-2"
+                                    style="
+                                    font-size:14px;
+                                    border-radius:12px;
+                                    ">
+
+                                Execute Recommendation
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= WARNING CARD ================= -->
+
+        <div class="alert-card"
+             style="border:1px solid #f1e4c8;">
+
+            <div class="row g-0">
+
+                <!-- LEFT -->
+
+                <div class="col-md-3"
+                     style="background:#fffaf0;">
+
+                    <div class="alert-left">
+
+                        <div class="d-flex align-items-center gap-3 mb-5">
+
+                            <i class="bi bi-exclamation-circle text-warning"
+                               style="font-size:28px;"></i>
+
+                            <span class="fw-bold"
+                                  style="font-size:18px;">
+
+                                Warning
+
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="text-secondary mb-3"
+                             style="font-size:13px;">
+
+                            20/10/2025, 10:50:00
+
+                        </div>
+
+                        <span class="badge bg-white text-dark px-3 py-2"
+                              style="font-size:12px;">
+
+                            SHP-3341B
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- RIGHT -->
+
+                <div class="col-md-9">
+
+                    <div class="alert-right">
+
+                        <h3 style="
+                                   font-size:20px;
+                                   line-height:1.6;
+                                   ">
+
+                            Heavy fog reported in English Channel,
+                            reducing visibility to &lt;50m.
+
+                        </h3>
+
+
+
+                        <hr class="my-5">
+
+
+
+                        <div class="text-end">
+
+                            <button class="btn btn-light px-4 py-2"
+                                    style="font-size:14px;">
+
+                                Acknowledge
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
 
             </div>
 

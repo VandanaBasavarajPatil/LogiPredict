@@ -3,120 +3,528 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>LogiPredict Dashboard</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- BOOTSTRAP -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
 
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- BOOTSTRAP ICONS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
-<body>
+<body style="
+background:#f4f7fb;
+overflow-x:hidden;
+font-family:Inter,sans-serif;
+">
 
-    <div class="d-flex">
-        <div class="sidebar bg-dark text-white p-3">
 
-            <!-- LOGO -->
-            <h2 class="logo mb-4">
+
+<!-- ===================== SIDEBAR ===================== -->
+<div class="sidebar d-flex flex-column justify-content-between"
+     style="
+     width:235px;
+     height:100vh;
+     background:#061238;
+     padding:22px 18px;
+     position:fixed;
+     left:0;
+     top:0;
+     z-index:1000;
+     ">
+
+    <!-- TOP -->
+    <div>
+
+        <!-- LOGO -->
+        <div class="d-flex align-items-center gap-2 mb-3">
+
+            <i class="bi bi-truck"
+               style="
+               font-size:22px;
+               color:#2563ff;
+               ">
+            </i>
+
+            <h2 style="
+                font-size:21px;
+                color:#2563ff;
+                font-weight:700;
+                margin:0;
+                ">
+
                 LogiPredict
+
             </h2>
 
-            <!-- MENU -->
-            <ul class="nav flex-column gap-2">
+        </div>
 
-                <li class="nav-item">
-                    <a href="{% url 'dashboard' %}" class="nav-link active-menu text-white d-flex align-items-center">
-                        <i class="bi bi-grid fs-4 me-2"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
 
-                <li class="nav-item">
-                    <a href="{% url 'shipment' %}" class="nav-link text-white d-flex align-items-center">
-                        <i class="bi bi-plus-square fs-4 me-2"></i>
-                        <span>Create Shipment</span>
-                    </a>
-                </li>
 
-                <li class="nav-item">
-                    <a href="{% url 'prediction' %}" class="nav-link text-white d-flex align-items-center">
-                        <i class="bi bi-broadcast fs-4 me-2"></i>
-                        <span>Predictions</span>
-                    </a>
-                </li>
+        <!-- MENU -->
+        <ul class="nav flex-column"
+            style="gap:4px;">
 
-                <li class="nav-item">
-                    <a href="{% url 'tracking' %}" class="nav-link text-white d-flex align-items-center">
-                        <i class="bi bi-truck fs-4 me-2"></i>
-                        <span>Tracking</span>
-                    </a>
-                </li>
+            <!-- DASHBOARD -->
+            <li class="nav-item">
 
-                <li class="nav-item">
-                    <a href="{% url 'analytics' %}" class="nav-link text-white d-flex align-items-center">
-                        <i class="bi bi-bar-chart fs-4 me-2"></i>
-                        <span>Analytics</span>
-                    </a>
-                </li>
+                <a href="{% url 'dashboard' %}"
+                   class="nav-link d-flex align-items-center rounded-3"
+                   style="
+                   padding:11px 14px;
+                   background:#0d2150;
+                   color:white;
+                   ">
 
-                <li class="nav-item">
-                    <a href="{% url 'alerts' %}" class="nav-link text-white d-flex align-items-center">
-                        <i class="bi bi-bell fs-4 me-2"></i>
-                        <span>Alerts</span>
-                    </a>
-                </li>
+                    <i class="bi bi-grid"
+                       style="
+                       font-size:15px;
+                       color:#9ca3af;
+                       width:18px;
+                       ">
+                    </i>
 
-            </ul>
+                    <span style="
+                                 font-size:16px;
+                                 margin-left:10px;
+                                 font-weight:500;
+                                 ">
+
+                        Dashboard
+
+                    </span>
+
+                </a>
+
+            </li>
+
+
+
+            <!-- SHIPMENTS -->
+            <li class="nav-item">
+
+                <a href="{% url 'shipment' %}"
+                   class="nav-link d-flex align-items-center rounded-3 text-white"
+                   style="
+                   padding:11px 14px;
+                   ">
+
+                    <i class="bi bi-box-seam"
+                       style="
+                       font-size:15px;
+                       color:#9ca3af;
+                       width:18px;
+                       ">
+                    </i>
+
+                    <span style="
+                                 font-size:16px;
+                                 margin-left:10px;
+                                 font-weight:500;
+                                 ">
+
+                        Shipments
+
+                    </span>
+
+                </a>
+
+            </li>
+
+
+
+            <!-- PREDICTIONS -->
+            <li class="nav-item">
+
+                <a href="{% url 'prediction' %}"
+                   class="nav-link d-flex align-items-center rounded-3 text-white"
+                   style="
+                   padding:11px 14px;
+                   ">
+
+                    <i class="bi bi-cpu"
+                       style="
+                       font-size:15px;
+                       color:#9ca3af;
+                       width:18px;
+                       ">
+                    </i>
+
+                    <span style="
+                                 font-size:16px;
+                                 margin-left:10px;
+                                 font-weight:500;
+                                 ">
+
+                        Predictions
+
+                    </span>
+
+                </a>
+
+            </li>
+
+
+
+            <!-- TRACKING -->
+            <li class="nav-item">
+
+                <a href="{% url 'tracking' %}"
+                   class="nav-link d-flex align-items-center rounded-3 text-white"
+                   style="
+                   padding:11px 14px;
+                   ">
+
+                    <i class="bi bi-send"
+                       style="
+                       font-size:15px;
+                       color:#9ca3af;
+                       width:18px;
+                       ">
+                    </i>
+
+                    <span style="
+                                 font-size:16px;
+                                 margin-left:10px;
+                                 font-weight:500;
+                                 ">
+
+                        Tracking
+
+                    </span>
+
+                </a>
+
+            </li>
+
+
+
+            <!-- ANALYTICS -->
+            <li class="nav-item">
+
+                <a href="{% url 'analytics' %}"
+                   class="nav-link d-flex align-items-center rounded-3 text-white"
+                   style="
+                   padding:11px 14px;
+                   ">
+
+                    <i class="bi bi-bar-chart"
+                       style="
+                       font-size:15px;
+                       color:#9ca3af;
+                       width:18px;
+                       ">
+                    </i>
+
+                    <span style="
+                                 font-size:16px;
+                                 margin-left:10px;
+                                 font-weight:500;
+                                 ">
+
+                        Analytics
+
+                    </span>
+
+                </a>
+
+            </li>
+
+
+
+            <!-- ALERTS -->
+            <li class="nav-item">
+
+                <a href="{% url 'alerts' %}"
+                   class="nav-link d-flex align-items-center rounded-3 text-white"
+                   style="
+                   padding:11px 14px;
+                   ">
+
+                    <i class="bi bi-bell"
+                       style="
+                       font-size:15px;
+                       color:#9ca3af;
+                       width:18px;
+                       ">
+                    </i>
+
+                    <span style="
+                                 font-size:16px;
+                                 margin-left:10px;
+                                 font-weight:500;
+                                 ">
+
+                        Alerts
+
+                    </span>
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+
+
+    <!-- BOTTOM -->
+    <div>
+
+        <!-- PROFILE -->
+        <div class="d-flex align-items-center gap-2 px-2 mb-3">
+
+            <!-- AVATAR -->
+            <div class="rounded-circle d-flex align-items-center justify-content-center"
+                 style="
+                 width:42px;
+                 height:42px;
+                 background:#1b2a52;
+                 ">
+
+                <span style="
+                             color:white;
+                             font-size:15px;
+                             font-weight:700;
+                             ">
+
+                    JD
+
+                </span>
+
+            </div>
+
+
+
+            <!-- TEXT -->
+            <div>
+
+                <div style="
+                            color:white;
+                            font-size:12px;
+                            font-weight:600;
+                            ">
+
+                    J. Director
+
+                </div>
+
+                <div style="
+                            color:#7d879c;
+                            font-size:10px;
+                            ">
+
+                    Logistics Dir.
+
+                </div>
+
+            </div>
 
         </div>
-        <!-- END SIDEBAR -->
 
 
 
-        <!-- CONTENT AREA -->
-        <div class="content-area">
+        <!-- LOGOUT -->
+        <a href="#"
+           class="nav-link d-flex align-items-center text-white px-2">
 
-            <!-- TOP NAVBAR -->
-            <div class="container-fluid px-0">
+            <i class="bi bi-box-arrow-right"
+               style="
+               font-size:16px;
+               color:#9ca3af;
+               width:18px;
+               ">
+            </i>
 
-                <div class="row g-0">
+            <span style="
+                         font-size:16px;
+                         margin-left:10px;
+                         font-weight:500;
+                         ">
 
-                    <div class="col-12">
+                Logout
 
-                        <div class="top-navbar border d-flex justify-content-between align-items-center">
+            </span>
 
-                            <!-- LEFT -->
-                            <h2 class="main-title">
-                                Operational Intelligence
-                            </h2>
+        </a>
 
-                            <!-- RIGHT -->
-                            <div class="d-flex align-items-center gap-4">
+    </div>
 
-                                <div class="d-flex align-items-center gap-2">
+</div>
 
-                                    <i class="bi bi-search fs-3"></i>
 
-                                    <span class="search-text">
-                                        Search
-                                    </span>
 
-                                </div>
 
-                                <i class="bi bi-person-circle fs-1"></i>
 
-                            </div>
+<!-- ===================== MAIN CONTENT ===================== -->
+<div style="
+margin-left:235px;
+width:calc(100% - 235px);
+min-height:100vh;
+background:#f4f7fb;
+">
 
-                        </div>
+
+
+    <!-- ===================== TOPBAR ===================== -->
+    <div style="
+         height:74px;
+         background:white;
+         border-bottom:1px solid #e5e7eb;
+         padding:0 34px;
+         display:flex;
+         align-items:center;
+         justify-content:space-between;
+         ">
+
+        <!-- SEARCH -->
+        <div class="d-flex align-items-center rounded-3"
+             style="
+             width:520px;
+             height:42px;
+             background:#f7f8fa;
+             border:1px solid #e5e7eb;
+             padding:0 14px;
+             ">
+
+            <i class="bi bi-search text-secondary"
+               style="font-size:14px;">
+            </i>
+
+            <input type="text"
+                   placeholder="Search shipments, routes, alerts..."
+                   style="
+                   border:none;
+                   outline:none;
+                   background:transparent;
+                   margin-left:10px;
+                   width:100%;
+                   font-size:13px;
+                   color:#6b7280;
+                   ">
+
+        </div>
+
+
+
+        <!-- RIGHT -->
+        <div class="d-flex align-items-center gap-3">
+
+            <!-- AI STATUS -->
+            <div class="rounded-3 d-flex align-items-center gap-2"
+                 style="
+                 border:1px solid #b7ebd2;
+                 background:#ebfff4;
+                 padding:8px 14px;
+                 ">
+
+                <div style="
+                     width:8px;
+                     height:8px;
+                     background:#36c98f;
+                     border-radius:50%;
+                     ">
+                </div>
+
+                <span style="
+                             font-size:12px;
+                             font-weight:600;
+                             color:#0f9f6e;
+                             ">
+
+                    AI Online
+
+                </span>
+
+            </div>
+
+
+
+            <!-- BELL -->
+            <div class="position-relative">
+
+                <i class="bi bi-bell"
+                   style="
+                   font-size:18px;
+                   color:#7b8794;
+                   ">
+                </i>
+
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+    <!-- ===================== CONTENT ===================== -->
+    <div style="padding:28px;">
+
+
+
+        <!-- ===================== TOP CARDS ===================== -->
+        <div class="row g-3 mb-4">
+
+            <!-- CARD -->
+            <div class="col-lg-3">
+
+                <div class="bg-white rounded-4 border"
+                     style="
+                     padding:22px;
+                     height:145px;
+                     border-color:#edf0f5 !important;
+                     ">
+
+                    <div class="d-flex justify-content-between">
+
+                        <span style="
+                                     font-size:14px;
+                                     color:#7b8794;
+                                     ">
+
+                            Active Shipments
+
+                        </span>
+
+                        <i class="bi bi-box text-primary"
+                           style="font-size:14px;">
+                        </i>
 
                     </div>
+
+                    <h2 style="
+                               font-size:26px;
+                               font-weight:700;
+                               margin-top:18px;
+                               margin-bottom:4px;
+                               ">
+
+                        12
+
+                    </h2>
+
+                    <span style="
+                                 font-size:12px;
+                                 color:#7b8794;
+                                 ">
+
+                        +2 from yesterday
+
+                    </span>
 
                 </div>
 
@@ -124,94 +532,53 @@
 
 
 
-            <!-- ANALYTICS CARDS -->
-            <div class="container-fluid mt-4">
+            <!-- CARD -->
+            <div class="col-lg-3">
 
-                <div class="row g-4">
+                <div class="bg-white rounded-4 border"
+                     style="
+                     padding:22px;
+                     height:145px;
+                     border-color:#edf0f5 !important;
+                     ">
 
-                    <!-- CARD 1 -->
-                    <div class="col-lg-3 col-md-6">
+                    <div class="d-flex justify-content-between">
 
-                        <div class="card dashboard-card shadow-sm">
+                        <span style="
+                                     font-size:14px;
+                                     color:#7b8794;
+                                     ">
 
-                            <div class="card-body">
+                            At Risk
 
-                                <div class="d-flex justify-content-between align-items-center">
+                        </span>
 
-                                    <h6 class="card-heading">
-                                        TOTAL SHIPMENTS
-                                    </h6>
-
-                                    <i class="bi bi-box-seam card-icon text-primary"></i>
-
-                                </div>
-
-                                <div class="mt-3 d-flex align-items-center gap-3">
-
-                                    <h3 class="main-number">
-                                        1,284
-                                    </h3>
-
-                                    <span class="growth text-primary">
-                                        +12.5%
-                                    </span>
-
-                                </div>
-
-                                <div class="progress mt-3 aria-label=" Example 1px high" aria-valuenow="25"
-                                    aria-valuemin="0" aria-valuemax="100" style="height: 1px"">
-
-                                <div class=" progress-bar bg-primary" style="width:75%">
-                                </div>
-
-                            </div>
-
-                        </div>
+                        <i class="bi bi-exclamation-triangle text-danger"
+                           style="font-size:14px;">
+                        </i>
 
                     </div>
 
-                </div>
+                    <h2 style="
+                               font-size:26px;
+                               font-weight:700;
+                               color:#ef4444;
+                               margin-top:18px;
+                               margin-bottom:4px;
+                               ">
 
+                        4
 
+                    </h2>
 
-                <!-- CARD 2 -->
-                <div class="col-lg-3 col-md-6">
+                    <span style="
+                                 font-size:12px;
+                                 color:#7b8794;
+                                 ">
 
-                    <div class="card dashboard-card shadow-sm">
+                        Requires attention
 
-                        <div class="card-body">
-
-                            <div class="d-flex justify-content-between align-items-center">
-
-                                <h6 class="card-heading">
-                                    DELAYED
-                                </h6>
-
-                                <i class="bi bi-clock-history card-icon text-warning"></i>
-
-                            </div>
-
-                            <div class="mt-3 d-flex align-items-center gap-3">
-
-                                <h3 class="main-number">
-                                    42
-                                </h3>
-
-                                <span class="growth text-danger">
-                                    -3.2%
-                                </span>
-
-                            </div>
-
-                            <div class="progress mt-3 aria-label=" Example 1px high" aria-valuenow="25"
-                                aria-valuemin="0" aria-valuemax="100" style="height: 1px"">
-
-                                <div class=" progress-bar bg-warning" style="width:35%">
-                            </div>
-
-                        </div>
-
-                    </div>
+                    </span>
 
                 </div>
 
@@ -219,39 +586,293 @@
 
 
 
-            <!-- CARD 3 -->
-            <div class="col-lg-3 col-md-6">
+            <!-- CARD -->
+            <div class="col-lg-3">
 
-                <div class="card dashboard-card high-risk shadow-sm">
+                <div class="bg-white rounded-4 border"
+                     style="
+                     padding:22px;
+                     height:145px;
+                     border-color:#edf0f5 !important;
+                     ">
 
-                    <div class="card-body">
+                    <div class="d-flex justify-content-between">
+
+                        <span style="
+                                     font-size:14px;
+                                     color:#7b8794;
+                                     ">
+
+                            Delivered Today
+
+                        </span>
+
+                        <i class="bi bi-box-seam text-success"
+                           style="font-size:14px;">
+                        </i>
+
+                    </div>
+
+                    <h2 style="
+                               font-size:26px;
+                               font-weight:700;
+                               margin-top:18px;
+                               margin-bottom:4px;
+                               ">
+
+                        2
+
+                    </h2>
+
+                    <span style="
+                                 font-size:12px;
+                                 color:#7b8794;
+                                 ">
+
+                        98% on time
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CARD -->
+            <div class="col-lg-3">
+
+                <div class="bg-white rounded-4 border"
+                     style="
+                     padding:22px;
+                     height:145px;
+                     border-color:#edf0f5 !important;
+                     ">
+
+                    <div class="d-flex justify-content-between">
+
+                        <span style="
+                                     font-size:14px;
+                                     color:#7b8794;
+                                     ">
+
+                            Avg Risk Score
+
+                        </span>
+
+                        <i class="bi bi-graph-up-arrow text-warning"
+                           style="font-size:14px;">
+                        </i>
+
+                    </div>
+
+                    <h2 style="
+                               font-size:26px;
+                               font-weight:700;
+                               margin-top:18px;
+                               margin-bottom:4px;
+                               ">
+
+                        49.5%
+
+                    </h2>
+
+                    <span style="
+                                 font-size:12px;
+                                 color:#7b8794;
+                                 ">
+
+                        Network probability
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+
+        <!-- ===================== BOTTOM SECTION ===================== -->
+        <div class="row g-4">
+
+            <!-- SHIPMENTS -->
+            <div class="col-lg-8">
+
+                <div class="bg-white rounded-4 border"
+                     style="
+                     padding:28px;
+                     border-color:#edf0f5 !important;
+                     ">
+
+                    <h3 style="
+                               font-size:18px;
+                               font-weight:700;
+                               margin-bottom:24px;
+                               ">
+
+                        Recent Shipments
+
+                    </h3>
+
+
+
+                    <!-- ITEM -->
+                    <div class="border rounded-4 mb-3"
+                         style="
+                         padding:24px;
+                         border-color:#edf0f5 !important;
+                         ">
 
                         <div class="d-flex justify-content-between align-items-center">
 
-                            <h6 class="card-heading">
-                                HIGH-RISK
-                            </h6>
+                            <div>
 
-                            <i class="bi bi-exclamation-triangle card-icon text-danger"></i>
+                                <h4 style="
+                                           font-size:16px;
+                                           font-weight:700;
+                                           margin-bottom:8px;
+                                           ">
 
-                        </div>
+                                    SHP-8291A
 
-                        <div class="mt-3 d-flex align-items-center gap-3">
+                                </h4>
 
-                            <h3 class="main-number">
-                                18
-                            </h3>
+                                <p style="
+                                          font-size:12px;
+                                          color:#6b7280;
+                                          margin:0;
+                                          ">
 
-                            <span class="growth text-danger">
-                                +5.8%
+                                    Shanghai, CN → Los Angeles, US
+
+                                </p>
+
+                            </div>
+
+
+
+                            <span class="badge"
+                                  style="
+                                  background:#ef4444;
+                                  font-size:11px;
+                                  padding:10px 16px;
+                                  border-radius:10px;
+                                  ">
+
+                                AT RISK
+
                             </span>
 
                         </div>
 
-                        <div class="progress mt-3 aria-label=" Example 1px high" aria-valuenow="25" aria-valuemin="0"
-                            aria-valuemax="100" style="height: 1px"">
+                    </div>
 
-                                <div class=" progress-bar bg-danger" style="width:20%">
+
+
+                    <!-- ITEM -->
+                    <div class="border rounded-4 mb-3"
+                         style="
+                         padding:24px;
+                         border-color:#edf0f5 !important;
+                         ">
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <div>
+
+                                <h4 style="
+                                           font-size:16px;
+                                           font-weight:700;
+                                           margin-bottom:8px;
+                                           ">
+
+                                    SHP-3341B
+
+                                </h4>
+
+                                <p style="
+                                          font-size:12px;
+                                          color:#6b7280;
+                                          margin:0;
+                                          ">
+
+                                    Rotterdam, NL → New York, US
+
+                                </p>
+
+                            </div>
+
+
+
+                            <span class="badge"
+                                  style="
+                                  background:#2563ff;
+                                  font-size:11px;
+                                  padding:10px 16px;
+                                  border-radius:10px;
+                                  ">
+
+                                IN TRANSIT
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ITEM -->
+                    <div class="border rounded-4"
+                         style="
+                         padding:24px;
+                         border-color:#edf0f5 !important;
+                         ">
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <div>
+
+                                <h4 style="
+                                           font-size:16px;
+                                           font-weight:700;
+                                           margin-bottom:8px;
+                                           ">
+
+                                    SHP-7729C
+
+                                </h4>
+
+                                <p style="
+                                          font-size:12px;
+                                          color:#6b7280;
+                                          margin:0;
+                                          ">
+
+                                    Shenzhen, CN → Seattle, US
+
+                                </p>
+
+                            </div>
+
+
+
+                            <span class="badge"
+                                  style="
+                                  background:#2563ff;
+                                  font-size:11px;
+                                  padding:10px 16px;
+                                  border-radius:10px;
+                                  ">
+
+                                DELAYED
+
+                            </span>
+
                         </div>
 
                     </div>
@@ -260,309 +881,116 @@
 
             </div>
 
-        </div>
 
 
 
-        <!-- CARD 4 -->
-        <div class="col-lg-3 col-md-6">
 
-            <div class="card dashboard-card shadow-sm">
-
-                <div class="card-body">
-
-                    <div class="d-flex justify-content-between align-items-center">
-
-                        <h6 class="card-heading">
-                            ON-TIME
-                        </h6>
-
-                        <i class="bi bi-patch-check card-icon text-primary"></i>
-
-                    </div>
-
-                    <div class="mt-3 d-flex align-items-center gap-3">
-
-                        <h3 class="main-number">
-                            94.2%
-                        </h3>
-
-                        <span class="growth text-primary">
-                            +1.2%
-                        </span>
-
-                    </div>
-
-                    <div class="progress mt-3 aria-label=" Example 1px high" aria-valuenow="25" aria-valuemin="0"
-                        aria-valuemax="100" style="height: 1px"">
-
-                                <div class=" progress-bar bg-primary" style="width:90%">
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    </div>
-
-    </div>
-
-
-
-    <!-- MAP SECTION -->
-    <div class="container-fluid mt-4">
-
-        <div class="map-container position-relative overflow-hidden">
-
-            <!-- MAP IMAGE -->
-            <img src="{% static 'images/world-map.jpg' %}" class="img-fluid w-100 map-image" alt="World Map">
-
-
-            <!-- ACTIVE ROUTES -->
-            <div class="route-box">
-
-                <div class="d-flex align-items-center gap-3">
-
-                    <div class="status-dot bg-primary"></div>
-
-                    <span>
-                        1,120 Active Routes
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <!-- HOTSPOTS -->
-            <div class="hotspot-box">
-
-                <div class="d-flex align-items-center gap-3">
-
-                    <div class="status-dot bg-danger"></div>
-
-                    <span>
-                        14 High-Risk Hotspots
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <!-- ZOOM BUTTONS -->
-            <div class="zoom-controls">
-
-                <button class="btn zoom-btn">
-                    +
-                </button>
-
-                <button class="btn zoom-btn">
-                    −
-                </button>
-
-                <button class="btn zoom-btn active-location">
-                    ⊙
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- AI PREDICTION + RECENT SHIPMENTS -->
-    <div class="container-fluid mt-4 mb-5">
-
-        <div class="row g-4">
-
-            <!-- AI PREDICTION -->
+            <!-- ALERTS -->
             <div class="col-lg-4">
 
-                <div class="card prediction-card shadow-sm border-0">
+                <div class="bg-white rounded-4 border h-100"
+                     style="
+                     padding:28px;
+                     border-color:#edf0f5 !important;
+                     ">
 
-                    <div class="card-body p-4">
+                    <h3 style="
+                               font-size:18px;
+                               font-weight:700;
+                               margin-bottom:24px;
+                               ">
 
-                        <h2 class="prediction-title">
-                            ✨ AI Prediction
-                        </h2>
+                        Critical Alerts
+
+                    </h3>
 
 
-                        <!-- CONFIDENCE -->
-                        <div class="confidence-box mt-4">
 
-                            <div class="d-flex justify-content-between align-items-center">
+                    <!-- ALERT -->
+                    <div class="rounded-4 mb-3"
+                         style="
+                         background:#fff1f2;
+                         border:1px solid #fecdd3;
+                         padding:22px;
+                         ">
 
-                                <h5 class="mb-0">
-                                    Confidence Score
-                                </h5>
+                        <div class="d-flex gap-3">
 
-                                <span class="confidence-percent">
-                                    92%
+                            <i class="bi bi-exclamation-triangle text-danger"
+                               style="font-size:15px;">
+                            </i>
+
+                            <div>
+
+                                <p style="
+                                          font-size:13px;
+                                          font-weight:500;
+                                          line-height:1.8;
+                                          margin-bottom:12px;
+                                          ">
+
+                                    Typhoon warning in South China Sea.
+                                    Expected path intersects with 3 routes.
+
+                                </p>
+
+                                <span style="
+                                             font-size:11px;
+                                             color:#6b7280;
+                                             ">
+
+                                    13:45:00
+
                                 </span>
 
                             </div>
 
-                            <div class="progress mt-3 progress-height">
+                        </div>
 
-                                <div class="progress-bar bg-primary" style="width:92%">
-                                </div>
+                    </div>
+
+
+
+                    <!-- ALERT -->
+                    <div class="rounded-4"
+                         style="
+                         background:#fff1f2;
+                         border:1px solid #fecdd3;
+                         padding:22px;
+                         ">
+
+                        <div class="d-flex gap-3">
+
+                            <i class="bi bi-exclamation-triangle text-danger"
+                               style="font-size:15px;">
+                            </i>
+
+                            <div>
+
+                                <p style="
+                                          font-size:13px;
+                                          font-weight:500;
+                                          line-height:1.8;
+                                          margin-bottom:12px;
+                                          ">
+
+                                    Port congestion at Los Angeles
+                                    reaching critical levels.
+
+                                </p>
+
+                                <span style="
+                                             font-size:11px;
+                                             color:#6b7280;
+                                             ">
+
+                                    13:00:00
+
+                                </span>
 
                             </div>
 
                         </div>
-
-
-                        <!-- AI TEXT -->
-                        <p class="prediction-text mt-4">
-
-                            AI models detect a
-
-                            <span class="text-danger fw-bold">
-                                15% increase
-                            </span>
-
-                            in regional port congestion at
-
-                            <span class="fw-bold">
-                                Terminal 4
-                            </span>.
-
-                            We recommend rerouting 12 scheduled shipments.
-
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- RECENT SHIPMENTS -->
-            <div class="col-lg-8">
-
-                <div class="card shipment-card shadow-sm border-0">
-
-                    <!-- HEADER -->
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center p-4">
-
-                        <h2 class="shipment-title mb-0">
-                            Recent Shipments
-                        </h2>
-
-                        <a href="#" class="view-all">
-                            View All
-                        </a>
-
-                    </div>
-
-
-                    <!-- TABLE -->
-                    <div class="table-responsive">
-
-                        <table class="table align-middle mb-0">
-
-                            <thead>
-
-                                <tr>
-
-                                    <th>ID</th>
-                                    <th>DESTINATION</th>
-                                    <th>DELAY PREDICTION</th>
-                                    <th>STATUS</th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                <tr>
-
-                                    <td>#LP-9283-A</td>
-
-                                    <td>Rotterdam, NL</td>
-
-                                    <td class="text-danger fw-bold">
-                                        ● High (+24h)
-                                    </td>
-
-                                    <td>
-                                        <span class="badge bg-warning text-dark p-2">
-                                            In Transit
-                                        </span>
-                                    </td>
-
-                                </tr>
-
-
-                                <tr>
-
-                                    <td>#LP-4412-B</td>
-
-                                    <td>Singapore, SG</td>
-
-                                    <td class="text-primary fw-bold">
-                                        ● Low (&lt;2h)
-                                    </td>
-
-                                    <td>
-                                        <span class="badge bg-primary p-2">
-                                            Loading
-                                        </span>
-                                    </td>
-
-                                </tr>
-
-
-                                <tr>
-
-                                    <td>#LP-1055-Z</td>
-
-                                    <td>Hamburg, DE</td>
-
-                                    <td class="text-secondary fw-bold">
-                                        ● None
-                                    </td>
-
-                                    <td>
-                                        <span class="badge bg-light text-dark p-2">
-                                            Delivered
-                                        </span>
-                                    </td>
-
-                                </tr>
-
-
-                                <tr>
-
-                                    <td>#LP-7729-K</td>
-
-                                    <td>Felixstowe, UK</td>
-
-                                    <td class="text-warning fw-bold">
-                                        ● Medium (+6h)
-                                    </td>
-
-                                    <td>
-                                        <span class="badge bg-warning text-dark p-2">
-                                            In Transit
-                                        </span>
-                                    </td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
 
                     </div>
 
@@ -574,11 +1002,7 @@
 
     </div>
 
-    </div>
-    <!-- END CONTENT AREA -->
-
-    </div>
+</div>
 
 </body>
-
 </html>
