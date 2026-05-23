@@ -1,0 +1,409 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Create Shipment</title>
+
+    <!-- Bootstrap CSS -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Font -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+
+        *{
+            font-family: 'Inter', sans-serif;
+        }
+
+        body{
+
+            background-color: #f4f7fc;
+
+            padding: 40px 20px;
+        }
+
+        .form-container{
+
+            max-width: 1130px;
+
+            margin: auto;
+
+            background-color: white;
+
+            border-radius: 28px;
+
+            padding: 55px;
+
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+        }
+
+        .form-title{
+
+            font-size: 38px;
+
+            font-weight: 700;
+
+            color: #111827;
+
+            margin-bottom: 12px;
+        }
+
+        .form-subtitle{
+
+            color: #6b7280;
+
+            margin-bottom: 55px;
+
+            font-size: 18px;
+        }
+
+        .form-label{
+
+            font-size: 17px;
+
+            font-weight: 600;
+
+            color: #374151;
+        }
+
+        .form-control,
+        .form-select{
+
+            height: 56px;
+
+            width: 100%;
+
+            border-radius: 16px;
+
+            border: 1.5px solid #d7deea;
+
+            background-color: #f9fbff;
+
+            padding-left: 18px;
+
+            font-size: 15px;
+
+            transition: 0.3s;
+        }
+
+        .form-control:focus,
+        .form-select:focus{
+
+            border-color: #2563eb;
+
+            box-shadow: 0 0 0 4px rgba(37,99,235,0.08);
+
+            background-color: white;
+        }
+
+        .field-row{
+
+            margin-bottom: 34px;
+        }
+
+        .save-btn{
+
+            background: linear-gradient(135deg,#2563eb,#1d4ed8);
+
+            color: white;
+
+            border: none;
+
+            border-radius: 18px;
+
+            height: 50px;
+
+            width: 220px;
+
+            font-size: 16px;
+
+            font-weight: 600;
+
+            transition: 0.3s;
+        }
+
+        .save-btn:hover{
+
+            transform: translateY(-2px);
+
+            box-shadow: 0 12px 24px rgba(37,99,235,0.22);
+        }
+
+        @media(max-width:768px){
+
+            .form-container{
+
+                padding: 30px;
+            }
+
+            .form-title{
+
+                font-size: 42px;
+            }
+
+            .form-subtitle{
+
+                font-size: 17px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="form-container">
+
+        <!-- TITLE -->
+
+        <h1 class="form-title">
+
+            Create Shipment
+
+        </h1>
+
+        <p class="form-subtitle">
+
+            Add shipment details for logistics tracking and AI prediction.
+
+        </p>
+
+        <!-- FORM -->
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="row">
+
+                <!-- LEFT COLUMN -->
+
+                <div class="col-md-6 pe-md-5">
+
+                    <!-- Shipment ID -->
+
+                    <div class="row align-items-center field-row">
+
+                        <div class="col-4">
+
+                            <label class="form-label mb-0">
+
+                                Shipment ID
+
+                            </label>
+
+                        </div>
+
+                        <div class="col-8">
+
+                            {{ form.shipment_id }}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Origin -->
+
+                    <div class="row align-items-center field-row">
+
+                        <div class="col-4">
+
+                            <label class="form-label mb-0">
+
+                                Origin
+
+                            </label>
+
+                        </div>
+
+                        <div class="col-8">
+
+                            {{ form.origin }}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Departure -->
+
+                    <div class="row align-items-center field-row">
+
+                        <div class="col-4">
+
+                            <label class="form-label mb-0">
+
+                                Departure Time
+
+                            </label>
+
+                        </div>
+
+                        <div class="col-8">
+
+                            {{ form.departure }}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Risk -->
+
+                    <div class="row align-items-center field-row">
+
+                        <div class="col-4">
+
+                            <label class="form-label mb-0">
+
+                                Risk 
+
+                            </label>
+
+                        </div>
+
+                        <div class="col-8">
+
+                            {{ form.risk }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- RIGHT COLUMN -->
+
+                <div class="col-md-6 ps-md-5">
+
+                    <!-- Carrier -->
+
+                    <div class="row align-items-center field-row">
+
+                        <div class="col-4">
+
+                            <label class="form-label mb-0">
+
+                                Carrier
+
+                            </label>
+
+                        </div>
+
+                        <div class="col-8">
+
+                            {{ form.carrier }}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Destination -->
+
+                    <div class="row align-items-center field-row">
+
+                        <div class="col-4">
+
+                            <label class="form-label mb-0">
+
+                                Destination
+
+                            </label>
+
+                        </div>
+
+                        <div class="col-8">
+
+                            {{ form.destination }}
+
+                        </div>
+
+                    </div>
+
+                    <!-- ETA -->
+
+                    <div class="row align-items-center field-row">
+
+                        <div class="col-4">
+
+                            <label class="form-label mb-0">
+
+                                ETA
+
+                            </label>
+
+                        </div>
+
+                        <div class="col-8">
+
+                            {{ form.eta }}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Status -->
+
+                    <div class="row align-items-center field-row">
+
+                        <div class="col-4">
+
+                            <label class="form-label mb-0">
+
+                                Shipment Status
+
+                            </label>
+
+                        </div>
+
+                        <div class="col-8">
+
+                            {{ form.status }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- BUTTON -->
+
+            <button type="submit"
+                    class="save-btn mt-3">
+
+                <i class="bi bi-check-circle-fill me-2"></i>
+
+                Save Shipment
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

@@ -557,7 +557,7 @@ body{
                     <span class="text-danger fw-semibold"
                           style="font-size:13px;">
 
-                        3 Critical
+                        {{ critical_count }} Critical
 
                     </span>
 
@@ -572,7 +572,7 @@ body{
                     <span class="text-warning fw-semibold"
                           style="font-size:13px;">
 
-                        3 Warning
+                        {{ warning_count }} Warning
 
                     </span>
 
@@ -586,234 +586,191 @@ body{
 
         <!-- ================= CRITICAL CARD ================= -->
 
-        <div class="alert-card">
+{% for alert in critical_alerts %}
 
-            <div class="row g-0">
+<div class="alert-card">
 
-                <!-- LEFT -->
+    <div class="row g-0">
 
-                <div class="col-md-3 bg-danger-subtle border-end">
+        <div class="col-md-3 bg-danger-subtle border-end">
 
-                    <div class="alert-left d-flex flex-column justify-content-between">
+            <div class="alert-left d-flex flex-column justify-content-between">
 
-                        <div class="d-flex align-items-center gap-3">
+                <div class="d-flex align-items-center gap-3">
 
-                            <i class="bi bi-exclamation-triangle text-danger"
-                               style="font-size:28px;"></i>
+                    <i class="bi bi-exclamation-triangle text-danger"
+                       style="font-size:28px;"></i>
 
-                            <span class="fw-bold"
-                                  style="font-size:18px;">
+                    <span class="fw-bold"
+                          style="font-size:18px;">
 
-                                Critical
+                        Critical
 
-                            </span>
-
-                        </div>
-
-
-
-                        <div class="mt-5">
-
-                            <div class="text-secondary mb-3"
-                                 style="font-size:13px;">
-
-                                20/10/2025, 13:45:00
-
-                            </div>
-
-                            <span class="badge bg-white text-dark px-3 py-2"
-                                  style="font-size:12px;">
-
-                                SHP-8291A
-
-                            </span>
-
-                        </div>
-
-                    </div>
+                    </span>
 
                 </div>
 
+                <div class="mt-5">
 
+                    <div class="text-secondary mb-3"
+                         style="font-size:13px;">
 
-                <!-- RIGHT -->
-
-                <div class="col-md-9">
-
-                    <div class="alert-right">
-
-                        <h3 class="mb-4"
-                            style="
-                            font-size:20px;
-                            line-height:1.6;
-                            ">
-
-                            Typhoon warning in South China Sea.
-                            Expected path intersects with 3 active routes.
-
-                        </h3>
-
-
-
-                        <!-- AI BOX -->
-
-                        <div class="bg-light border rounded-4 p-4 mb-4">
-
-                            <div class="d-flex gap-3">
-
-                                <i class="bi bi-send text-primary"
-                                   style="font-size:20px;"></i>
-
-                                <div style="font-size:14px;line-height:1.8;">
-
-                                    <span class="fw-bold text-primary">
-
-                                        AI Action:
-
-                                    </span>
-
-                                    Reroute SHP-8291A and SHP-7729C
-                                    via southern corridor.
-                                    Estimated delay: +2 days.
-                                    Cost impact: Low.
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-
-                        <hr>
-
-
-
-                        <!-- BUTTONS -->
-
-                        <div class="d-flex justify-content-end gap-3">
-
-                            <button class="btn btn-light px-4 py-2"
-                                    style="font-size:14px;">
-
-                                Acknowledge
-
-                            </button>
-
-
-
-                            <button class="btn btn-danger px-4 py-2"
-                                    style="
-                                    font-size:14px;
-                                    border-radius:12px;
-                                    ">
-
-                                Execute Recommendation
-
-                            </button>
-
-                        </div>
+                        {{ alert.time }}
 
                     </div>
+
+                    <span class="badge bg-white text-dark px-3 py-2">
+
+                        {{ alert.shipment_id }}
+
+                    </span>
 
                 </div>
 
             </div>
 
         </div>
+
+        <div class="col-md-9">
+
+            <div class="alert-right">
+
+                <h3 class="mb-4"
+                    style="font-size:20px;line-height:1.6;">
+
+                    {{ alert.message }}
+
+                </h3>
+
+                <div class="bg-light border rounded-4 p-4 mb-4">
+
+                    <div class="d-flex gap-3">
+
+                        <i class="bi bi-send text-primary"
+                           style="font-size:20px;"></i>
+
+                        <div style="font-size:14px;line-height:1.8;">
+
+                            <span class="fw-bold text-primary">
+
+                                AI Action:
+
+                            </span>
+
+                            {{ alert.action }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-end gap-3">
+
+                    <button class="btn btn-light px-4 py-2">
+
+                        Acknowledge
+
+                    </button>
+
+                    <button class="btn btn-danger px-4 py-2">
+
+                        Execute Recommendation
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endfor %}
 
 
 
         <!-- ================= WARNING CARD ================= -->
 
-        <div class="alert-card"
-             style="border:1px solid #f1e4c8;">
+        {% for alert in warning_alerts %}
 
-            <div class="row g-0">
+<div class="alert-card"
+     style="border:1px solid #f1e4c8;">
 
-                <!-- LEFT -->
+    <div class="row g-0">
 
-                <div class="col-md-3"
-                     style="background:#fffaf0;">
+        <div class="col-md-3"
+             style="background:#fffaf0;">
 
-                    <div class="alert-left">
+            <div class="alert-left">
 
-                        <div class="d-flex align-items-center gap-3 mb-5">
+                <div class="d-flex align-items-center gap-3 mb-5">
 
-                            <i class="bi bi-exclamation-circle text-warning"
-                               style="font-size:28px;"></i>
+                    <i class="bi bi-exclamation-circle text-warning"
+                       style="font-size:28px;"></i>
 
-                            <span class="fw-bold"
-                                  style="font-size:18px;">
+                    <span class="fw-bold"
+                          style="font-size:18px;">
 
-                                Warning
+                        Warning
 
-                            </span>
-
-                        </div>
-
-
-
-                        <div class="text-secondary mb-3"
-                             style="font-size:13px;">
-
-                            20/10/2025, 10:50:00
-
-                        </div>
-
-                        <span class="badge bg-white text-dark px-3 py-2"
-                              style="font-size:12px;">
-
-                            SHP-3341B
-
-                        </span>
-
-                    </div>
+                    </span>
 
                 </div>
 
+                <div class="text-secondary mb-3"
+                     style="font-size:13px;">
 
+                    {{ alert.time }}
 
-                <!-- RIGHT -->
+                </div>
 
-                <div class="col-md-9">
+                <span class="badge bg-white text-dark px-3 py-2">
 
-                    <div class="alert-right">
+                    {{ alert.shipment_id }}
 
-                        <h3 style="
-                                   font-size:20px;
-                                   line-height:1.6;
-                                   ">
+                </span>
 
-                            Heavy fog reported in English Channel,
-                            reducing visibility to &lt;50m.
+            </div>
 
-                        </h3>
+        </div>
 
+        <div class="col-md-9">
 
+            <div class="alert-right">
 
-                        <hr class="my-5">
+                <h3 style="font-size:20px;line-height:1.6;">
 
+                    {{ alert.message }}
 
+                </h3>
 
-                        <div class="text-end">
+                <hr class="my-5">
 
-                            <button class="btn btn-light px-4 py-2"
-                                    style="font-size:14px;">
+                <div class="text-end">
 
-                                Acknowledge
+                    <button class="btn btn-light px-4 py-2">
 
-                            </button>
+                        Acknowledge
 
-                        </div>
-
-                    </div>
+                    </button>
 
                 </div>
 
             </div>
 
         </div>
+
+    </div>
+
+</div>
+
+{% endfor %}
 
     </div>
 

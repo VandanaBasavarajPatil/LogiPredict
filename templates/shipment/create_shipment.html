@@ -456,14 +456,14 @@ body{
 
             </div>
 
-            <button class="btn btn-primary px-3 py-2 rounded-4">
+          <a href="{% url 'add_shipment' %}"
+   class="btn btn-primary px-3 py-2 rounded-4">
 
-                <i class="bi bi-plus-lg me-2"></i>
+    <i class="bi bi-plus-lg me-2"></i>
 
-                Create Shipment
+    Create Shipment
 
-            </button>
-
+</a>
         </div>
 
         <!-- MAIN CARD -->
@@ -514,126 +514,183 @@ body{
 
                     </thead>
 
-                    <tbody>
+               <tbody>
 
-                        <tr>
+{% for shipment in shipments %}
 
-                            <td class="fw-bold">SHP-8291A</td>
+<tr>
 
-                            <td>
-                                <div class="fw-medium">Shanghai, CN</div>
-                                <small class="text-secondary">
-                                    to Los Angeles, US
-                                </small>
-                            </td>
+    <!-- Shipment ID -->
+    <td class="fw-semibold">
+        {{ shipment.shipment_id }}
+    </td>
 
-                            <td>Maersk</td>
+    <!-- Route -->
+    <td>
+        <div class="fw-semibold">
+            {{ shipment.origin }}
+        </div>
 
-                            <td>24/10/2025</td>
+        <small class="text-secondary">
+            to {{ shipment.destination }}
+        </small>
+    </td>
 
-                            <td>
-                                <span class="badge-custom badge-danger-outline">
-                                    CRITICAL
-                                </span>
-                            </td>
+    <!-- Carrier -->
+    <td>
+        {{ shipment.carrier }}
+    </td>
 
-                            <td>
-                                <span class="badge-custom badge-danger-fill">
-                                    AT-RISK
-                                </span>
-                            </td>
+    <!-- ETA -->
+    <td>
+        {{ shipment.eta|date:"d/m/Y" }}
+    </td>
 
-                        </tr>
+    <!-- Risk -->
+    <td>
 
-                        <tr>
+        {% if shipment.risk == "Critical" %}
 
-                            <td class="fw-bold">SHP-3341B</td>
+            <span class="badge border border-danger text-danger rounded-pill px-3 py-2">
+                CRITICAL
+            </span>
 
-                            <td>
-                                <div class="fw-medium">Rotterdam, NL</div>
-                                <small class="text-secondary">
-                                    to New York, US
-                                </small>
-                            </td>
+        {% elif shipment.risk == "High" %}
 
-                            <td>MSC</td>
+            <span class="badge border border-warning text-warning rounded-pill px-3 py-2">
+                HIGH
+            </span>
 
-                            <td>21/10/2025</td>
+        {% elif shipment.risk == "Medium" %}
 
-                            <td>
-                                <span class="badge-custom badge-success-outline">
-                                    LOW
-                                </span>
-                            </td>
+            <span class="badge border border-primary text-primary rounded-pill px-3 py-2">
+                MEDIUM
+            </span>
 
-                            <td>
-                                <span class="badge-custom badge-gray">
-                                    IN-TRANSIT
-                                </span>
-                            </td>
+        {% else %}
 
-                        </tr>
+            <span class="badge border border-success text-success rounded-pill px-3 py-2">
+                LOW
+            </span>
 
-                        <tr>
+        {% endif %}
 
-                            <td class="fw-bold">SHP-7729C</td>
+    </td>
 
-                            <td>
-                                <div class="fw-medium">Shenzhen, CN</div>
-                                <small class="text-secondary">
-                                    to Seattle, US
-                                </small>
-                            </td>
+    <!-- Status -->
+    <td>
 
-                            <td>COSCO</td>
+        {% if shipment.status == "At Risk" %}
 
-                            <td>29/10/2025</td>
+            <span class="badge bg-danger text-white rounded-pill px-3 py-2">
+                AT-RISK
+            </span>
 
-                            <td>
-                                <span class="badge-custom badge-danger-outline">
-                                    CRITICAL
-                                </span>
-                            </td>
+        {% elif shipment.status == "In Transit" %}
 
-                            <td>
-                                <span class="badge-custom badge-gray">
-                                    DELAYED
-                                </span>
-                            </td>
+            <span class="badge bg-secondary text-white rounded-pill px-3 py-2">
+                IN-TRANSIT
+            </span>
 
-                        </tr>
+        {% elif shipment.status == "Delayed" %}
 
-                        <tr>
+            <span class="badge bg-primary text-white rounded-pill px-3 py-2">
+                DELAYED
+            </span>
 
-                            <td class="fw-bold">SHP-1198D</td>
+        {% else %}
 
-                            <td>
-                                <div class="fw-medium">Hamburg, NL</div>
-                                <small class="text-secondary">
-                                    to Miami, US
-                                </small>
-                            </td>
+            <span class="badge bg-success text-white rounded-pill px-3 py-2">
+                DELIVERED
+            </span>
 
-                            <td>Hapag-Lloyd</td>
+        {% endif %}
 
-                            <td>23/10/2025</td>
+    </td>
 
-                            <td>
-                                <span class="badge-custom badge-primary-outline">
-                                    MEDIUM
-                                </span>
-                            </td>
+    <!-- ACTION BUTTONS -->
+    <td class="text-center ">
 
-                            <td>
-                                <span class="badge-custom badge-gray">
-                                    IN-TRANSIT
-                                </span>
-                            </td>
+        <!-- UPDATE -->
+        <a href="{% url 'update_shipment' shipment.id %}"
+           class="btn btn-light border rounded-circle me-2">
 
-                        </tr>
+            <i class="bi bi-pencil-square text-primary"></i>
 
-                    </tbody>
+        </a>
 
+        <!-- DELETE -->
+        <button
+            class="btn btn-light border rounded-circle"
+            data-bs-toggle="modal"
+            data-bs-target="#deleteModal{{ shipment.id }}">
+
+            <i class="bi bi-trash text-danger"></i>
+
+        </button>
+
+    </td>
+
+</tr>
+
+
+<!-- DELETE MODAL -->
+<div class="modal fade"
+     id="deleteModal{{ shipment.id }}"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 rounded-4">
+
+            <div class="modal-header border-0">
+
+                <h5 class="modal-title fw-bold">
+                    Delete Shipment
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                Are you sure you want to delete
+                <strong>{{ shipment.shipment_id }}</strong> ?
+
+            </div>
+
+            <div class="modal-footer border-0">
+
+                <button type="button"
+                        class="btn btn-light"
+                        data-bs-dismiss="modal">
+
+                    Cancel
+
+                </button>
+
+                <a href="{% url 'delete_shipment' shipment.id %}"
+                   class="btn btn-danger">
+
+                    Delete
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+</tbody>
                 </table>
 
             </div>
@@ -643,6 +700,7 @@ body{
     </div>
 
 </div>
+<th class="text-center">Actions</th>
 
 </body>
 </html>

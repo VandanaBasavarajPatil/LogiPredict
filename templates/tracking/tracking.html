@@ -5,513 +5,445 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>LogiPredict Tracking</title>
 
     <!-- BOOTSTRAP -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- BOOTSTRAP ICONS -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<style>
+    <style>
+        /* ================= BODY ================= */
 
-/* ================= BODY ================= */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background: #f4f7fb;
+            font-family: Inter, sans-serif;
+        }
 
-body{
-    margin:0;
-    padding:0;
-    overflow-x:hidden;
-    background:#f4f7fb;
-    font-family:Inter,sans-serif;
-}
 
 
+        /* ================= SIDEBAR ================= */
 
-/* ================= SIDEBAR ================= */
+        .sidebar {
+            width: 240px;
+            min-width: 240px;
+            height: 100vh;
+            background: #061238;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            padding: 22px 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
 
-.sidebar{
-    width:240px;
-    min-width:240px;
-    height:100vh;
-    background:#061238;
-    position:fixed;
-    top:0;
-    left:0;
-    z-index:1000;
-    padding:22px 18px;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-}
 
 
+        /* ================= CONTENT ================= */
 
-/* ================= CONTENT ================= */
+        .content-area {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            min-height: 100vh;
+        }
 
-.content-area{
-    margin-left:240px;
-    width:calc(100% - 240px);
-    min-height:100vh;
-}
 
 
+        /* ================= LOGO ================= */
 
-/* ================= LOGO ================= */
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
 
-.logo-section{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-bottom:20px;
-}
+        .logo-icon {
+            font-size: 22px;
+            color: #2563ff;
+        }
 
-.logo-icon{
-    font-size:22px;
-    color:#2563ff;
-}
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2563ff;
+        }
 
-.logo-text{
-    font-size:20px;
-    font-weight:700;
-    color:#2563ff;
-}
 
 
+        /* ================= MENU ================= */
 
-/* ================= MENU ================= */
+        .sidebar-menu {
+            gap: 6px;
+        }
 
-.sidebar-menu{
-    gap:6px;
-}
 
 
+        /* ================= LINKS ================= */
 
-/* ================= LINKS ================= */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #d1d5db !important;
+            text-decoration: none;
+            padding: 12px 16px;
+            border-radius: 14px;
+            transition: 0.2s;
+            font-size: 16px;
+            font-weight: 500;
+        }
 
-.sidebar-link{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    color:#d1d5db !important;
-    text-decoration:none;
-    padding:12px 16px;
-    border-radius:14px;
-    transition:0.2s;
-    font-size:16px;
-    font-weight:500;
-}
+        .sidebar-link i {
+            font-size: 16px;
+        }
 
-.sidebar-link i{
-    font-size:16px;
-}
+        .sidebar-link:hover {
+            background: #102454;
+            color: white !important;
+        }
 
-.sidebar-link:hover{
-    background:#102454;
-    color:white !important;
-}
 
 
+        /* ================= ACTIVE ================= */
+
+        .active-menu {
+            background: #102454;
+            color: white !important;
+        }
+
+
+
+        /* ================= PROFILE ================= */
+
+        .sidebar-bottom {
+            margin-top: 20px;
+        }
 
-/* ================= ACTIVE ================= */
-
-.active-menu{
-    background:#102454;
-    color:white !important;
-}
+        .profile-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+        }
 
+        .profile-circle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #162754;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+        }
 
+        .profile-name {
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+        }
 
-/* ================= PROFILE ================= */
+        .profile-role {
+            color: #94a3b8;
+            font-size: 11px;
+        }
 
-.sidebar-bottom{
-    margin-top:20px;
-}
 
-.profile-box{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding:10px 12px;
-}
 
-.profile-circle{
-    width:42px;
-    height:42px;
-    border-radius:50%;
-    background:#162754;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:white;
-    font-size:14px;
-    font-weight:700;
-}
+        /* ================= TOPBAR ================= */
 
-.profile-name{
-    color:white;
-    font-size:13px;
-    font-weight:600;
-}
+        .topbar {
+            height: 80px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-.profile-role{
-    color:#94a3b8;
-    font-size:11px;
-}
 
 
+        /* ================= SEARCH ================= */
 
-/* ================= TOPBAR ================= */
+        .search-box {
+            width: 420px;
+            height: 44px;
+            background: white;
+            border: 1px solid #dbe2ea;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+        }
 
-.topbar{
-    height:80px;
-    background:white;
-    border-bottom:1px solid #e5e7eb;
-    padding:0 32px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-}
+        .search-box input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+            margin-left: 10px;
+            font-size: 13px;
+        }
 
 
 
-/* ================= SEARCH ================= */
+        /* ================= AI STATUS ================= */
 
-.search-box{
-    width:420px;
-    height:44px;
-    background:white;
-    border:1px solid #dbe2ea;
-    border-radius:14px;
-    display:flex;
-    align-items:center;
-    padding:0 14px;
-}
+        .ai-status {
+            background: #ebfff4;
+            border: 1px solid #b7ebd2;
+            border-radius: 12px;
+            padding: 9px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-.search-box input{
-    border:none;
-    outline:none;
-    background:transparent;
-    width:100%;
-    margin-left:10px;
-    font-size:13px;
-}
+        .ai-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+        }
 
 
 
-/* ================= AI STATUS ================= */
+        /* ================= PAGE ================= */
 
-.ai-status{
-    background:#ebfff4;
-    border:1px solid #b7ebd2;
-    border-radius:12px;
-    padding:9px 16px;
-    display:flex;
-    align-items:center;
-    gap:8px;
-}
+        .page-wrapper {
+            padding: 28px;
+        }
 
-.ai-dot{
-    width:8px;
-    height:8px;
-    background:#22c55e;
-    border-radius:50%;
-}
 
 
+        /* ================= HEADER ================= */
 
-/* ================= PAGE ================= */
+        .page-title {
+            font-size: 34px;
+            font-weight: 700;
+            color: #0f172a;
+        }
 
-.page-wrapper{
-    padding:28px;
-}
+        .page-subtitle {
+            font-size: 15px;
+            color: #64748b;
+        }
 
 
 
-/* ================= HEADER ================= */
+        /* ================= CARDS ================= */
 
-.page-title{
-    font-size:34px;
-    font-weight:700;
-    color:#0f172a;
-}
+        .card {
+            border: none !important;
+            border-radius: 22px !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04) !important;
+        }
 
-.page-subtitle{
-    font-size:15px;
-    color:#64748b;
-}
 
 
+        /* ================= SMALL TEXT ================= */
 
-/* ================= CARDS ================= */
+        .small-text {
+            font-size: 13px;
+        }
 
-.card{
-    border:none !important;
-    border-radius:22px !important;
-    box-shadow:0 2px 10px rgba(0,0,0,0.04) !important;
-}
+        .tiny-text {
+            font-size: 11px;
+        }
 
 
 
-/* ================= SMALL TEXT ================= */
+        /* ================= SCROLL ================= */
 
-.small-text{
-    font-size:13px;
-}
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
 
-.tiny-text{
-    font-size:11px;
-}
-
-
-
-/* ================= SCROLL ================= */
-
-::-webkit-scrollbar{
-    width:5px;
-}
-
-::-webkit-scrollbar-thumb{
-    background:#cbd5e1;
-    border-radius:10px;
-}
-
-</style>
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
 
 </head>
 
 <body>
 
-<!-- ================= SIDEBAR ================= -->
+    <!-- ================= SIDEBAR ================= -->
 
-<div class="sidebar">
+    <div class="sidebar">
 
-    <!-- TOP -->
+        <!-- TOP -->
 
-    <div>
+        <div>
 
-        <!-- LOGO -->
+            <!-- LOGO -->
 
-        <div class="logo-section">
+            <div class="logo-section">
 
-            <i class="bi bi-truck logo-icon"></i>
+                <i class="bi bi-truck logo-icon"></i>
 
-            <span class="logo-text">
-                LogiPredict
-            </span>
-
-        </div>
-
-
-
-        <!-- MENU -->
-
-        <ul class="nav flex-column sidebar-menu">
-
-            <!-- DASHBOARD -->
-
-            <li class="nav-item">
-
-                <a href="{% url 'dashboard' %}"
-                   class="nav-link sidebar-link">
-
-                    <i class="bi bi-grid"></i>
-
-                    <span>Dashboard</span>
-
-                </a>
-
-            </li>
-
-
-
-            <!-- SHIPMENTS -->
-
-            <li class="nav-item">
-
-                <a href="{% url 'shipment' %}"
-                   class="nav-link sidebar-link">
-
-                    <i class="bi bi-box-seam"></i>
-
-                    <span>Shipments</span>
-
-                </a>
-
-            </li>
-
-
-
-            <!-- PREDICTIONS -->
-
-            <li class="nav-item">
-
-                <a href="{% url 'prediction' %}"
-                   class="nav-link sidebar-link">
-
-                    <i class="bi bi-cpu"></i>
-
-                    <span>Predictions</span>
-
-                </a>
-
-            </li>
-
-
-
-            <!-- TRACKING -->
-
-            <li class="nav-item">
-
-                <a href="{% url 'tracking' %}"
-                   class="nav-link sidebar-link active-menu">
-
-                    <i class="bi bi-send"></i>
-
-                    <span>Tracking</span>
-
-                </a>
-
-            </li>
-
-
-
-            <!-- ANALYTICS -->
-
-            <li class="nav-item">
-
-                <a href="{% url 'analytics' %}"
-                   class="nav-link sidebar-link">
-
-                    <i class="bi bi-bar-chart"></i>
-
-                    <span>Analytics</span>
-
-                </a>
-
-            </li>
-
-
-
-            <!-- ALERTS -->
-
-            <li class="nav-item">
-
-                <a href="{% url 'alerts' %}"
-                   class="nav-link sidebar-link">
-
-                    <i class="bi bi-bell"></i>
-
-                    <span>Alerts</span>
-
-                </a>
-
-            </li>
-
-        </ul>
-
-    </div>
-
-
-
-    <!-- BOTTOM -->
-
-    <div class="sidebar-bottom">
-
-        <!-- PROFILE -->
-
-        <div class="profile-box">
-
-            <div class="profile-circle">
-                JD
-            </div>
-
-            <div>
-
-                <div class="profile-name">
-                    J. Director
-                </div>
-
-                <div class="profile-role">
-                    Logistics Dir.
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- LOGOUT -->
-
-        <a href="#"
-           class="nav-link sidebar-link mt-2">
-
-            <i class="bi bi-box-arrow-right"></i>
-
-            <span>Logout</span>
-
-        </a>
-
-    </div>
-
-</div>
-
-
-
-<!-- ================= CONTENT AREA ================= -->
-
-<div class="content-area">
-
-    <!-- TOPBAR -->
-
-    <div class="topbar">
-
-        <!-- SEARCH -->
-
-        <div class="search-box">
-
-            <i class="bi bi-search text-secondary"></i>
-
-            <input type="text"
-                   placeholder="Search shipments...">
-
-        </div>
-
-
-
-        <!-- RIGHT -->
-
-        <div class="d-flex align-items-center gap-3">
-
-            <!-- AI STATUS -->
-
-            <div class="ai-status">
-
-                <div class="ai-dot"></div>
-
-                <span class="fw-semibold text-success small-text">
-                    AI Online
+                <span class="logo-text">
+                    LogiPredict
                 </span>
 
             </div>
 
 
 
-            <!-- NOTIFICATION -->
+            <!-- MENU -->
 
-            <div class="position-relative">
+            <ul class="nav flex-column sidebar-menu">
 
-                <i class="bi bi-bell text-secondary"
-                   style="font-size:18px;"></i>
+                <!-- DASHBOARD -->
 
-                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+                <li class="nav-item">
+
+                    <a href="{% url 'dashboard' %}" class="nav-link sidebar-link">
+
+                        <i class="bi bi-grid"></i>
+
+                        <span>Dashboard</span>
+
+                    </a>
+
+                </li>
+
+
+
+                <!-- SHIPMENTS -->
+
+                <li class="nav-item">
+
+                    <a href="{% url 'shipment' %}" class="nav-link sidebar-link">
+
+                        <i class="bi bi-box-seam"></i>
+
+                        <span>Shipments</span>
+
+                    </a>
+
+                </li>
+
+
+
+                <!-- PREDICTIONS -->
+
+                <li class="nav-item">
+
+                    <a href="{% url 'prediction' %}" class="nav-link sidebar-link">
+
+                        <i class="bi bi-cpu"></i>
+
+                        <span>Predictions</span>
+
+                    </a>
+
+                </li>
+
+
+
+                <!-- TRACKING -->
+
+                <li class="nav-item">
+
+                    <a href="{% url 'tracking' %}" class="nav-link sidebar-link active-menu">
+
+                        <i class="bi bi-send"></i>
+
+                        <span>Tracking</span>
+
+                    </a>
+
+                </li>
+
+
+
+                <!-- ANALYTICS -->
+
+                <li class="nav-item">
+
+                    <a href="{% url 'analytics' %}" class="nav-link sidebar-link">
+
+                        <i class="bi bi-bar-chart"></i>
+
+                        <span>Analytics</span>
+
+                    </a>
+
+                </li>
+
+
+
+                <!-- ALERTS -->
+
+                <li class="nav-item">
+
+                    <a href="{% url 'alerts' %}" class="nav-link sidebar-link">
+
+                        <i class="bi bi-bell"></i>
+
+                        <span>Alerts</span>
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+
+
+        <!-- BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+            <!-- PROFILE -->
+
+            <div class="profile-box">
+
+                <div class="profile-circle">
+                    JD
+                </div>
+
+                <div>
+
+                    <div class="profile-name">
+                        J. Director
+                    </div>
+
+                    <div class="profile-role">
+                        Logistics Dir.
+                    </div>
+
+                </div>
 
             </div>
+
+
+
+            <!-- LOGOUT -->
+
+            <a href="#" class="nav-link sidebar-link mt-2">
+
+                <i class="bi bi-box-arrow-right"></i>
+
+                <span>Logout</span>
+
+            </a>
 
         </div>
 
@@ -519,145 +451,21 @@ body{
 
 
 
-    <!-- PAGE -->
+    <!-- ================= CONTENT AREA ================= -->
 
-    <div class="page-wrapper">
+    <div class="content-area">
 
-        <!-- HEADER -->
+        <!-- TOPBAR -->
 
-        <div class="mb-4">
+        <div class="topbar">
 
-            <div class="d-flex align-items-center gap-3 mb-1">
+            <!-- SEARCH -->
 
-                <i class="bi bi-send text-primary"
-                   style="font-size:32px;"></i>
+            <div class="search-box">
 
-                <h1 class="page-title m-0">
-                    Live Tracking
-                </h1>
+                <i class="bi bi-search text-secondary"></i>
 
-            </div>
-
-            <p class="page-subtitle mb-0">
-
-                Real-time location monitoring and route tracking.
-
-            </p>
-
-        </div>
-
-
-
-        <!-- MAIN GRID -->
-
-        <div class="row g-4">
-
-            <!-- LEFT -->
-
-            <div class="col-lg-4">
-
-                <div style="height:760px;overflow-y:auto;padding-right:6px;">
-
-                    <!-- CARD -->
-
-                    <div class="card mb-4">
-
-                        <div class="card-body p-4">
-
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-
-                                <h4 class="fw-bold mb-0"
-                                    style="font-size:18px;">
-
-                                    SHP-8291A
-
-                                </h4>
-
-                                <span class="badge bg-danger px-3 py-2"
-                                      style="font-size:11px;">
-
-                                    AT-RISK
-
-                                </span>
-
-                            </div>
-
-                            <p class="text-secondary mb-4 small-text">
-
-                                Carrier: Maersk
-
-                            </p>
-
-                            <div class="d-flex justify-content-between align-items-center">
-
-                                <div>
-
-                                    <small class="text-secondary d-block tiny-text">
-                                        Origin
-                                    </small>
-
-                                    <h5 class="fw-semibold m-0"
-                                        style="font-size:15px;">
-
-                                        Shanghai, CN
-
-                                    </h5>
-
-                                </div>
-
-                                <i class="bi bi-send text-secondary"
-                                   style="font-size:18px;"></i>
-
-                                <div class="text-end">
-
-                                    <small class="text-secondary d-block tiny-text">
-                                        Destination
-                                    </small>
-
-                                    <h5 class="fw-semibold m-0"
-                                        style="font-size:15px;">
-
-                                        Los Angeles
-
-                                    </h5>
-
-                                </div>
-
-                            </div>
-
-                            <hr>
-
-                            <div class="d-flex align-items-center gap-2 mb-3">
-
-                                <i class="bi bi-truck text-primary"></i>
-
-                                <small class="text-secondary small-text">
-                                    ETA:
-                                </small>
-
-                                <span class="fw-bold small-text">
-                                    24/10/2025
-                                </span>
-
-                            </div>
-
-                            <div class="bg-danger-subtle rounded-4 p-3 text-center">
-
-                                <small class="text-danger small-text">
-
-                                    <i class="bi bi-exclamation-circle me-1"></i>
-
-                                    Delay detected on current route.
-
-                                </small>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
+                <input type="text" placeholder="Search shipments...">
 
             </div>
 
@@ -665,16 +473,228 @@ body{
 
             <!-- RIGHT -->
 
-            <div class="col-lg-8">
+            <div class="d-flex align-items-center gap-3">
 
-                <div class="card h-100">
+                <!-- AI STATUS -->
 
-                    <div class="card-body p-4 position-relative">
+                <div class="ai-status">
 
-                        <!-- TRACKING BOX -->
+                    <div class="ai-dot"></div>
 
-                        <div class="bg-light rounded-4 p-4 shadow-sm"
-                             style="
+                    <span class="fw-semibold text-success small-text">
+                        AI Online
+                    </span>
+
+                </div>
+
+
+
+                <!-- NOTIFICATION -->
+
+                <div class="position-relative">
+
+                    <i class="bi bi-bell text-secondary" style="font-size:18px;"></i>
+
+                    <span
+                        class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- PAGE -->
+
+        <div class="page-wrapper">
+
+            <!-- HEADER -->
+
+            <div class="mb-4">
+
+                <div class="d-flex align-items-center gap-3 mb-1">
+
+                    <i class="bi bi-send text-primary" style="font-size:32px;"></i>
+
+                    <h1 class="page-title m-0">
+                        Live Tracking
+                    </h1>
+
+                </div>
+
+                <p class="page-subtitle mb-0">
+
+                    Real-time location monitoring and route tracking.
+
+                </p>
+
+            </div>
+
+
+
+            <!-- MAIN GRID -->
+
+            <div class="row g-4">
+
+                <!-- LEFT -->
+
+                <div class="col-lg-4">
+
+                    <div style="height:760px;overflow-y:auto;padding-right:6px;">
+
+                        <!-- CARD -->
+
+                        {% for shipment in shipments %}
+
+                        <div class="card mb-4">
+
+                            <div class="card-body p-4">
+
+                                <!-- TOP -->
+
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+
+                                    <h4 class="fw-bold mb-0" style="font-size:18px;">
+
+                                        {{ shipment.shipment_id }}
+
+                                    </h4>
+
+                                    {% if shipment.status == "Delayed" %}
+
+                                    <span class="badge bg-danger px-3 py-2" style="font-size:11px;">
+
+                                        DELAYED
+
+                                    </span>
+
+                                    {% elif shipment.status == "In Transit" %}
+
+                                    <span class="badge bg-primary px-3 py-2" style="font-size:11px;">
+
+                                        IN TRANSIT
+
+                                    </span>
+
+                                    {% else %}
+
+                                    <span class="badge bg-success px-3 py-2" style="font-size:11px;">
+
+                                        {{ shipment.status }}
+
+                                    </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                                <!-- CARRIER -->
+
+                                <p class="text-secondary mb-4 small-text">
+
+                                    Carrier: {{ shipment.carrier }}
+
+                                </p>
+
+                                <!-- ROUTE -->
+
+                                <div class="d-flex justify-content-between align-items-center">
+
+                                    <div>
+
+                                        <small class="text-secondary d-block tiny-text">
+                                            Origin
+                                        </small>
+
+                                        <h5 class="fw-semibold m-0" style="font-size:15px;">
+
+                                            {{ shipment.origin }}
+
+                                        </h5>
+
+                                    </div>
+
+                                    <i class="bi bi-send text-secondary" style="font-size:18px;"></i>
+
+                                    <div class="text-end">
+
+                                        <small class="text-secondary d-block tiny-text">
+                                            Destination
+                                        </small>
+
+                                        <h5 class="fw-semibold m-0" style="font-size:15px;">
+
+                                            {{ shipment.destination }}
+
+                                        </h5>
+
+                                    </div>
+
+                                </div>
+
+                                <hr>
+
+                                <!-- ETA -->
+
+                                <div class="d-flex align-items-center gap-2 mb-3">
+
+                                    <i class="bi bi-truck text-primary"></i>
+
+                                    <small class="text-secondary small-text">
+                                        ETA:
+                                    </small>
+
+                                    <span class="fw-bold small-text">
+
+                                        {{ shipment.eta }}
+
+                                    </span>
+
+                                </div>
+
+                                <!-- ALERT -->
+
+                                {% if shipment.status == "Delayed" %}
+
+                                <div class="bg-danger-subtle rounded-4 p-3 text-center">
+
+                                    <small class="text-danger small-text">
+
+                                        <i class="bi bi-exclamation-circle me-1"></i>
+
+                                        Delay detected on current route.
+
+                                    </small>
+
+                                </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- RIGHT -->
+
+                <div class="col-lg-8">
+
+                    <div class="card h-100">
+
+                        <div class="card-body p-4 position-relative">
+
+                            <!-- TRACKING BOX -->
+
+                            <div class="bg-light rounded-4 p-4 shadow-sm" style="
                              width:330px;
                              position:absolute;
                              top:24px;
@@ -682,157 +702,150 @@ body{
                              z-index:5;
                              ">
 
-                            <h4 class="fw-bold mb-4"
-                                style="font-size:18px;">
+                                <h4 class="fw-bold mb-4" style="font-size:18px;">
 
-                                Tracking Active Route
+                                    Tracking Active Route
 
-                            </h4>
-
+                                </h4>
 
 
-                            <!-- STEP -->
 
-                            <div class="d-flex gap-3 mb-4">
+                                <!-- STEP -->
 
-                                <div>
+                                <div class="d-flex gap-3 mb-4">
 
-                                    <div class="bg-primary rounded-circle"
-                                         style="width:16px;height:16px;"></div>
+                                    <div>
 
-                                    <div class="bg-primary-subtle mx-auto"
-                                         style="width:3px;height:65px;"></div>
+                                        <div class="bg-primary rounded-circle" style="width:16px;height:16px;"></div>
 
-                                </div>
+                                        <div class="bg-primary-subtle mx-auto" style="width:3px;height:65px;"></div>
 
-                                <div>
+                                    </div>
 
-                                    <h5 class="mb-1"
-                                        style="font-size:16px;">
+                                    <div>
 
-                                        Departed Origin
+                                        <h5 class="mb-1" style="font-size:16px;">
 
-                                    </h5>
+                                            Departed Origin
 
-                                    <small class="text-secondary small-text">
+                                        </h5>
 
-                                        Oct 15, 08:00 AM
+                                        <small class="text-secondary small-text">
 
-                                    </small>
+                                            Oct 15, 08:00 AM
+
+                                        </small>
+
+                                    </div>
 
                                 </div>
 
-                            </div>
 
 
+                                <!-- STEP -->
 
-                            <!-- STEP -->
+                                <div class="d-flex gap-3 mb-4">
 
-                            <div class="d-flex gap-3 mb-4">
+                                    <div>
 
-                                <div>
+                                        <div class="bg-primary-subtle rounded-circle" style="width:16px;height:16px;">
+                                        </div>
 
-                                    <div class="bg-primary-subtle rounded-circle"
-                                         style="width:16px;height:16px;"></div>
+                                    </div>
 
-                                </div>
+                                    <div>
 
-                                <div>
+                                        <h5 class="text-primary mb-1" style="font-size:16px;">
 
-                                    <h5 class="text-primary mb-1"
-                                        style="font-size:16px;">
+                                            In Transit - Midpoint
 
-                                        In Transit - Midpoint
+                                        </h5>
 
-                                    </h5>
+                                        <small class="text-secondary small-text">
 
-                                    <small class="text-secondary small-text">
+                                            Current Location
 
-                                        Current Location
+                                        </small>
 
-                                    </small>
-
-                                </div>
-
-                            </div>
-
-
-
-                            <!-- STEP -->
-
-                            <div class="d-flex gap-3">
-
-                                <div>
-
-                                    <div class="border border-3 border-secondary rounded-circle"
-                                         style="width:16px;height:16px;"></div>
+                                    </div>
 
                                 </div>
 
-                                <div>
 
-                                    <h5 class="text-secondary mb-1"
-                                        style="font-size:16px;">
 
-                                        Arrival Destination
+                                <!-- STEP -->
 
-                                    </h5>
+                                <div class="d-flex gap-3">
 
-                                    <small class="text-secondary small-text">
+                                    <div>
 
-                                        Estimated: Oct 24
+                                        <div class="border border-3 border-secondary rounded-circle"
+                                            style="width:16px;height:16px;"></div>
 
-                                    </small>
+                                    </div>
+
+                                    <div>
+
+                                        <h5 class="text-secondary mb-1" style="font-size:16px;">
+
+                                            Arrival Destination
+
+                                        </h5>
+
+                                        <small class="text-secondary small-text">
+
+                                            Estimated: Oct 24
+
+                                        </small>
+
+                                    </div>
 
                                 </div>
 
                             </div>
 
-                        </div>
+
+
+                            <!-- MAP -->
+
+                            <div class="d-flex flex-column justify-content-center align-items-center h-100 text-center">
+
+                                <i class="bi bi-geo-alt text-secondary-subtle" style="font-size:82px;"></i>
+
+                                <h2 class="text-secondary-subtle mt-3" style="font-size:24px;">
+
+                                    Interactive Map Visualization
+
+                                </h2>
+
+                                <p class="text-secondary-subtle" style="max-width:650px;font-size:13px;">
+
+                                    Production environment would render
+                                    Mapbox or Google Maps tracking here.
+
+                                </p>
+
+                            </div>
 
 
 
-                        <!-- MAP -->
+                            <!-- BUTTONS -->
 
-                        <div class="d-flex flex-column justify-content-center align-items-center h-100 text-center">
+                            <div class="position-absolute bottom-0 end-0 p-4 d-flex gap-3">
 
-                            <i class="bi bi-geo-alt text-secondary-subtle"
-                               style="font-size:82px;"></i>
+                                <button class="btn btn-light border rounded-3 px-3 py-2 small-text">
 
-                            <h2 class="text-secondary-subtle mt-3"
-                                style="font-size:24px;">
+                                    Zoom In
 
-                                Interactive Map Visualization
+                                </button>
 
-                            </h2>
+                                <button class="btn btn-light border rounded-3 px-3 py-2 small-text">
 
-                            <p class="text-secondary-subtle"
-                               style="max-width:650px;font-size:13px;">
+                                    Zoom Out
 
-                                Production environment would render
-                                Mapbox or Google Maps tracking here.
+                                </button>
 
-                            </p>
-
-                        </div>
-
-
-
-                        <!-- BUTTONS -->
-
-                        <div class="position-absolute bottom-0 end-0 p-4 d-flex gap-3">
-
-                            <button class="btn btn-light border rounded-3 px-3 py-2 small-text">
-
-                                Zoom In
-
-                            </button>
-
-                            <button class="btn btn-light border rounded-3 px-3 py-2 small-text">
-
-                                Zoom Out
-
-                            </button>
+                            </div>
 
                         </div>
 
@@ -846,7 +859,6 @@ body{
 
     </div>
 
-</div>
-
 </body>
+
 </html>

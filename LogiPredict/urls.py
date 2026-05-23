@@ -25,4 +25,6 @@ urlpatterns = [
     path('analytics/',include('analytics.urls')),
     path('alerts/', include('alerts.urls')),
     path('tracking/', include('tracking.urls')),
+ 
+
 ]
