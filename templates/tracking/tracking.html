@@ -1,864 +1,720 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>LogiPredict Tracking</title>
-
-    <!-- BOOTSTRAP -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- BOOTSTRAP ICONS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
     <style>
-        /* ================= BODY ================= */
-
-        body {
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            background: #f4f7fb;
-            font-family: Inter, sans-serif;
-        }
-
-
-
-        /* ================= SIDEBAR ================= */
-
-        .sidebar {
-            width: 240px;
-            min-width: 240px;
-            height: 100vh;
-            background: #061238;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            padding: 22px 18px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-
-
-        /* ================= CONTENT ================= */
-
-        .content-area {
-            margin-left: 240px;
-            width: calc(100% - 240px);
-            min-height: 100vh;
-        }
-
-
-
-        /* ================= LOGO ================= */
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .logo-icon {
-            font-size: 22px;
-            color: #2563ff;
-        }
-
-        .logo-text {
-            font-size: 20px;
-            font-weight: 700;
-            color: #2563ff;
-        }
-
-
-
-        /* ================= MENU ================= */
-
-        .sidebar-menu {
-            gap: 6px;
-        }
-
-
-
-        /* ================= LINKS ================= */
-
-        .sidebar-link {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            color: #d1d5db !important;
-            text-decoration: none;
-            padding: 12px 16px;
-            border-radius: 14px;
-            transition: 0.2s;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        .sidebar-link i {
-            font-size: 16px;
-        }
-
-        .sidebar-link:hover {
-            background: #102454;
-            color: white !important;
-        }
-
-
-
-        /* ================= ACTIVE ================= */
-
-        .active-menu {
-            background: #102454;
-            color: white !important;
-        }
-
-
-
-        /* ================= PROFILE ================= */
-
-        .sidebar-bottom {
-            margin-top: 20px;
-        }
-
-        .profile-box {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-        }
-
-        .profile-circle {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: #162754;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .profile-name {
-            color: white;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .profile-role {
-            color: #94a3b8;
-            font-size: 11px;
-        }
-
-
-
-        /* ================= TOPBAR ================= */
-
-        .topbar {
-            height: 80px;
-            background: white;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 0 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-
-
-        /* ================= SEARCH ================= */
-
-        .search-box {
-            width: 420px;
-            height: 44px;
-            background: white;
-            border: 1px solid #dbe2ea;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            padding: 0 14px;
-        }
-
-        .search-box input {
-            border: none;
-            outline: none;
-            background: transparent;
-            width: 100%;
-            margin-left: 10px;
-            font-size: 13px;
-        }
-
-
-
-        /* ================= AI STATUS ================= */
-
-        .ai-status {
-            background: #ebfff4;
-            border: 1px solid #b7ebd2;
-            border-radius: 12px;
-            padding: 9px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .ai-dot {
-            width: 8px;
-            height: 8px;
-            background: #22c55e;
-            border-radius: 50%;
-        }
-
-
-
-        /* ================= PAGE ================= */
-
-        .page-wrapper {
-            padding: 28px;
-        }
-
-
-
-        /* ================= HEADER ================= */
-
-        .page-title {
-            font-size: 34px;
-            font-weight: 700;
-            color: #0f172a;
-        }
-
-        .page-subtitle {
-            font-size: 15px;
-            color: #64748b;
-        }
-
-
-
-        /* ================= CARDS ================= */
-
-        .card {
-            border: none !important;
-            border-radius: 22px !important;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04) !important;
-        }
-
-
-
-        /* ================= SMALL TEXT ================= */
-
-        .small-text {
-            font-size: 13px;
-        }
-
-        .tiny-text {
-            font-size: 11px;
-        }
-
-
-
-        /* ================= SCROLL ================= */
-
-        ::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
+        * { box-sizing:border-box; }
+        body { margin:0; padding:0; background:#f4f7fb; font-family:Inter,sans-serif; overflow-x:hidden; }
+        .sidebar { width:240px; height:100vh; background:#061238; position:fixed; top:0; left:0; z-index:1000; padding:22px 18px; display:flex; flex-direction:column; justify-content:space-between; }
+        .content-area { margin-left:240px; width:calc(100% - 240px); min-height:100vh; }
+        .logo-text { font-size:20px; font-weight:700; color:#2563ff; }
+        .sidebar-link { display:flex; align-items:center; gap:12px; color:#d1d5db !important; text-decoration:none; padding:11px 14px; border-radius:12px; font-size:15px; font-weight:500; transition:0.2s; }
+        .sidebar-link:hover,.active-menu { background:#102454; color:white !important; }
+        .profile-circle { width:40px; height:40px; border-radius:50%; background:#162754; display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:13px; }
+        .topbar { height:76px; background:white; border-bottom:1px solid #e5e7eb; padding:0 28px; display:flex; align-items:center; justify-content:space-between; }
+        .search-box { width:400px; height:42px; background:#f8fafc; border:1px solid #dbe2ea; border-radius:12px; display:flex; align-items:center; padding:0 14px; }
+        .search-box input { border:none; outline:none; background:transparent; width:100%; margin-left:8px; font-size:13px; }
+        .ai-badge { background:#ebfff4; border:1px solid #b7ebd2; border-radius:10px; padding:8px 14px; display:flex; align-items:center; gap:7px; }
+        .ai-dot { width:7px; height:7px; background:#22c55e; border-radius:50%; }
+        .page-wrap { padding:24px 28px; }
+        .page-title { font-size:32px; font-weight:700; color:#0f172a; }
+        .page-sub { font-size:14px; color:#64748b; }
+        .ship-list { height:680px; overflow-y:auto; padding-right:4px; }
+        .ship-list::-webkit-scrollbar { width:4px; }
+        .ship-list::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4px; }
+        .ship-card { background:white; border-radius:16px; padding:18px; margin-bottom:12px; border:2px solid transparent; text-decoration:none; display:block; color:inherit; box-shadow:0 1px 6px rgba(0,0,0,0.05); transition:0.2s; }
+        .ship-card:hover { border-color:#93c5fd; color:inherit; }
+        .ship-card.selected { border-color:#2563eb; background:#eff6ff; }
+        .map-panel { background:white; border-radius:20px; box-shadow:0 2px 12px rgba(0,0,0,0.06); overflow:hidden; height:680px; position:relative; }
+        #map { width:100%; height:100%; display:block; }
+        .timeline-overlay { position:absolute; top:16px; left:16px; z-index:100; background:rgba(255,255,255,0.97); border-radius:16px; padding:20px 22px; width:270px; box-shadow:0 4px 20px rgba(0,0,0,0.13); }
+        .tl-title { font-size:14px; font-weight:700; color:#0f172a; margin-bottom:16px; }
+        .tl-step { display:flex; gap:12px; margin-bottom:4px; }
+        .tl-dot-blue { width:13px; height:13px; background:#2563eb; border-radius:50%; flex-shrink:0; margin-top:3px; }
+        .tl-dot-light { width:13px; height:13px; background:#bfdbfe; border-radius:50%; flex-shrink:0; margin-top:3px; }
+        .tl-dot-empty { width:13px; height:13px; border:2px solid #cbd5e1; border-radius:50%; flex-shrink:0; margin-top:3px; }
+        .tl-line { width:2px; height:36px; background:#dbeafe; margin-left:5px; }
+        .tl-label { font-size:13px; font-weight:600; color:#0f172a; }
+        .tl-sub { font-size:11px; color:#94a3b8; margin-top:2px; }
+        .tl-active { font-size:13px; font-weight:600; color:#2563eb; }
+        .weather-overlay { position:absolute; bottom:16px; left:16px; z-index:100; background:rgba(255,255,255,0.97); border-radius:12px; padding:12px 16px; box-shadow:0 4px 16px rgba(0,0,0,0.10); min-width:210px; }
+        .w-title { font-size:11px; font-weight:700; color:#374151; margin-bottom:8px; }
+        .w-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+        .w-label { font-size:11px; color:#94a3b8; }
+        .w-val { font-size:12px; font-weight:600; color:#0f172a; }
+        .shipid-overlay { position:absolute; top:16px; right:16px; z-index:100; background:rgba(255,255,255,0.97); border-radius:12px; padding:12px 16px; box-shadow:0 4px 16px rgba(0,0,0,0.10); text-align:right; }
+        .rbadge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+        .rb-low { background:#dcfce7; color:#16a34a; }
+        .rb-medium { background:#fef9c3; color:#ca8a04; }
+        .rb-high { background:#fee2e2; color:#dc2626; }
+        .rb-critical { background:#fce7f3; color:#9d174d; }
+        .no-map { width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#94a3b8; text-align:center; padding:40px; }
     </style>
-
 </head>
-
 <body>
 
-    <!-- ================= SIDEBAR ================= -->
-
-    <div class="sidebar">
-
-        <!-- TOP -->
-
-        <div>
-
-            <!-- LOGO -->
-
-            <div class="logo-section">
-
-                <i class="bi bi-truck logo-icon"></i>
-
-                <span class="logo-text">
-                    LogiPredict
-                </span>
-
-            </div>
-
-
-
-            <!-- MENU -->
-
-            <ul class="nav flex-column sidebar-menu">
-
-                <!-- DASHBOARD -->
-
-                <li class="nav-item">
-
-                    <a href="{% url 'dashboard' %}" class="nav-link sidebar-link">
-
-                        <i class="bi bi-grid"></i>
-
-                        <span>Dashboard</span>
-
-                    </a>
-
-                </li>
-
-
-
-                <!-- SHIPMENTS -->
-
-                <li class="nav-item">
-
-                    <a href="{% url 'shipment' %}" class="nav-link sidebar-link">
-
-                        <i class="bi bi-box-seam"></i>
-
-                        <span>Shipments</span>
-
-                    </a>
-
-                </li>
-
-
-
-                <!-- PREDICTIONS -->
-
-                <li class="nav-item">
-
-                    <a href="{% url 'prediction' %}" class="nav-link sidebar-link">
-
-                        <i class="bi bi-cpu"></i>
-
-                        <span>Predictions</span>
-
-                    </a>
-
-                </li>
-
-
-
-                <!-- TRACKING -->
-
-                <li class="nav-item">
-
-                    <a href="{% url 'tracking' %}" class="nav-link sidebar-link active-menu">
-
-                        <i class="bi bi-send"></i>
-
-                        <span>Tracking</span>
-
-                    </a>
-
-                </li>
-
-
-
-                <!-- ANALYTICS -->
-
-                <li class="nav-item">
-
-                    <a href="{% url 'analytics' %}" class="nav-link sidebar-link">
-
-                        <i class="bi bi-bar-chart"></i>
-
-                        <span>Analytics</span>
-
-                    </a>
-
-                </li>
-
-
-
-                <!-- ALERTS -->
-
-                <li class="nav-item">
-
-                    <a href="{% url 'alerts' %}" class="nav-link sidebar-link">
-
-                        <i class="bi bi-bell"></i>
-
-                        <span>Alerts</span>
-
-                    </a>
-
-                </li>
-
-            </ul>
-
+<div class="sidebar">
+    <div>
+        <div class="d-flex align-items-center gap-2 mb-4">
+            <i class="bi bi-truck" style="font-size:22px;color:#2563ff;"></i>
+            <span class="logo-text">LogiPredict</span>
         </div>
-
-
-
-        <!-- BOTTOM -->
-
-        <div class="sidebar-bottom">
-
-            <!-- PROFILE -->
-
-            <div class="profile-box">
-
-                <div class="profile-circle">
-                    JD
-                </div>
-
-                <div>
-
-                    <div class="profile-name">
-                        J. Director
-                    </div>
-
-                    <div class="profile-role">
-                        Logistics Dir.
-                    </div>
-
-                </div>
-
+        <ul class="nav flex-column" style="gap:4px;">
+            <li><a href="{% url 'dashboard' %}" class="nav-link sidebar-link"><i class="bi bi-grid"></i><span>Dashboard</span></a></li>
+            <li><a href="{% url 'shipment' %}" class="nav-link sidebar-link"><i class="bi bi-box-seam"></i><span>Shipments</span></a></li>
+            <li><a href="{% url 'prediction' %}" class="nav-link sidebar-link"><i class="bi bi-cpu"></i><span>Predictions</span></a></li>
+            <li><a href="{% url 'tracking' %}" class="nav-link sidebar-link active-menu"><i class="bi bi-send"></i><span>Tracking</span></a></li>
+            <li><a href="{% url 'analytics' %}" class="nav-link sidebar-link"><i class="bi bi-bar-chart"></i><span>Analytics</span></a></li>
+            <li><a href="{% url 'alerts' %}" class="nav-link sidebar-link"><i class="bi bi-bell"></i><span>Alerts</span></a></li>
+        </ul>
+    </div>
+    <div>
+        <div class="d-flex align-items-center gap-2 px-2 mb-3">
+            <div class="profile-circle">JD</div>
+            <div>
+                <div style="color:white;font-size:12px;font-weight:600;">J. Director</div>
+                <div style="color:#94a3b8;font-size:10px;">Logistics Dir.</div>
             </div>
-
-
-
-            <!-- LOGOUT -->
-
-            <a href="#" class="nav-link sidebar-link mt-2">
-
-                <i class="bi bi-box-arrow-right"></i>
-
-                <span>Logout</span>
-
-            </a>
-
         </div>
+        <a href="#" class="nav-link sidebar-link"><i class="bi bi-box-arrow-right"></i><span>Logout</span></a>
+    </div>
+</div>
 
+<div class="content-area">
+    <div class="topbar">
+        <div class="search-box">
+            <i class="bi bi-search text-secondary" style="font-size:14px;"></i>
+            <input type="text" placeholder="Search shipments...">
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <div class="ai-badge">
+                <div class="ai-dot"></div>
+                <span style="font-size:13px;font-weight:600;color:#16a34a;">AI Online</span>
+            </div>
+            <div class="position-relative">
+                <i class="bi bi-bell text-secondary" style="font-size:18px;"></i>
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+            </div>
+        </div>
     </div>
 
-
-
-    <!-- ================= CONTENT AREA ================= -->
-
-    <div class="content-area">
-
-        <!-- TOPBAR -->
-
-        <div class="topbar">
-
-            <!-- SEARCH -->
-
-            <div class="search-box">
-
-                <i class="bi bi-search text-secondary"></i>
-
-                <input type="text" placeholder="Search shipments...">
-
+    <div class="page-wrap">
+        <div class="mb-4 d-flex align-items-center gap-3">
+            <i class="bi bi-send text-primary" style="font-size:30px;"></i>
+            <div>
+                <div class="page-title">Live Tracking</div>
+                <div class="page-sub">Real-time location monitoring and route tracking.</div>
             </div>
-
-
-
-            <!-- RIGHT -->
-
-            <div class="d-flex align-items-center gap-3">
-
-                <!-- AI STATUS -->
-
-                <div class="ai-status">
-
-                    <div class="ai-dot"></div>
-
-                    <span class="fw-semibold text-success small-text">
-                        AI Online
-                    </span>
-
-                </div>
-
-
-
-                <!-- NOTIFICATION -->
-
-                <div class="position-relative">
-
-                    <i class="bi bi-bell text-secondary" style="font-size:18px;"></i>
-
-                    <span
-                        class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
-
-                </div>
-
-            </div>
-
         </div>
 
+        <div class="row g-4">
 
-
-        <!-- PAGE -->
-
-        <div class="page-wrapper">
-
-            <!-- HEADER -->
-
-            <div class="mb-4">
-
-                <div class="d-flex align-items-center gap-3 mb-1">
-
-                    <i class="bi bi-send text-primary" style="font-size:32px;"></i>
-
-                    <h1 class="page-title m-0">
-                        Live Tracking
-                    </h1>
-
-                </div>
-
-                <p class="page-subtitle mb-0">
-
-                    Real-time location monitoring and route tracking.
-
-                </p>
-
-            </div>
-
-
-
-            <!-- MAIN GRID -->
-
-            <div class="row g-4">
-
-                <!-- LEFT -->
-
-                <div class="col-lg-4">
-
-                    <div style="height:760px;overflow-y:auto;padding-right:6px;">
-
-                        <!-- CARD -->
-
+            <!-- LEFT: Shipment Cards -->
+            <div class="col-lg-4">
+                <div class="ship-list">
+                    {% if shipments %}
                         {% for shipment in shipments %}
-
-                        <div class="card mb-4">
-
-                            <div class="card-body p-4">
-
-                                <!-- TOP -->
-
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-
-                                    <h4 class="fw-bold mb-0" style="font-size:18px;">
-
-                                        {{ shipment.shipment_id }}
-
-                                    </h4>
-
-                                    {% if shipment.status == "Delayed" %}
-
-                                    <span class="badge bg-danger px-3 py-2" style="font-size:11px;">
-
-                                        DELAYED
-
-                                    </span>
-
-                                    {% elif shipment.status == "In Transit" %}
-
-                                    <span class="badge bg-primary px-3 py-2" style="font-size:11px;">
-
-                                        IN TRANSIT
-
-                                    </span>
-
-                                    {% else %}
-
-                                    <span class="badge bg-success px-3 py-2" style="font-size:11px;">
-
-                                        {{ shipment.status }}
-
-                                    </span>
-
-                                    {% endif %}
-
-                                </div>
-
-                                <!-- CARRIER -->
-
-                                <p class="text-secondary mb-4 small-text">
-
-                                    Carrier: {{ shipment.carrier }}
-
-                                </p>
-
-                                <!-- ROUTE -->
-
-                                <div class="d-flex justify-content-between align-items-center">
-
-                                    <div>
-
-                                        <small class="text-secondary d-block tiny-text">
-                                            Origin
-                                        </small>
-
-                                        <h5 class="fw-semibold m-0" style="font-size:15px;">
-
-                                            {{ shipment.origin }}
-
-                                        </h5>
-
-                                    </div>
-
-                                    <i class="bi bi-send text-secondary" style="font-size:18px;"></i>
-
-                                    <div class="text-end">
-
-                                        <small class="text-secondary d-block tiny-text">
-                                            Destination
-                                        </small>
-
-                                        <h5 class="fw-semibold m-0" style="font-size:15px;">
-
-                                            {{ shipment.destination }}
-
-                                        </h5>
-
-                                    </div>
-
-                                </div>
-
-                                <hr>
-
-                                <!-- ETA -->
-
-                                <div class="d-flex align-items-center gap-2 mb-3">
-
-                                    <i class="bi bi-truck text-primary"></i>
-
-                                    <small class="text-secondary small-text">
-                                        ETA:
-                                    </small>
-
-                                    <span class="fw-bold small-text">
-
-                                        {{ shipment.eta }}
-
-                                    </span>
-
-                                </div>
-
-                                <!-- ALERT -->
-
-                                {% if shipment.status == "Delayed" %}
-
-                                <div class="bg-danger-subtle rounded-4 p-3 text-center">
-
-                                    <small class="text-danger small-text">
-
-                                        <i class="bi bi-exclamation-circle me-1"></i>
-
-                                        Delay detected on current route.
-
-                                    </small>
-
-                                </div>
-
+                        <a href="?shipment_id={{ shipment.shipment_id }}"
+                           class="ship-card {% if active_shipment and active_shipment.shipment_id == shipment.shipment_id %}selected{% endif %}">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span style="font-size:16px;font-weight:700;">{{ shipment.shipment_id }}</span>
+                                {% if shipment.status == "In Transit" %}
+                                    <span class="badge bg-primary" style="font-size:10px;padding:5px 10px;">IN TRANSIT</span>
+                                {% elif shipment.status == "At Risk" %}
+                                    <span class="badge bg-danger" style="font-size:10px;padding:5px 10px;">AT RISK</span>
+                                {% elif shipment.status == "Delayed" %}
+                                    <span class="badge bg-warning text-dark" style="font-size:10px;padding:5px 10px;">DELAYED</span>
+                                {% elif shipment.status == "Delivered" %}
+                                    <span class="badge bg-success" style="font-size:10px;padding:5px 10px;">DELIVERED</span>
+                                {% else %}
+                                    <span class="badge bg-secondary" style="font-size:10px;padding:5px 10px;">{{ shipment.status|upper }}</span>
                                 {% endif %}
-
                             </div>
-
-                        </div>
-
+                            <div style="font-size:12px;color:#94a3b8;margin-bottom:10px;">Carrier: {{ shipment.carrier }}</div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div style="font-size:10px;color:#94a3b8;">ORIGIN</div>
+                                    <div style="font-size:14px;font-weight:600;">{{ shipment.origin }}</div>
+                                </div>
+                                <i class="bi bi-arrow-right" style="color:#cbd5e1;"></i>
+                                <div class="text-end">
+                                    <div style="font-size:10px;color:#94a3b8;">DESTINATION</div>
+                                    <div style="font-size:14px;font-weight:600;">{{ shipment.destination }}</div>
+                                </div>
+                            </div>
+                            <hr style="margin:10px 0;border-color:#f1f5f9;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div style="font-size:12px;color:#64748b;">
+                                    <i class="bi bi-calendar3 me-1"></i>
+                                    ETA: <strong>{{ shipment.eta|date:"M d, Y" }}</strong>
+                                </div>
+                                {% if shipment.distance_km %}
+                                <div style="font-size:11px;color:#94a3b8;">{{ shipment.distance_km|floatformat:0 }} km</div>
+                                {% endif %}
+                            </div>
+                            {% if shipment.risk %}
+                            <div class="mt-2">
+                                <span class="rbadge {% if shipment.risk == 'Low' %}rb-low{% elif shipment.risk == 'Medium' %}rb-medium{% elif shipment.risk == 'High' %}rb-high{% else %}rb-critical{% endif %}">
+                                    {{ shipment.risk }} Risk
+                                </span>
+                                {% if shipment.risk_score %}
+                                <span style="font-size:11px;color:#94a3b8;margin-left:6px;">{{ shipment.risk_score|floatformat:0 }}% delay</span>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </a>
                         {% endfor %}
-
-                    </div>
-
+                    {% else %}
+                        <div style="text-align:center;padding:60px 20px;color:#94a3b8;">
+                            <i class="bi bi-inbox" style="font-size:40px;"></i>
+                            <p style="margin-top:12px;font-size:14px;">No shipments yet.<br>
+                            <a href="{% url 'add_shipment' %}" style="color:#2563eb;">Create one</a> to start.</p>
+                        </div>
+                    {% endif %}
                 </div>
+            </div>
 
+            <!-- RIGHT: Map Panel -->
+            <div class="col-lg-8">
+                <div class="map-panel">
 
+                    {% if active_shipment %}
 
-                <!-- RIGHT -->
+                        <!-- THE MAP — Google Maps renders here -->
+                        <div id="map"></div>
 
-                <div class="col-lg-8">
-
-                    <div class="card h-100">
-
-                        <div class="card-body p-4 position-relative">
-
-                            <!-- TRACKING BOX -->
-
-                            <div class="bg-light rounded-4 p-4 shadow-sm" style="
-                             width:330px;
-                             position:absolute;
-                             top:24px;
-                             left:24px;
-                             z-index:5;
-                             ">
-
-                                <h4 class="fw-bold mb-4" style="font-size:18px;">
-
-                                    Tracking Active Route
-
-                                </h4>
-
-
-
-                                <!-- STEP -->
-
-                                <div class="d-flex gap-3 mb-4">
-
-                                    <div>
-
-                                        <div class="bg-primary rounded-circle" style="width:16px;height:16px;"></div>
-
-                                        <div class="bg-primary-subtle mx-auto" style="width:3px;height:65px;"></div>
-
-                                    </div>
-
-                                    <div>
-
-                                        <h5 class="mb-1" style="font-size:16px;">
-
-                                            Departed Origin
-
-                                        </h5>
-
-                                        <small class="text-secondary small-text">
-
-                                            Oct 15, 08:00 AM
-
-                                        </small>
-
-                                    </div>
-
-                                </div>
-
-
-
-                                <!-- STEP -->
-
-                                <div class="d-flex gap-3 mb-4">
-
-                                    <div>
-
-                                        <div class="bg-primary-subtle rounded-circle" style="width:16px;height:16px;">
-                                        </div>
-
-                                    </div>
-
-                                    <div>
-
-                                        <h5 class="text-primary mb-1" style="font-size:16px;">
-
-                                            In Transit - Midpoint
-
-                                        </h5>
-
-                                        <small class="text-secondary small-text">
-
-                                            Current Location
-
-                                        </small>
-
-                                    </div>
-
-                                </div>
-
-
-
-                                <!-- STEP -->
-
-                                <div class="d-flex gap-3">
-
-                                    <div>
-
-                                        <div class="border border-3 border-secondary rounded-circle"
-                                            style="width:16px;height:16px;"></div>
-
-                                    </div>
-
-                                    <div>
-
-                                        <h5 class="text-secondary mb-1" style="font-size:16px;">
-
-                                            Arrival Destination
-
-                                        </h5>
-
-                                        <small class="text-secondary small-text">
-
-                                            Estimated: Oct 24
-
-                                        </small>
-
-                                    </div>
-
-                                </div>
-
+                        <!-- Timeline Overlay (top-left) -->
+                        <div class="timeline-overlay">
+                            <div class="tl-title">
+                                <i class="bi bi-send text-primary me-2"></i>
+                                {{ active_shipment.shipment_id }}
                             </div>
-
-
-
-                            <!-- MAP -->
-
-                            <div class="d-flex flex-column justify-content-center align-items-center h-100 text-center">
-
-                                <i class="bi bi-geo-alt text-secondary-subtle" style="font-size:82px;"></i>
-
-                                <h2 class="text-secondary-subtle mt-3" style="font-size:24px;">
-
-                                    Interactive Map Visualization
-
-                                </h2>
-
-                                <p class="text-secondary-subtle" style="max-width:650px;font-size:13px;">
-
-                                    Production environment would render
-                                    Mapbox or Google Maps tracking here.
-
-                                </p>
-
+                            <div class="tl-step">
+                                <div><div class="tl-dot-blue"></div><div class="tl-line"></div></div>
+                                <div>
+                                    <div class="tl-label">Departed Origin</div>
+                                    <div class="tl-sub">{{ active_shipment.origin }} · {{ active_shipment.departure|date:"M d, H:i" }}</div>
+                                </div>
                             </div>
-
-
-
-                            <!-- BUTTONS -->
-
-                            <div class="position-absolute bottom-0 end-0 p-4 d-flex gap-3">
-
-                                <button class="btn btn-light border rounded-3 px-3 py-2 small-text">
-
-                                    Zoom In
-
-                                </button>
-
-                                <button class="btn btn-light border rounded-3 px-3 py-2 small-text">
-
-                                    Zoom Out
-
-                                </button>
-
+                            <div class="tl-step">
+                                <div><div class="tl-dot-light"></div><div class="tl-line"></div></div>
+                                <div>
+                                    <div class="tl-active">In Transit — Midpoint</div>
+                                    <div class="tl-sub">Current Location</div>
+                                    {% if active_shipment.distance_km %}<div class="tl-sub">{{ active_shipment.distance_km|floatformat:0 }} km total</div>{% endif %}
+                                </div>
                             </div>
-
+                            <div class="tl-step">
+                                <div><div class="tl-dot-empty"></div></div>
+                                <div>
+                                    <div class="tl-label" style="color:#94a3b8;">Arrival Destination</div>
+                                    <div class="tl-sub">{{ active_shipment.destination }} · ETA {{ active_shipment.eta|date:"M d, Y" }}</div>
+                                </div>
+                            </div>
                         </div>
 
-                    </div>
+                        <!-- Weather Overlay (bottom-left) -->
+                        {% if active_shipment.origin_weather %}
+                        <div class="weather-overlay">
+                            <div class="w-title"><i class="bi bi-cloud me-1 text-primary"></i>ROUTE CONDITIONS</div>
+                            <div class="w-row">
+                                <span class="w-label">Origin ({{ active_shipment.origin }})</span>
+                                <span class="w-val">{{ active_shipment.origin_weather }} {{ active_shipment.origin_temp|floatformat:1 }}°C</span>
+                            </div>
+                            {% if active_shipment.destination_weather %}
+                            <div class="w-row">
+                                <span class="w-label">Dest ({{ active_shipment.destination }})</span>
+                                <span class="w-val">{{ active_shipment.destination_weather }} {{ active_shipment.destination_temp|floatformat:1 }}°C</span>
+                            </div>
+                            {% endif %}
+                            <div class="w-row" style="margin-top:6px;">
+                                <span class="w-label">AI Risk</span>
+                                <span class="rbadge {% if active_shipment.risk == 'Low' %}rb-low{% elif active_shipment.risk == 'Medium' %}rb-medium{% elif active_shipment.risk == 'High' %}rb-high{% else %}rb-critical{% endif %}">{{ active_shipment.risk }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Shipment ID Overlay (top-right) -->
+                        <div class="shipid-overlay">
+                            <div style="font-size:13px;font-weight:700;color:#0f172a;">{{ active_shipment.shipment_id }}</div>
+                            <div style="font-size:11px;color:#94a3b8;">{{ active_shipment.carrier }}</div>
+                        </div>
+
+                    {% else %}
+                        <div class="no-map">
+                            <i class="bi bi-map" style="font-size:56px;margin-bottom:16px;"></i>
+                            <h5 style="font-weight:700;">No Shipments Yet</h5>
+                            <p style="font-size:13px;">Create a shipment to see live route tracking.</p>
+                            <a href="{% url 'add_shipment' %}" style="background:#2563eb;color:white;padding:10px 24px;border-radius:12px;text-decoration:none;font-size:13px;font-weight:600;">+ Create Shipment</a>
+                        </div>
+                    {% endif %}
 
                 </div>
-
             </div>
 
         </div>
-
     </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+{% if active_shipment %}
+<script>
+    // Declare global variables first without references to 'google'
+    let currentPos = null;
+    let cmInfoWindow = null;
+    let activeInfoWindow = null;
+
+    const ORIGIN_LAT  = {{ active_shipment.origin_lat|default:0.0 }};
+    const ORIGIN_LNG  = {{ active_shipment.origin_lng|default:0.0 }};
+    const DEST_LAT    = {{ active_shipment.dest_lat|default:0.0 }};
+    const DEST_LNG    = {{ active_shipment.dest_lng|default:0.0 }};
+    const CURRENT_LAT = {{ active_shipment.current_lat|default:0.0 }};
+    const CURRENT_LNG = {{ active_shipment.current_lng|default:0.0 }};
+    const ORIGIN_NAME = "{{ active_shipment.origin }}";
+    const DEST_NAME   = "{{ active_shipment.destination }}";
+    const SHIP_ID     = "{{ active_shipment.shipment_id }}";
+
+    function initMap() {
+        // Geocoder defined safely after Google script loaded
+        const geocoder = new google.maps.Geocoder();
+
+        function getLatLng(address, defaultLat, defaultLng) {
+            return new Promise((resolve) => {
+                if (defaultLat !== 0 && defaultLng !== 0) {
+                    resolve(new google.maps.LatLng(defaultLat, defaultLng));
+                    return;
+                }
+                geocoder.geocode({ address: address }, (results, status) => {
+                    if (status === 'OK' && results[0]) {
+                        resolve(results[0].geometry.location);
+                    } else {
+                        const fallbacks = {
+                            "mumbai": { lat: 19.0760, lng: 72.8777 },
+                            "delhi": { lat: 28.7041, lng: 77.1025 },
+                            "dehli": { lat: 28.7041, lng: 77.1025 },
+                            "bangalore": { lat: 12.9716, lng: 77.5946 },
+                            "bengaluru": { lat: 12.9716, lng: 77.5946 },
+                            "chennai": { lat: 13.0827, lng: 80.2707 },
+                            "kolkata": { lat: 22.5726, lng: 88.3639 },
+                            "hyderabad": { lat: 17.3850, lng: 78.4867 },
+                            "pune": { lat: 18.5204, lng: 73.8567 },
+                            "ahmedabad": { lat: 23.0225, lng: 72.5714 }
+                        };
+                        const key = address.toLowerCase().trim();
+                        if (fallbacks[key]) {
+                            resolve(new google.maps.LatLng(fallbacks[key].lat, fallbacks[key].lng));
+                        } else {
+                            resolve(new google.maps.LatLng(20.5937, 78.9629)); // Center of India
+                        }
+                    }
+                });
+            });
+        }
+
+        Promise.all([
+            getLatLng(ORIGIN_NAME, ORIGIN_LAT, ORIGIN_LNG),
+            getLatLng(DEST_NAME, DEST_LAT, DEST_LNG)
+        ]).then((resolvedCoords) => {
+            const resolvedOrigin = resolvedCoords[0];
+            const resolvedDest = resolvedCoords[1];
+
+            let resolvedCurrent = null;
+            if (CURRENT_LAT !== 0 && CURRENT_LNG !== 0) {
+                resolvedCurrent = new google.maps.LatLng(CURRENT_LAT, CURRENT_LNG);
+            } else {
+                // Synthesize position dynamically based on 45% midpoint along resolved route
+                const progressFraction = 0.45;
+                const lat = resolvedOrigin.lat() + (resolvedDest.lat() - resolvedOrigin.lat()) * progressFraction;
+                const lng = resolvedOrigin.lng() + (resolvedDest.lng() - resolvedOrigin.lng()) * progressFraction;
+                resolvedCurrent = new google.maps.LatLng(lat, lng);
+            }
+
+            drawMap(resolvedOrigin, resolvedDest, resolvedCurrent);
+        });
+    }
+
+    function drawMap(resolvedOrigin, resolvedDest, resolvedCurrent) {
+        currentPos = { lat: resolvedCurrent.lat(), lng: resolvedCurrent.lng() };
+
+        // Declare high-fidelity icons safely here since google is defined
+        const originIcon = {
+            url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                    <circle cx="16" cy="16" r="14" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-width="1.5"/>
+                    <circle cx="16" cy="16" r="8" fill="#10b981" stroke="#ffffff" stroke-width="2"/>
+                    <circle cx="16" cy="16" r="3" fill="#ffffff"/>
+                </svg>
+            `),
+            scaledSize: new google.maps.Size(32, 32),
+            anchor: new google.maps.Point(16, 16)
+        };
+
+        const destIcon = {
+            url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                    <circle cx="16" cy="16" r="14" fill="#ef4444" fill-opacity="0.15" stroke="#ef4444" stroke-width="1.5"/>
+                    <circle cx="16" cy="16" r="8" fill="#ef4444" stroke="#ffffff" stroke-width="2"/>
+                    <circle cx="16" cy="16" r="3" fill="#ffffff"/>
+                </svg>
+            `),
+            scaledSize: new google.maps.Size(32, 32),
+            anchor: new google.maps.Point(16, 16)
+        };
+
+        const pulseIcons = [
+            'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+                <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 42 42">
+                    <circle cx="21" cy="21" r="18" fill="#2563eb" fill-opacity="0.1" stroke="#2563eb" stroke-width="1"/>
+                    <circle cx="21" cy="21" r="11" fill="#2563eb" stroke="#ffffff" stroke-width="2"/>
+                    <path d="M14 22h1c0 .55.45 1 1 1s1-.45 1-1h4c0 .55.45 1 1 1s1-.45 1-1h1v-3l-2-2h-3v-2h-5v5h1zm7-2.5l1.35 1.5H19v-1.5h2z" fill="#ffffff" transform="scale(0.9) translate(4.5, 4)"/>
+                </svg>
+            `),
+            'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+                <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 42 42">
+                    <circle cx="21" cy="21" r="15" fill="#2563eb" fill-opacity="0.2" stroke="#2563eb" stroke-width="1.5"/>
+                    <circle cx="21" cy="21" r="11" fill="#2563eb" stroke="#ffffff" stroke-width="2"/>
+                    <path d="M14 22h1c0 .55.45 1 1 1s1-.45 1-1h4c0 .55.45 1 1 1s1-.45 1-1h1v-3l-2-2h-3v-2h-5v5h1zm7-2.5l1.35 1.5H19v-1.5h2z" fill="#ffffff" transform="scale(0.9) translate(4.5, 4)"/>
+                </svg>
+            `),
+            'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+                <svg xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 42 42">
+                    <circle cx="21" cy="21" r="12" fill="#2563eb" fill-opacity="0.3" stroke="#2563eb" stroke-width="2"/>
+                    <circle cx="21" cy="21" r="11" fill="#2563eb" stroke="#ffffff" stroke-width="2"/>
+                    <path d="M14 22h1c0 .55.45 1 1 1s1-.45 1-1h4c0 .55.45 1 1 1s1-.45 1-1h1v-3l-2-2h-3v-2h-5v5h1zm7-2.5l1.35 1.5H19v-1.5h2z" fill="#ffffff" transform="scale(0.9) translate(4.5, 4)"/>
+                </svg>
+            `)
+        ];
+
+        // Custom theme map styles
+        const mapStyle = [
+            { "featureType": "all", "elementType": "labels.text.fill", "stylers": [{ "color": "#4f5b66" }] },
+            { "featureType": "all", "elementType": "labels.text.stroke", "stylers": [{ "visibility": "on" }, { "color": "#ffffff" }, { "weight": 2 }] },
+            { "featureType": "administrative", "elementType": "labels.text.fill", "stylers": [{ "color": "#1f2937" }] },
+            { "featureType": "landscape", "elementType": "all", "stylers": [{ "color": "#f3f4f6" }] },
+            { "featureType": "poi", "stylers": [{ "visibility": "off" }] },
+            { "featureType": "road", "elementType": "all", "stylers": [{ "saturation": -100 }, { "lightness": 45 }] },
+            { "featureType": "road.highway", "elementType": "all", "stylers": [{ "visibility": "simplified" }] },
+            { "featureType": "road.highway", "elementType": "geometry.fill", "stylers": [{ "color": "#ffffff" }] },
+            { "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [{ "color": "#e5e7eb" }] },
+            { "featureType": "road.arterial", "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] },
+            { "featureType": "transit", "stylers": [{ "visibility": "off" }] },
+            { "featureType": "water", "elementType": "all", "stylers": [{ "color": "#dbeafe" }, { "visibility": "on" }] }
+        ];
+
+        const map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 6,
+            center: { lat: (resolvedOrigin.lat() + resolvedDest.lat()) / 2, lng: (resolvedOrigin.lng() + resolvedDest.lng()) / 2 },
+            mapTypeId: 'roadmap',
+            disableDefaultUI: true,
+            zoomControl: true,
+            zoomControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_BOTTOM
+            },
+            styles: mapStyle
+        });
+
+        // Origin Marker
+        const om = new google.maps.Marker({
+            position: resolvedOrigin,
+            map: map,
+            title: "Origin Hub: " + ORIGIN_NAME,
+            icon: originIcon
+        });
+
+        const originInfoWindow = new google.maps.InfoWindow({
+            content: `
+            <div style="font-family:'Inter',sans-serif; padding:8px 12px; min-width:180px;">
+                <div style="font-size:10px; font-weight:700; color:#10b981; text-transform:uppercase; margin-bottom:4px; letter-spacing:0.5px;">📦 Origin Hub</div>
+                <div style="font-size:13px; font-weight:700; color:#0f172a; margin-bottom:2px;">${ORIGIN_NAME}</div>
+                <div style="font-size:11px; color:#64748b;">Coords: ${resolvedOrigin.lat().toFixed(4)}, ${resolvedOrigin.lng().toFixed(4)}</div>
+                {% if active_shipment.origin_weather %}
+                <div style="font-size:11px; color:#475569; margin-top:6px; display:flex; align-items:center; gap:4px;">
+                    <i class="bi bi-cloud-sun text-primary"></i> {{ active_shipment.origin_weather }} · {{ active_shipment.origin_temp|floatformat:1 }}°C
+                </div>
+                {% endif %}
+            </div>`
+        });
+
+        om.addListener('click', () => {
+            if (activeInfoWindow) activeInfoWindow.close();
+            originInfoWindow.open(map, om);
+            activeInfoWindow = originInfoWindow;
+        });
+
+        // Destination Marker
+        const dm = new google.maps.Marker({
+            position: resolvedDest,
+            map: map,
+            title: "Destination Hub: " + DEST_NAME,
+            icon: destIcon
+        });
+
+        const destInfoWindow = new google.maps.InfoWindow({
+            content: `
+            <div style="font-family:'Inter',sans-serif; padding:8px 12px; min-width:180px;">
+                <div style="font-size:10px; font-weight:700; color:#ef4444; text-transform:uppercase; margin-bottom:4px; letter-spacing:0.5px;">🏁 Destination Hub</div>
+                <div style="font-size:13px; font-weight:700; color:#0f172a; margin-bottom:2px;">${DEST_NAME}</div>
+                <div style="font-size:11px; color:#64748b; margin-bottom:4px;">Coords: ${resolvedDest.lat().toFixed(4)}, ${resolvedDest.lng().toFixed(4)}</div>
+                <div style="font-size:11px; font-weight:600; color:#2563eb; margin-top:2px;">
+                    <i class="bi bi-calendar3 me-1"></i> ETA: {{ active_shipment.eta|date:"M d, Y" }}
+                </div>
+                {% if active_shipment.destination_weather %}
+                <div style="font-size:11px; color:#475569; margin-top:6px; display:flex; align-items:center; gap:4px;">
+                    <i class="bi bi-cloud-sun text-primary"></i> {{ active_shipment.destination_weather }} · {{ active_shipment.destination_temp|floatformat:1 }}°C
+                </div>
+                {% endif %}
+            </div>`
+        });
+
+        dm.addListener('click', () => {
+            if (activeInfoWindow) activeInfoWindow.close();
+            destInfoWindow.open(map, dm);
+            activeInfoWindow = destInfoWindow;
+        });
+
+        // Pulsing Current Location Marker
+        let cm = new google.maps.Marker({
+            position: resolvedCurrent,
+            map: map,
+            title: SHIP_ID + " Current Location",
+            icon: {
+                url: pulseIcons[0],
+                scaledSize: new google.maps.Size(42, 42),
+                anchor: new google.maps.Point(21, 21)
+            },
+            zIndex: 10
+        });
+
+        function updateCurrentInfoWindow(lat, lng) {
+            return new google.maps.InfoWindow({
+                content: `
+                <div style="font-family:'Inter',sans-serif; padding:10px 14px; min-width:210px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; gap: 8px;">
+                        <span style="font-size:10px; font-weight:700; background:#eff6ff; color:#2563eb; padding:2px 6px; border-radius:4px; letter-spacing:0.5px; text-transform:uppercase;">🚚 Live Telemetry</span>
+                        <span style="font-size:11px; font-weight:700; color:#475569;">${SHIP_ID}</span>
+                    </div>
+                    <div style="font-size:12px; color:#0f172a; margin-bottom:4px;">
+                        <strong>Carrier:</strong> {{ active_shipment.carrier }}
+                    </div>
+                    <div style="font-size:11px; color:#64748b; margin-bottom:6px;">
+                        <strong>Current Position:</strong> ${lat.toFixed(4)}, ${lng.toFixed(4)}
+                    </div>
+                    <div style="display:flex; gap:6px; margin-top:8px;">
+                        <span class="badge {% if active_shipment.risk == 'Low' %}bg-success{% elif active_shipment.risk == 'Medium' %}bg-warning text-dark{% else %}bg-danger{% endif %}" style="font-size:10px; border-radius:4px; padding:3px 6px;">
+                            {{ active_shipment.risk }} Risk
+                        </span>
+                        {% if active_shipment.risk_score %}
+                        <span style="font-size:11px; color:#2563eb; font-weight:600; align-self:center;">{{ active_shipment.risk_score|floatformat:0 }}% delay risk</span>
+                        {% endif %}
+                    </div>
+                </div>`
+            });
+        }
+
+        cmInfoWindow = updateCurrentInfoWindow(resolvedCurrent.lat(), resolvedCurrent.lng());
+        cm.addListener('click', () => {
+            if (activeInfoWindow) activeInfoWindow.close();
+            cmInfoWindow.open(map, cm);
+            activeInfoWindow = cmInfoWindow;
+        });
+
+        // Pulsing Telemetry Animation
+        let pulseIndex = 0;
+        setInterval(() => {
+            pulseIndex = (pulseIndex + 1) % pulseIcons.length;
+            cm.setIcon({
+                url: pulseIcons[pulseIndex],
+                scaledSize: new google.maps.Size(42, 42),
+                anchor: new google.maps.Point(21, 21)
+            });
+        }, 350);
+
+        // Smooth Bezier Curve fallback path calculator
+        function getBezierPath(p1, p2) {
+            const points = [];
+            const steps = 80;
+            const lat1 = p1.lat();
+            const lng1 = p1.lng();
+            const lat2 = p2.lat();
+            const lng2 = p2.lng();
+
+            const midLat = (lat1 + lat2) / 2;
+            const midLng = (lng1 + lng2) / 2;
+            const dLat = lat2 - lat1;
+            const dLng = lng2 - lng1;
+
+            const offsetScale = 0.15;
+            const offsetLat = -dLng * offsetScale;
+            const offsetLng = dLat * offsetScale;
+
+            const ctrlLat = midLat + offsetLat;
+            const ctrlLng = midLng + offsetLng;
+
+            for (let i = 0; i <= steps; i++) {
+                const t = i / steps;
+                const term1 = (1 - t) * (1 - t);
+                const term2 = 2 * (1 - t) * t;
+                const term3 = t * t;
+
+                const lat = term1 * lat1 + term2 * ctrlLat + term3 * lat2;
+                const lng = term1 * lng1 + term2 * ctrlLng + term3 * lng2;
+
+                points.push(new google.maps.LatLng(lat, lng));
+            }
+            return points;
+        }
+
+        // Draw dynamic polylines
+        function renderCustomPolylines(pathCoordinates) {
+            new google.maps.Polyline({
+                path: pathCoordinates,
+                map: map,
+                strokeColor: '#3b82f6',
+                strokeOpacity: 0.22,
+                strokeWeight: 6
+            });
+
+            new google.maps.Polyline({
+                path: pathCoordinates,
+                map: map,
+                strokeColor: '#2563eb',
+                strokeOpacity: 0.85,
+                strokeWeight: 4
+            });
+
+            const flowLine = new google.maps.Polyline({
+                path: pathCoordinates,
+                map: map,
+                strokeColor: '#3b82f6',
+                strokeOpacity: 0,
+                icons: [{
+                    icon: {
+                        path: 'M 0,-1.5 0,1.5',
+                        strokeOpacity: 0.9,
+                        scale: 3,
+                        strokeColor: '#60a5fa'
+                    },
+                    offset: '0',
+                    repeat: '18px'
+                }]
+            });
+
+            let flowCount = 0;
+            setInterval(() => {
+                flowCount = (flowCount + 1) % 200;
+                const icons = flowLine.get('icons');
+                if (icons && icons[0]) {
+                    icons[0].offset = (flowCount / 2) + '%';
+                    flowLine.set('icons', icons);
+                }
+            }, 30);
+        }
+
+        // Query Directions API
+        const ds = new google.maps.DirectionsService();
+        ds.route({
+            origin: resolvedOrigin,
+            destination: resolvedDest,
+            travelMode: google.maps.TravelMode.DRIVING
+        }, function(result, status) {
+            if (status === 'OK') {
+                const routePath = result.routes[0].overview_path;
+                renderCustomPolylines(routePath);
+            } else {
+                const curvePath = getBezierPath(resolvedOrigin, resolvedDest);
+                renderCustomPolylines(curvePath);
+            }
+        });
+
+        // Fitting bounds professionally
+        const bounds = new google.maps.LatLngBounds();
+        bounds.extend(resolvedOrigin);
+        bounds.extend(resolvedDest);
+        map.fitBounds(bounds, { top: 80, bottom: 80, left: 320, right: 80 });
+
+        // Add Elegant Custom Control Button for Fit Route
+        const fitControlDiv = document.createElement('div');
+        fitControlDiv.style.margin = '16px';
+        fitControlDiv.innerHTML = `
+            <button class="btn btn-light shadow-sm d-flex align-items-center gap-2" style="border-radius:12px; font-size:12px; font-weight:600; padding:8px 14px; border:1px solid #e2e8f0; transition:0.2s; background:white; color:#0f172a;">
+                <i class="bi bi-aspect-ratio text-primary" style="font-size:14px;"></i>
+                <span>Fit to Route</span>
+            </button>
+        `;
+        fitControlDiv.addEventListener('click', () => {
+            map.fitBounds(bounds, { top: 80, bottom: 80, left: 320, right: 80 });
+            const btn = fitControlDiv.querySelector('button');
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => btn.style.transform = 'scale(1)', 150);
+        });
+        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(fitControlDiv);
+
+        // Smooth Sliding Transition for Marker Coordinate Telemetry
+        function smoothMoveMarker(marker, targetLat, targetLng, duration = 2200) {
+            const startLat = currentPos.lat;
+            const startLng = currentPos.lng;
+            const startTime = performance.now();
+
+            function animate(time) {
+                const elapsed = time - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                const easeProgress = progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress;
+
+                const currLat = startLat + (targetLat - startLat) * easeProgress;
+                const currLng = startLng + (targetLng - startLng) * easeProgress;
+
+                const newLatLng = new google.maps.LatLng(currLat, currLng);
+                marker.setPosition(newLatLng);
+                currentPos = { lat: currLat, lng: currLng };
+
+                if (activeInfoWindow === cmInfoWindow && cmInfoWindow.getMap()) {
+                    cmInfoWindow.setPosition(newLatLng);
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        // Live telemetry updates every 30 seconds
+        setInterval(function(){
+            fetch('/shipment/api/tracking/' + SHIP_ID + '/')
+                .then(r => r.json())
+                .then(d => {
+                    if (d.current_lat && d.current_lng) {
+                        const newLat = parseFloat(d.current_lat);
+                        const newLng = parseFloat(d.current_lng);
+                        
+                        if (Math.abs(newLat - currentPos.lat) > 0.0001 || Math.abs(newLng - currentPos.lng) > 0.0001) {
+                            smoothMoveMarker(cm, newLat, newLng);
+                            
+                            const isWindowOpen = (activeInfoWindow === cmInfoWindow && cmInfoWindow.getMap());
+                            if (isWindowOpen) {
+                                cmInfoWindow.close();
+                            }
+                            cmInfoWindow = updateCurrentInfoWindow(newLat, newLng);
+                            if (isWindowOpen) {
+                                cmInfoWindow.open(map, cm);
+                                activeInfoWindow = cmInfoWindow;
+                            }
+                        }
+                    }
+                })
+                .catch(() => {});
+        }, 30000);
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_key }}&callback=initMap" async defer></script>
+{% endif %}
 
 </body>
-
 </html>

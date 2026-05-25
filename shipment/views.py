@@ -1,21 +1,65 @@
-from django.http import HttpResponse
+# shipment/views.py
+
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
-from .weather_service import get_weather
 from .forms import ShipmentForm
 from .models import Shipment
-from .models import Shipment
-
-
 from .services import predict_delay
 
+import requests
+from django.conf import settings
+
+
+# ==========================================
+# GOOGLE MAPS - GET LATITUDE & LONGITUDE
+# ==========================================
+
+def get_coordinates(city):
+
+    url = "https://maps.googleapis.com/maps/api/geocode/json"
+
+    params = {
+        "address": city,
+        "key": settings.GOOGLE_MAPS_API_KEY
+    }
+
+    response = requests.get(url, params=params)
+
+    data = response.json()
+
+    if data["status"] == "OK":
+
+        location = data["results"][0]["geometry"]["location"]
+
+        return (
+            location["lat"],
+            location["lng"]
+        )
+
+    return (0, 0)
+
+
+# ==========================================
+# SHIPMENT LIST PAGE
+# ==========================================
 
 def create_shipment(request):
-    shipments=Shipment.objects.all()
-    context={
-        'shipments':shipments
-    }
-    return render(request, 'shipment/create_shipment.html',context)
+
+    shipments = Shipment.objects.all().order_by('-created_at')
+
+    return render(
+        request,
+        'shipment/create_shipment.html',
+        {
+            'shipments': shipments
+        }
+    )
+
+
+# ==========================================
+# ADD NEW SHIPMENT
+# ==========================================
 
 def add_shipment(request):
 
@@ -25,33 +69,119 @@ def add_shipment(request):
 
         if form.is_valid():
 
-          shipment = form.save()
+            shipment = form.save(commit=False)
 
-          predict_delay(shipment)
+            # ==================================
+            # GET ORIGIN COORDINATES
+            # ==================================
 
-        return redirect('shipment')
+            origin_lat, origin_lng = get_coordinates(
+                shipment.origin
+            )
+
+            # ==================================
+            # GET DESTINATION COORDINATES
+            # ==================================
+
+            dest_lat, dest_lng = get_coordinates(
+                shipment.destination
+            )
+
+            # ==================================
+            # SAVE MAP DATA
+            # ==================================
+
+            shipment.origin_lat = origin_lat
+            shipment.origin_lng = origin_lng
+
+            shipment.dest_lat = dest_lat
+            shipment.dest_lng = dest_lng
+
+            # Current location starts at origin
+
+            shipment.current_lat = origin_lat
+            shipment.current_lng = origin_lng
+
+            # ==================================
+            # SAVE SHIPMENT
+            # ==================================
+
+            shipment.save()
+
+            # ==================================
+            # AI PREDICTION
+            # ==================================
+
+            try:
+
+                predict_delay(shipment)
+
+            except Exception as e:
+
+                print(f"[Warning] Prediction failed: {e}")
+
+            return redirect('shipment')
 
     else:
 
         form = ShipmentForm()
 
-    context = {
-        'form': form
-    }
+    return render(
+        request,
+        'shipment/add_shipment.html',
+        {
+            'form': form
+        }
+    )
 
-    return render(request, 'shipment/add_shipment.html', context)
+
+# ==========================================
+# UPDATE SHIPMENT
+# ==========================================
 
 def update_shipment(request, id):
 
-    shipment = get_object_or_404(Shipment, id=id)
+    shipment = get_object_or_404(
+        Shipment,
+        id=id
+    )
 
     if request.method == 'POST':
 
-        form = ShipmentForm(request.POST, instance=shipment)
+        form = ShipmentForm(
+            request.POST,
+            instance=shipment
+        )
 
         if form.is_valid():
 
-            form.save()
+            updated = form.save(commit=False)
+
+            # UPDATE COORDINATES AGAIN
+
+            origin_lat, origin_lng = get_coordinates(
+                updated.origin
+            )
+
+            dest_lat, dest_lng = get_coordinates(
+                updated.destination
+            )
+
+            updated.origin_lat = origin_lat
+            updated.origin_lng = origin_lng
+
+            updated.dest_lat = dest_lat
+            updated.dest_lng = dest_lng
+
+            updated.save()
+
+            try:
+
+                predict_delay(updated)
+
+            except Exception as e:
+
+                print(f"[Warning] Re-prediction failed: {e}")
 
             return redirect('shipment')
 
@@ -59,28 +189,65 @@ def update_shipment(request, id):
 
         form = ShipmentForm(instance=shipment)
 
-    context = {
-        'form': form
-    }
+    return render(
+        request,
+        'shipment/add_shipment.html',
+        {
+            'form': form
+        }
+    )
 
-    return render(request, 'shipment/add_shipment.html', context)
 
+# ==========================================
+# DELETE SHIPMENT
+# ==========================================
 
 def delete_shipment(request, id):
 
-    shipment = get_object_or_404(Shipment, id=id)
+    shipment = get_object_or_404(
+        Shipment,
+        id=id
+    )
 
     shipment.delete()
 
     return redirect('shipment')
 
+
+# ==========================================
+# LIVE TRACKING API
+# ==========================================
+
+def api_tracking_update(request, shipment_id):
+
+    shipment = get_object_or_404(
+        Shipment,
+        shipment_id=shipment_id
+    )
+
+    return JsonResponse({
+
+        'shipment_id': shipment.shipment_id,
+
+        'current_lat': shipment.current_lat,
+
+        'current_lng': shipment.current_lng,
+
+        'status': shipment.status,
+
+    })
+
+
+# ==========================================
+# WEATHER TEST API
+# ==========================================
+
 def test_weather(request):
 
-    data = get_weather("Shanghai")
+    from .weather_service import get_weather
 
-    print(data)
+    data = get_weather("Mumbai")
 
-    return HttpResponse("Weather checked")
-
-
-
+    return HttpResponse(
+        f"Weather OK: {data}"
+    )

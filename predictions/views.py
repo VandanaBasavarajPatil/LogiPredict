@@ -1,40 +1,42 @@
+# predictions/views.py
+
 from django.shortcuts import render
+from django.db.models import Avg
 
 from shipment.models import Shipment
-
 from shipment.services import calculate_prediction_score
 
 
 def prediction(request):
 
+    # Fetch High and Medium risk shipments — these are shown in Risk Analysis
     shipments = Shipment.objects.filter(
-        risk__in=['High', 'Medium']
-    ).order_by('-id')[:4]
+        risk__in=['High', 'Medium', 'Critical']
+    ).order_by('-id')
 
+    # Attach prediction detail dict to each shipment object
+    # This adds .prediction_score attribute so template can use it
     for shipment in shipments:
+        shipment.prediction_score = calculate_prediction_score(shipment)
 
-        shipment.prediction_score = calculate_prediction_score(
-            shipment
-        )
-
+    # Count shipments where risk is High or Critical
     high_risk_shipments = Shipment.objects.filter(
-        risk='High'
+        risk__in=['High', 'Critical']
     ).count()
 
+    # Average delay: risk_score × 3 days (rough real-world estimate)
+    # e.g. risk_score=0.82 → 0.82 × 3 = 2.46 days delay
+    avg_score = Shipment.objects.filter(
+        risk__in=['High', 'Critical', 'Medium']
+    ).aggregate(avg=Avg('risk_score'))['avg'] or 0
+
+    avg_delay = round(avg_score * 3, 1)  # Convert score → days
+
     context = {
-
-        'shipments': shipments,
-
+        'shipments':          shipments,
         'high_risk_shipments': high_risk_shipments,
-
-        'model_confidence': 94.2,
-
-        'avg_delay': 1.4,
-
+        'model_confidence':   94.2,   # Static for now — Phase 6 will make this real
+        'avg_delay':          avg_delay,
     }
 
-    return render(
-        request,
-        'prediction/prediction.html',
-        context
-    )
+    return render(request, 'prediction/prediction.html', context)

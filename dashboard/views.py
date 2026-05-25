@@ -1,101 +1,40 @@
+# dashboard/views.py
+
 from django.shortcuts import render
+from django.db.models import Avg
 from shipment.models import Shipment
 from alerts.models import Alert
 
-import requests
-
 
 def dashboard(request):
+    """Reads everything from DB — no API calls here."""
 
     shipments = Shipment.objects.all()
 
-    alerts = Alert.objects.all().order_by('-id')[:3]
-
     total_shipments = shipments.count()
-
-    at_risk_shipments = 0
-
-    delivered_today = Shipment.objects.filter(
-        status="Delivered"
+    at_risk_count   = shipments.filter(risk__in=['High', 'Critical']).count()
+    delivered_count = shipments.filter(status='Delivered').count()
+    active_count    = shipments.filter(
+        status__in=['Pending', 'In Transit', 'At Risk']
     ).count()
 
+    avg_risk = (shipments.aggregate(avg=Avg('risk_score'))['avg'] or 0)
+    avg_risk_score = round(avg_risk * 100, 1)
 
-    # WEATHER + AI RISK CHECK
-    for shipment in shipments:
-
-        try:
-
-            city = shipment.origin
-
-            api_key = "YOUR_API_KEY"
-
-            url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
-
-            response = requests.get(url)
-
-            data = response.json()
-
-            weather_condition = data['weather'][0]['main']
-
-
-            # AI RISK LOGIC
-            if weather_condition in ["Rain", "Thunderstorm", "Snow"]:
-
-                shipment.status = "At Risk"
-
-                shipment.save()
-
-                at_risk_shipments += 1
-
-            else:
-
-                shipment.status = "In Transit"
-
-                shipment.save()
-
-
-        except Exception as e:
-
-            print("Weather Error:", e)
-
-
-
-    # RECENT SHIPMENTS
-    recent_shipments = Shipment.objects.all().order_by('-id')[:5]
-
-
-
-    # AVG RISK SCORE
-    if total_shipments > 0:
-
-        avg_risk_score = int(
-            (at_risk_shipments / total_shipments) * 100
-        )
-
-    else:
-
-        avg_risk_score = 0
-
-
+    recent_shipments = shipments.order_by('-created_at')[:5]
+    critical_alerts  = Alert.objects.filter(
+        level='critical', acknowledged=False
+    )[:3]
 
     context = {
-
-        'total_shipments': total_shipments,
-
-        'at_risk_shipments': at_risk_shipments,
-
-        'delivered_today': delivered_today,
-
-        'recent_shipments': recent_shipments,
-
-        'alerts': alerts,
-
-        'avg_risk_score': avg_risk_score,
-
+        'total_shipments':   total_shipments,
+        'active_count':      active_count,
+        'at_risk_shipments': at_risk_count,
+        'delivered_today':   delivered_count,
+        'avg_risk_score':    avg_risk_score,
+        'recent_shipments':  recent_shipments,
+        'alerts':            critical_alerts,
+        'alert_count':       Alert.objects.filter(acknowledged=False).count(),
     }
 
-    return render(
-        request,
-        'dashboard.html',
-        context
-    )
+    return render(request, 'dashboard.html', context)
