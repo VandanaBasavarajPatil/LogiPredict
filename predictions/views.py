@@ -9,6 +9,14 @@ from shipment.services import calculate_prediction_score
 
 def prediction(request):
 
+    # Update telemetry for all shipments to keep predictions synchronized
+    from shipment.services import update_shipment_telemetry
+    for shipment in Shipment.objects.all():
+        try:
+            update_shipment_telemetry(shipment)
+        except Exception as e:
+            print(f"[Telemetry Warning] {e}")
+
     # Fetch High and Medium risk shipments — these are shown in Risk Analysis
     shipments = Shipment.objects.filter(
         risk__in=['High', 'Medium', 'Critical']

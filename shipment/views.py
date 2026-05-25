@@ -16,37 +16,27 @@ from django.conf import settings
 # ==========================================
 
 def get_coordinates(city):
-
-    url = "https://maps.googleapis.com/maps/api/geocode/json"
-
-    params = {
-        "address": city,
-        "key": settings.GOOGLE_MAPS_API_KEY
-    }
-
-    response = requests.get(url, params=params)
-
-    data = response.json()
-
-    if data["status"] == "OK":
-
-        location = data["results"][0]["geometry"]["location"]
-
-        return (
-            location["lat"],
-            location["lng"]
-        )
-
-    return (0, 0)
+    from .maps_service import get_coordinates as get_coords_from_service
+    coords = get_coords_from_service(city)
+    return (coords['lat'], coords['lng'])
 
 
 # ==========================================
 # SHIPMENT LIST PAGE
 # ==========================================
 
+
 def create_shipment(request):
 
     shipments = Shipment.objects.all().order_by('-created_at')
+
+    # Update telemetry for active shipments
+    from .services import update_shipment_telemetry
+    for shipment in shipments:
+        try:
+            update_shipment_telemetry(shipment)
+        except Exception as e:
+            print(f"[Telemetry Warning] {e}")
 
     return render(
         request,
@@ -107,6 +97,15 @@ def add_shipment(request):
             # ==================================
 
             shipment.save()
+
+            # ==================================
+            # AUTOMATICALLY FETCH COORDINATES AND ROUTE DISTANCE
+            # ==================================
+            try:
+                from .route_service import update_shipment_route_data
+                update_shipment_route_data(shipment)
+            except Exception as e:
+                print(f"[Warning] Route update failed: {e}")
 
             # ==================================
             # AI PREDICTION
@@ -175,6 +174,15 @@ def update_shipment(request, id):
 
             updated.save()
 
+            # ==================================
+            # AUTOMATICALLY FETCH COORDINATES AND ROUTE DISTANCE
+            # ==================================
+            try:
+                from .route_service import update_shipment_route_data
+                update_shipment_route_data(updated)
+            except Exception as e:
+                print(f"[Warning] Route update failed: {e}")
+
             try:
 
                 predict_delay(updated)
@@ -224,6 +232,12 @@ def api_tracking_update(request, shipment_id):
         Shipment,
         shipment_id=shipment_id
     )
+
+    from .services import update_shipment_telemetry
+    try:
+        update_shipment_telemetry(shipment)
+    except Exception as e:
+        print(f"[Telemetry Warning] {e}")
 
     return JsonResponse({
 

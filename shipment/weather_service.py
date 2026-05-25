@@ -20,8 +20,8 @@ def get_weather(city: str) -> dict:
         wind_speed   = data['wind']['speed']
         rain_mm      = data.get('rain', {}).get('1h', 0.0)
 
-        risk_label, risk_score = _calculate_risk(temp_celsius, humidity, wind_speed, rain_mm, weather_main)
-        print(f"[Weather] {city}: {weather_main} {temp_celsius}°C risk={risk_label}")
+        risk_label, risk_score = _calculate_risk(temp_celsius, humidity, wind_speed, rain_mm, weather_main, data['weather'][0]['description'])
+        print(f"[Weather] {city}: {weather_main} {temp_celsius} C risk={risk_label}")
 
         return {
             'city': city, 'weather': weather_main,
@@ -36,23 +36,57 @@ def get_weather(city: str) -> dict:
         return _default_weather(city)
 
 
-def _calculate_risk(temp, humidity, wind_speed, rain_mm, weather_main):
+def _calculate_risk(temp, humidity, wind_speed, rain_mm, weather_main, description=""):
     score = 0.0
-    if rain_mm > 10 or weather_main in ['Thunderstorm', 'Tornado']: score += 0.45
-    elif rain_mm > 3 or weather_main in ['Rain', 'Drizzle', 'Snow']: score += 0.25
-    elif rain_mm > 0: score += 0.10
-    if wind_speed > 15: score += 0.30
-    elif wind_speed > 8: score += 0.15
-    if temp < -10 or temp > 45: score += 0.15
-    elif temp < 0 or temp > 38: score += 0.08
-    if humidity > 90: score += 0.10
-    score = min(score, 1.0)
-    if score >= 0.5:    return 'High',   score
-    elif score >= 0.25: return 'Medium', score
-    else:               return 'Low',    score
+    desc_lower = description.lower()
+    weather_lower = weather_main.lower()
+    
+    # 1. Weather Severity (Condition checking)
+    is_storm = any(kw in desc_lower or kw in weather_lower for kw in ['thunderstorm', 'squall', 'tornado', 'storm', 'heavy rain'])
+    is_rain = any(kw in desc_lower or kw in weather_lower for kw in ['rain', 'drizzle', 'shower', 'snow']) and not is_storm
+    is_fog = any(kw in desc_lower or kw in weather_lower for kw in ['fog', 'haze', 'mist', 'smoke'])
+    is_heavy_clouds = any(kw in desc_lower or kw in weather_lower for kw in ['overcast', 'broken clouds'])
+    
+    if is_storm:
+        score += 0.35
+    elif is_rain:
+        score += 0.20
+    elif is_fog:
+        score += 0.15
+    elif is_heavy_clouds:
+        score += 0.08
+        
+    # 2. Wind Speed
+    if wind_speed > 15:
+        score += 0.10
+    elif wind_speed > 8:
+        score += 0.05
+        
+    # 3. Temperature & Heat
+    if temp > 40 or temp < -10:
+        score += 0.08
+    elif temp > 35 or temp < 0:
+        score += 0.04
+        
+    # 4. Humidity
+    if humidity > 90:
+        score += 0.05
+        
+    # Limit weather risk score to maximum of 0.5
+    weather_risk_score = min(score, 0.5)
+    
+    if weather_risk_score >= 0.4:
+        label = 'Critical'
+    elif weather_risk_score >= 0.25:
+        label = 'High'
+    elif weather_risk_score >= 0.12:
+        label = 'Medium'
+    else:
+        label = 'Low'
+        
+    return label, weather_risk_score
 
 
 def _default_weather(city):
     return {'city': city, 'weather': 'Clear', 'description': 'API unavailable',
-            'temperature': 20.0, 'humidity': 50, 'wind_speed': 3.0,
-            'rain_mm': 0.0, 'risk': 'Low', 'risk_score': 0.1}
+            'temperature': 20.0, 'humidity': 50, 'wind_speed': 3.0,'rain_mm': 0.0, 'risk': 'Low', 'risk_score': 0.05}

@@ -6,6 +6,14 @@ from shipment.models import Shipment
 def tracking(request):
     shipments = Shipment.objects.all().order_by('-created_at')
 
+    # Update telemetry for all shipments to keep positions and status accurate
+    from shipment.services import update_shipment_telemetry
+    for shipment in shipments:
+        try:
+            update_shipment_telemetry(shipment)
+        except Exception as e:
+            print(f"[Telemetry Warning] {e}")
+
     selected_id     = request.GET.get('shipment_id')
     active_shipment = None
 

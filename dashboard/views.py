@@ -11,6 +11,14 @@ def dashboard(request):
 
     shipments = Shipment.objects.all()
 
+    # Update telemetry for all shipments to keep dashboard metrics synchronized
+    from shipment.services import update_shipment_telemetry
+    for shipment in shipments:
+        try:
+            update_shipment_telemetry(shipment)
+        except Exception as e:
+            print(f"[Telemetry Warning] {e}")
+
     total_shipments = shipments.count()
     at_risk_count   = shipments.filter(risk__in=['High', 'Critical']).count()
     delivered_count = shipments.filter(status='Delivered').count()

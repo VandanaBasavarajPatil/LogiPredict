@@ -1,10 +1,17 @@
-# alerts/views.py
-
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Alert
 
 
 def alerts(request):
+    # Update telemetry for all shipments to trigger any dynamic status/progress alerts
+    from shipment.models import Shipment
+    from shipment.services import update_shipment_telemetry
+    for shipment in Shipment.objects.all():
+        try:
+            update_shipment_telemetry(shipment)
+        except Exception as e:
+            print(f"[Telemetry Warning] {e}")
+
     all_alerts    = Alert.objects.all()
     critical_list = all_alerts.filter(level='critical', acknowledged=False)
     warning_list  = all_alerts.filter(level='warning',  acknowledged=False)
