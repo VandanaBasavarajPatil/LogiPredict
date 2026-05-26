@@ -146,10 +146,9 @@ STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
 
+# These should already be in settings.py — verify they are there:
 LOGIN_URL = 'login'
-
 LOGIN_REDIRECT_URL = 'dashboard'
-
 LOGOUT_REDIRECT_URL = 'login'
 
 GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")

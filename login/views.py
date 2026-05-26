@@ -1,89 +1,96 @@
+# login/views.py
+
 from django.shortcuts import render, redirect
-
-from django.contrib.auth import (
-    authenticate,
-    login,
-    logout
-)
-
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-
 from .forms import RegisterForm
 
 
 def login_view(request):
+    """
+    GET:  Show login form.
+    POST: Validate credentials → login → redirect to dashboard.
 
-    
+    If user is already logged in → redirect to dashboard immediately.
+    """
+
+    # KEY FIX 1: Already logged in? Skip login page entirely.
+    if request.user.is_authenticated:
+        return redirect('dashboard')
 
     error = None
 
     if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '')
 
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        user = authenticate(
-            request,
-            username=username,
-            password=password
-        )
-
-        if user:
-
-            login(request, user)
-
-            return redirect('dashboard')
-
+        if not username or not password:
+            error = "Please enter both username and password."
         else:
+            user = authenticate(request, username=username, password=password)
 
-            error = "Invalid username or password"
+            if user is not None:
+                login(request, user)
+                # Redirect to 'next' param if present (from @login_required redirect)
+                next_url = request.GET.get('next', 'dashboard')
+                return redirect(next_url)
+            else:
+                error = "Invalid username or password. Please try again."
 
-    return render(
-        request,
-        'login/login.html',
-        {'error': error}
-    )
+    return render(request, 'login/login.html', {'error': error})
 
 
 def register_view(request):
+    """
+    GET:  Show registration form.
+    POST: Validate → create user in MySQL → auto login → redirect to dashboard.
 
+    If user is already logged in → redirect to dashboard immediately.
+    """
 
+    # KEY FIX 2: Already logged in? Skip register page.
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+
+    errors = {}
 
     if request.method == 'POST':
-
         form = RegisterForm(request.POST)
 
         if form.is_valid():
-
+            # Save user to MySQL auth_user table
             user = form.save()
 
+            # Auto-login after registration
             login(request, user)
 
             return redirect('dashboard')
-
         else:
+            # KEY FIX 3: Extract specific field errors so user knows exactly what's wrong
+            for field, field_errors in form.errors.items():
+                if field == 'username':
+                    errors['username'] = field_errors[0]
+                elif field == 'email':
+                    errors['email'] = field_errors[0]
+                elif field == 'password1':
+                    errors['password1'] = field_errors[0]
+                elif field == 'password2':
+                    errors['password2'] = field_errors[0]
+                elif field == '__all__':
+                    errors['general'] = field_errors[0]
 
-            return render(
-                request,
-                'login/register.html',
-                {
-                    'form': form,
-                    'error': 'Invalid details or passwords not matching'
-                }
-            )
+    else:
+        form = RegisterForm()
 
-    form = RegisterForm()
-
-    return render(
-        request,
-        'login/register.html',
-        {'form': form}
-    )
+    return render(request, 'login/register.html', {
+        'form':   form,
+        'errors': errors,
+    })
 
 
-@login_required
+# KEY FIX 4: Remove @login_required from logout
+# If session expires and user tries to logout, it should just redirect
+# instead of crashing with a redirect loop
 def logout_view(request):
-
     logout(request)
-
     return redirect('login')

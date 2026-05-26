@@ -107,67 +107,71 @@
             Register to continue
         </p>
 
-        <form method="POST">
+        <!-- Replace the entire <form> block in register.html with this -->
+
+<form method="POST">
 
     {% csrf_token %}
-    {% if error %}
 
-<p style="color:red; margin-bottom:15px;">
-    {{ error }}
-</p>
-
-{% endif %}
+    <!-- General error (e.g. passwords don't match) -->
+    {% if errors.general %}
+    <p style="color:red; text-align:center; margin-bottom:15px; font-size:14px;">
+        {{ errors.general }}
+    </p>
+    {% endif %}
 
     <div class="input-group">
-
         <label>Username</label>
-
         <input
             type="text"
             name="username"
             placeholder="Enter Username"
+            value="{{ form.username.value|default:'' }}"
             required
         >
-
+        {% if errors.username %}
+        <small style="color:red; font-size:12px;">{{ errors.username }}</small>
+        {% endif %}
     </div>
 
     <div class="input-group">
-
         <label>Email</label>
-
         <input
             type="email"
             name="email"
             placeholder="Enter Email"
+            value="{{ form.email.value|default:'' }}"
             required
         >
-
+        {% if errors.email %}
+        <small style="color:red; font-size:12px;">{{ errors.email }}</small>
+        {% endif %}
     </div>
 
     <div class="input-group">
-
         <label>Password</label>
-
         <input
             type="password"
             name="password1"
             placeholder="Enter Password"
             required
         >
-
+        {% if errors.password1 %}
+        <small style="color:red; font-size:12px;">{{ errors.password1 }}</small>
+        {% endif %}
     </div>
 
     <div class="input-group">
-
         <label>Confirm Password</label>
-
         <input
             type="password"
             name="password2"
             placeholder="Confirm Password"
             required
         >
-
+        {% if errors.password2 %}
+        <small style="color:red; font-size:12px;">{{ errors.password2 }}</small>
+        {% endif %}
     </div>
 
     <button type="submit" class="register-btn">
