@@ -3,17 +3,16 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Prediction Page</title>
+    <title>AI Predictions — LogiPredict</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         body {
@@ -21,14 +20,10 @@
             padding: 0;
             overflow-x: hidden;
             background: #f4f7fb;
-            font-family: Inter, sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
-        .main-layout {
-            display: flex;
-            width: 100%;
-        }
-
+        /* ── SIDEBAR ── */
         .sidebar {
             width: 240px;
             min-width: 240px;
@@ -44,34 +39,7 @@
             z-index: 1000;
         }
 
-        .content-area {
-            margin-left: 240px;
-            width: calc(100% - 240px);
-            min-height: 100vh;
-            background: #f4f7fb;
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .logo-icon {
-            font-size: 22px;
-            color: #2563ff;
-        }
-
-        .logo-text {
-            font-size: 20px;
-            font-weight: 700;
-            color: #2563ff;
-        }
-
-        .sidebar-menu {
-            gap: 6px;
-        }
+        .logo-text { font-size: 20px; font-weight: 700; color: #2563ff; }
 
         .sidebar-link {
             display: flex;
@@ -81,549 +49,493 @@
             padding: 12px 16px;
             border-radius: 14px;
             text-decoration: none;
-            transition: 0.2s;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        .sidebar-link:hover {
-            background: #0f2354;
-            color: white !important;
-        }
-
-        .sidebar-link i {
-            font-size: 16px;
-        }
-
-        .active-menu {
-            background: #0f2354;
-            color: white !important;
-        }
-
-        .sidebar-bottom {
-            margin-top: 20px;
-        }
-
-        .profile-box {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-        }
-
-        .profile-circle {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: #162754;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
             font-size: 15px;
-            font-weight: 700;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .sidebar-link:hover, .sidebar-link.active-menu {
+            background: #102452;
+            color: white !important;
+        }
+        .profile-circle {
+            width: 42px; height: 42px; border-radius: 50%;
+            background: #162754;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 15px; font-weight: 700;
         }
 
-        .profile-name {
-            color: white;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .profile-role {
-            color: #94a3b8;
-            font-size: 11px;
+        /* ── MAIN AREA ── */
+        .content-area {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            min-height: 100vh;
         }
 
         .topbar {
-            height: 84px;
+            height: 75px;
             background: white;
             border-bottom: 1px solid #e5e7eb;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 36px;
+            padding: 0 32px;
         }
 
         .search-box {
-            width: 430px;
-            height: 46px;
+            width: 480px; height: 42px;
             background: #f8fafc;
-            border: 1px solid #dbe2ea;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            display: flex; align-items: center;
+            padding: 0 15px;
         }
-
         .search-box input {
-            border: none;
-            outline: none;
-            background: transparent;
-            width: 100%;
-            margin-left: 10px;
-            font-size: 13px;
+            border: none; outline: none;
+            background: transparent; width: 100%;
+            margin-left: 10px; font-size: 13px; color: #6b7280;
         }
 
-        .ai-status {
-            background: #e8f8ef;
-            border: 1px solid #b9ebcb;
-            border-radius: 12px;
-            padding: 9px 18px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .ai-badge {
+            background: #ecfdf5; border: 1px solid #bbf7d0;
+            border-radius: 10px; padding: 8px 14px;
+            display: flex; align-items: center; gap: 8px;
         }
+        .ai-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; }
 
-        .ai-dot {
-            width: 8px;
-            height: 8px;
-            background: #1dbf73;
-            border-radius: 50%;
-        }
-
-        .page-wrapper {
-            padding: 30px;
-        }
-
-        .page-title {
-            font-size: 34px;
-            font-weight: 700;
-            color: #0f172a;
-        }
-
-        .page-subtitle {
-            font-size: 15px;
-            color: #64748b;
-        }
-
-        .small-card {
+        /* ── STAT CARDS ── */
+        .stat-card {
             background: white;
-            border-radius: 22px;
-            padding: 22px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-            border: 1px solid #eef2f7;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        .stat-label { font-size: 13px; font-weight: 600; }
+        .stat-number { font-size: 34px; font-weight: 700; margin: 10px 0 4px; }
+        .stat-sub { font-size: 12px; color: #94a3b8; }
+
+        /* Confidence meter bar */
+        .confidence-bar-wrap {
+            margin-top: 10px;
+            background: #e0e7ff;
+            border-radius: 20px;
+            height: 6px;
+            overflow: hidden;
+        }
+        .confidence-bar-fill {
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(90deg, #2563ff, #60a5fa);
+            transition: width 0.6s ease;
         }
 
-        .card-title-small {
-            font-size: 14px;
+        /* ── RISK ANALYSIS CARDS ── */
+        .risk-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        .risk-card-inner { padding: 24px; }
+
+        .progress { height: 7px; border-radius: 20px; background: #f1f5f9; }
+        .progress-bar { border-radius: 20px; }
+
+        .ai-rec-box {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 16px;
+            margin-top: 18px;
+        }
+
+        .badge-risk {
+            font-size: 10px;
+            padding: 5px 10px;
+            border-radius: 8px;
             font-weight: 600;
         }
 
-        .big-number {
-            font-size: 32px;
-            font-weight: 700;
-        }
+        /* ── EMPTY STATE ── */
+        .empty-state { text-align: center; padding: 80px 20px; color: #94a3b8; }
+        .empty-state i { font-size: 54px; margin-bottom: 16px; display: block; }
 
-        .risk-card {
-            background: white;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-            border: 1px solid #eef2f7;
-        }
-
-        .risk-inner {
-            padding: 24px;
-        }
-
-        .progress {
-            height: 7px;
+        /* ── DELAY BADGE (days pill) ── */
+        .delay-pill {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
             border-radius: 20px;
-        }
-
-        .progress-bar {
-            border-radius: 20px;
-        }
-
-        .ai-box {
-            background: #f8fafc;
-            border-radius: 18px;
-            padding: 18px;
-        }
-
-        .custom-btn {
-            border-radius: 12px;
-            font-size: 12px;
-            padding: 8px 18px;
-        }
-
-        .badge-small {
-            font-size: 10px;
-            padding: 7px 10px;
-            border-radius: 10px;
-        }
-
-        /* Empty state */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #94a3b8;
-        }
-
-        .empty-state i {
-            font-size: 48px;
-            margin-bottom: 16px;
-            display: block;
         }
     </style>
-
 </head>
 
 <body>
 
-<div class="main-layout">
+<div class="d-flex">
 
-    <!-- SIDEBAR -->
+    <!-- ═══════════════════════════════ SIDEBAR ═══════════════════════════════ -->
     <div class="sidebar">
-
         <div>
-
-            <!-- LOGO -->
-            <div class="logo-section">
-                <i class="bi bi-truck logo-icon"></i>
+            <!-- Logo -->
+            <div class="d-flex align-items-center gap-2 mb-4">
+                <i class="bi bi-truck" style="font-size:22px;color:#2563ff;"></i>
                 <span class="logo-text">LogiPredict</span>
             </div>
 
-            <!-- MENU -->
-            <ul class="nav flex-column sidebar-menu">
-
-                <li class="nav-item">
-                    <a href="{% url 'dashboard' %}" class="nav-link sidebar-link">
-                        <i class="bi bi-grid"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{% url 'shipment' %}" class="nav-link sidebar-link">
-                        <i class="bi bi-box-seam"></i>
-                        <span>Shipments</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{% url 'prediction' %}" class="nav-link sidebar-link active-menu">
-                        <i class="bi bi-cpu"></i>
-                        <span>Predictions</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{% url 'tracking' %}" class="nav-link sidebar-link">
-                        <i class="bi bi-send"></i>
-                        <span>Tracking</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{% url 'analytics' %}" class="nav-link sidebar-link">
-                        <i class="bi bi-bar-chart"></i>
-                        <span>Analytics</span>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{% url 'alerts' %}" class="nav-link sidebar-link">
-                        <i class="bi bi-bell"></i>
-                        <span>Alerts</span>
-                    </a>
-                </li>
-
+            <!-- Menu -->
+            <ul class="nav flex-column" style="gap:4px;">
+                <li><a href="{% url 'dashboard' %}" class="sidebar-link"><i class="bi bi-grid"></i> Dashboard</a></li>
+                <li><a href="{% url 'shipment' %}" class="sidebar-link"><i class="bi bi-box-seam"></i> Shipments</a></li>
+                <li><a href="{% url 'prediction' %}" class="sidebar-link active-menu"><i class="bi bi-cpu"></i> Predictions</a></li>
+                <li><a href="{% url 'tracking' %}" class="sidebar-link"><i class="bi bi-send"></i> Tracking</a></li>
+                <li><a href="{% url 'analytics' %}" class="sidebar-link"><i class="bi bi-bar-chart"></i> Analytics</a></li>
+                <li><a href="{% url 'alerts' %}" class="sidebar-link"><i class="bi bi-bell"></i> Alerts</a></li>
             </ul>
-
         </div>
 
-        <!-- BOTTOM -->
-        <div class="sidebar-bottom">
-
-            <div class="profile-box">
+        <!-- Profile + Logout -->
+        <div>
+            <div class="d-flex align-items-center gap-2 px-2 mb-3">
                 <div class="profile-circle">JD</div>
                 <div>
-                    <div class="profile-name">J. Director</div>
-                    <div class="profile-role">Logistics Dir.</div>
+                    <div style="color:white;font-size:12px;font-weight:600;">J. Director</div>
+                    <div style="color:#8d96a8;font-size:10px;">Logistics Dir.</div>
                 </div>
             </div>
-
-            <a href="#" class="nav-link sidebar-link mt-2">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Logout</span>
-            </a>
-
+            <a href="#" class="sidebar-link"><i class="bi bi-box-arrow-right"></i> Logout</a>
         </div>
-
     </div>
 
-    <!-- CONTENT -->
+    <!-- ═══════════════════════════════ CONTENT ═══════════════════════════════ -->
     <div class="content-area">
 
         <!-- TOPBAR -->
         <div class="topbar">
-
             <div class="search-box">
-                <i class="bi bi-search text-secondary"></i>
+                <i class="bi bi-search text-secondary" style="font-size:14px;"></i>
                 <input type="text" placeholder="Search shipments, routes, alerts...">
             </div>
-
             <div class="d-flex align-items-center gap-4">
-
-                <div class="ai-status">
+                <div class="ai-badge">
                     <div class="ai-dot"></div>
-                    <div style="font-size:13px;font-weight:600;color:#0f9f62;">AI Online</div>
+                    <span style="font-size:12px;font-weight:600;color:#059669;">AI Online</span>
                 </div>
-
                 <div class="position-relative">
-                    <i class="bi bi-bell" style="font-size:21px;color:#64748b;"></i>
+                    <i class="bi bi-bell" style="font-size:18px;color:#6b7280;"></i>
                     <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
                 </div>
-
             </div>
-
         </div>
 
-        <!-- PAGE -->
-        <div class="page-wrapper">
+        <!-- PAGE CONTENT -->
+        <div style="padding:30px;">
 
-            <!-- HEADER -->
+            <!-- Page Header -->
             <div class="mb-4">
-                <div class="page-title">AI Predictions</div>
-                <div class="page-subtitle">Machine learning analysis of active logistics network.</div>
+                <h1 style="font-size:32px;font-weight:700;color:#0f172a;margin:0;">AI Predictions</h1>
+                <p style="font-size:14px;color:#64748b;margin-top:4px;">
+                    Machine learning analysis of active logistics network.
+                    {% if total_shipments > 0 %}
+                        <span style="color:#10b981;font-weight:500;">
+                            Analysing {{ total_shipments }} shipment{{ total_shipments|pluralize }}.
+                        </span>
+                    {% endif %}
+                </p>
             </div>
 
-            <!-- ═══════════════════════════════════════════
-                 TOP STAT CARDS
-                 All 3 values come from the database via views.py
-                 ═══════════════════════════════════════════ -->
+            <!-- ═══════════════════════════════
+                 TOP 3 STAT CARDS
+                 ═══════════════════════════════ -->
             <div class="row g-4 mb-4">
 
-                <!-- Model Confidence -->
+                <!-- Card 1: Model Confidence (DYNAMIC) -->
                 <div class="col-lg-4">
-                    <div class="small-card border border-primary-subtle">
-                        <div class="card-title-small text-primary">Model Confidence</div>
-                        <!-- model_confidence passed from views.py context -->
-                        <div class="big-number text-primary mt-2">{{ model_confidence }}%</div>
-                        <div class="text-secondary" style="font-size:13px;">
-                            Based on last 10,000 predictions
+                    <div class="stat-card border border-primary-subtle">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="stat-label text-primary">Model Confidence</div>
+                            <i class="bi bi-cpu-fill text-primary" style="font-size:18px;"></i>
+                        </div>
+
+                        {% if total_shipments == 0 %}
+                            <!-- No data yet -->
+                            <div class="stat-number text-secondary">—</div>
+                            <div class="stat-sub">No shipments to evaluate yet</div>
+                        {% else %}
+                            <div class="stat-number text-primary">{{ model_confidence }}%</div>
+                            <div class="stat-sub">Based on {{ total_shipments }} active shipment{{ total_shipments|pluralize }}</div>
+                            <!-- Visual confidence bar -->
+                            <div class="confidence-bar-wrap mt-2">
+                                <div class="confidence-bar-fill" style="width:{{ model_confidence }}%;"></div>
+                            </div>
+                            <div class="mt-1" style="font-size:11px;color:#94a3b8;">
+                                {% if model_confidence >= 90 %}
+                                    <i class="bi bi-check-circle-fill text-success me-1"></i>Excellent accuracy
+                                {% elif model_confidence >= 75 %}
+                                    <i class="bi bi-check-circle text-warning me-1"></i>Good accuracy
+                                {% else %}
+                                    <i class="bi bi-exclamation-circle text-danger me-1"></i>Needs more data
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Card 2: High Risk Shipments (DYNAMIC) -->
+                <div class="col-lg-4">
+                    <div class="stat-card border border-danger-subtle">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="stat-label text-danger">High Risk Shipments</div>
+                            <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size:18px;"></i>
+                        </div>
+                        <div class="stat-number text-danger">{{ high_risk_shipments }}</div>
+                        <div class="stat-sub">&gt;50% delay probability</div>
+                        <div class="mt-2" style="font-size:11px;color:#94a3b8;">
+                            {% if high_risk_shipments == 0 %}
+                                <i class="bi bi-shield-check text-success me-1"></i>All routes operating normally
+                            {% elif high_risk_shipments == 1 %}
+                                <i class="bi bi-exclamation-circle text-warning me-1"></i>1 route requires attention
+                            {% else %}
+                                <i class="bi bi-exclamation-circle text-danger me-1"></i>{{ high_risk_shipments }} routes require attention
+                            {% endif %}
                         </div>
                     </div>
                 </div>
 
-                <!-- High Risk Shipments -->
+                <!-- Card 3: Avg Predicted Delay (DYNAMIC) -->
                 <div class="col-lg-4">
-                    <div class="small-card border border-danger-subtle">
-                        <div class="card-title-small text-danger">High Risk Shipments</div>
-                        <!-- high_risk_shipments = real DB count from views.py -->
-                        <div class="big-number text-danger mt-2">{{ high_risk_shipments }}</div>
-                        <div class="text-secondary" style="font-size:13px;">
-                            &gt;50% delay probability
+                    <div class="stat-card border border-warning-subtle">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="stat-label text-warning">Avg Predicted Delay</div>
+                            <i class="bi bi-clock-history text-warning" style="font-size:18px;"></i>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Avg Predicted Delay -->
-                <div class="col-lg-4">
-                    <div class="small-card border border-warning-subtle">
-                        <div class="card-title-small text-warning">Avg Predicted Delay</div>
-                        <!-- avg_delay = calculated from risk_score × 3 in views.py -->
-                        <div class="big-number text-warning mt-2">+{{ avg_delay }} Days</div>
-                        <div class="text-secondary" style="font-size:13px;">
-                            Across all at-risk routes
+                        <div class="stat-number text-warning">
+                            {% if avg_delay > 0 %}+{{ avg_delay }} Days{% else %}+0 Days{% endif %}
+                        </div>
+                        <div class="stat-sub">Across all at-risk routes</div>
+                        <div class="mt-2" style="font-size:11px;color:#94a3b8;">
+                            {% if avg_delay == 0 %}
+                                <i class="bi bi-check-circle text-success me-1"></i>No delays predicted
+                            {% elif avg_delay <= 1 %}
+                                <i class="bi bi-dash-circle text-warning me-1"></i>Minor delays expected
+                            {% else %}
+                                <i class="bi bi-x-circle text-danger me-1"></i>Significant delays detected
+                            {% endif %}
                         </div>
                     </div>
                 </div>
 
             </div>
 
-            <!-- SECTION TITLE -->
-            <h4 class="fw-bold mb-4" style="font-size:24px;">Risk Analysis</h4>
-
-            <!-- ═══════════════════════════════════════════
-                 RISK CARDS LOOP
-                 Each card is one shipment from the database.
-                 All percentages, labels, colors = real data
-                 from calculate_prediction_score() in services.py
-                 ═══════════════════════════════════════════ -->
+            <!-- ═══════════════════════════════
+                 RISK ANALYSIS SECTION
+                 ═══════════════════════════════ -->
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h4 style="font-size:22px;font-weight:700;margin:0;">Risk Analysis</h4>
+                {% if shipments %}
+                    <span class="badge bg-danger" style="font-size:12px;padding:8px 14px;border-radius:10px;">
+                        {{ shipments|length }} shipment{{ shipments|length|pluralize }} flagged
+                    </span>
+                {% endif %}
+            </div>
 
             {% if shipments %}
 
             <div class="row g-4">
-
                 {% for shipment in shipments %}
-
                 <div class="col-lg-6">
-
                     <div class="risk-card">
 
-                        <!-- Left border color: red = High/Critical, yellow = Medium -->
-                        {% if shipment.risk == "High" or shipment.risk == "Critical" %}
-                        <div class="border-start border-4 border-danger">
+                        <!-- Left border colour by risk level -->
+                        {% if shipment.risk == "Critical" %}
+                            <div class="border-start border-4 border-danger">
+                        {% elif shipment.risk == "High" %}
+                            <div class="border-start border-4" style="border-color:#f97316 !important;">
                         {% else %}
-                        <div class="border-start border-4 border-warning">
+                            <div class="border-start border-4 border-warning">
                         {% endif %}
 
-                            <div class="risk-inner">
+                        <div class="risk-card-inner">
 
-                                <!-- ── CARD TOP ROW ── -->
-                                <div class="d-flex justify-content-between">
+                            <!-- TOP ROW: ID + Badge + Delay % -->
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <h5 class="fw-bold mb-0" style="font-size:17px;">{{ shipment.shipment_id }}</h5>
 
-                                    <div>
-
-                                        <!-- Shipment ID + Risk Badge -->
-                                        <div class="d-flex align-items-center gap-2 mb-1">
-
-                                            <h5 class="fw-bold mb-0">{{ shipment.shipment_id }}</h5>
-
-                                            {% if shipment.risk == "Critical" %}
-                                                <span class="badge bg-danger badge-small">CRITICAL</span>
-
-                                            {% elif shipment.risk == "High" %}
-                                                <span class="badge bg-danger badge-small">HIGH RISK</span>
-
-                                            {% else %}
-                                                <span class="badge border border-warning text-warning badge-small">
-                                                    MEDIUM RISK
-                                                </span>
-                                            {% endif %}
-
-                                        </div>
-
-                                        <!-- Route -->
-                                        <small class="text-secondary">
-                                            {{ shipment.origin }} △ {{ shipment.destination }}
-                                        </small>
-
-                                        <!-- Weather at origin (real API data) -->
-                                        {% if shipment.origin_weather %}
-                                        <div class="mt-1">
-                                            <small class="text-secondary">
-                                                <i class="bi bi-cloud me-1"></i>
-                                                {{ shipment.origin_weather }},
-                                                {{ shipment.origin_temp|floatformat:1 }}°C
-                                                at origin
-                                            </small>
-                                        </div>
+                                        {% if shipment.risk == "Critical" %}
+                                            <span class="badge bg-danger badge-risk">CRITICAL</span>
+                                        {% elif shipment.risk == "High" %}
+                                            <span class="badge badge-risk" style="background:#f97316;">HIGH RISK</span>
+                                        {% else %}
+                                            <span class="badge border border-warning text-warning badge-risk">MEDIUM</span>
                                         {% endif %}
-
                                     </div>
 
-                                    <!-- Delay Probability % — real ML score -->
-                                    <div class="text-end">
-                                        <div class="fw-bold text-danger" style="font-size:30px;">
-                                            {{ shipment.prediction_score.delay_probability_pct }}%
-                                        </div>
-                                        <small class="text-secondary">Delay Probability</small>
+                                    <!-- Route -->
+                                    <div style="font-size:12px;color:#6b7280;">
+                                        <i class="bi bi-geo-alt me-1"></i>
+                                        {{ shipment.origin }} → {{ shipment.destination }}
                                     </div>
 
+                                    <!-- Carrier + ETA -->
+                                    <div style="font-size:11px;color:#94a3b8;margin-top:3px;">
+                                        <i class="bi bi-truck me-1"></i>{{ shipment.carrier }}
+                                        {% if shipment.eta %}
+                                            &nbsp;|&nbsp;<i class="bi bi-calendar-event me-1"></i>ETA: {{ shipment.eta }}
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Live weather from API -->
+                                    {% if shipment.origin_weather %}
+                                    <div style="font-size:11px;color:#64748b;margin-top:5px;">
+                                        <i class="bi bi-cloud me-1 text-primary"></i>
+                                        <strong>Origin:</strong> {{ shipment.origin_weather }}, {{ shipment.origin_temp|floatformat:1 }}°C
+                                        {% if shipment.destination_weather %}
+                                        &nbsp;|&nbsp;
+                                        <strong>Dest:</strong> {{ shipment.destination_weather }}, {{ shipment.destination_temp|floatformat:1 }}°C
+                                        {% endif %}
+                                    </div>
+                                    {% endif %}
                                 </div>
 
-                                <!-- ── WEATHER IMPACT BAR ── -->
-                                <!-- label + color + width all from calculate_prediction_score() -->
-                                <div class="mt-4">
-
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <small class="text-secondary">Weather Impact</small>
-                                        <small class="text-{{ shipment.prediction_score.weather_bar_color }} fw-semibold">
-                                            {{ shipment.prediction_score.weather_label }}
-                                        </small>
+                                <!-- Delay Probability — from risk_score in DB -->
+                                <div class="text-end">
+                                    <div class="fw-bold" style="font-size:32px;
+                                        {% if shipment.risk == 'Critical' %}color:#ef4444;
+                                        {% elif shipment.risk == 'High' %}color:#f97316;
+                                        {% else %}color:#f59e0b;{% endif %}">
+                                        {{ shipment.prediction_score.delay_probability_pct }}%
                                     </div>
+                                    <small class="text-secondary">Delay Probability</small>
 
-                                    <div class="progress">
-                                        <div class="progress-bar bg-{{ shipment.prediction_score.weather_bar_color }}"
-                                             style="width:{{ shipment.prediction_score.weather_bar_pct }}%">
-                                        </div>
+                                    <!-- Predicted extra days -->
+                                    {% with days=shipment.risk_score|floatformat:1 %}
+                                    <div class="mt-1">
+                                        <span class="delay-pill
+                                            {% if shipment.risk == 'Critical' %}bg-danger text-white
+                                            {% elif shipment.risk == 'High' %}text-white" style="background:#f97316;
+                                            {% else %}bg-warning text-dark{% endif %}">
+                                            +{{ shipment.risk_score|floatformat:1|default:"0" }}d est.
+                                        </span>
                                     </div>
-
+                                    {% endwith %}
                                 </div>
+                            </div>
 
-                                <!-- ── PORT CONGESTION BAR ── -->
-                                <!-- Calculated from distance_km in services.py -->
-                                <div class="mt-4">
-
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <small class="text-secondary">Port Congestion</small>
-                                        <small class="text-{{ shipment.prediction_score.port_bar_color }} fw-semibold">
-                                            {{ shipment.prediction_score.port_label }}
-                                        </small>
-                                    </div>
-
-                                    <div class="progress">
-                                        <div class="progress-bar bg-{{ shipment.prediction_score.port_bar_color }}"
-                                             style="width:{{ shipment.prediction_score.port_bar_pct }}%">
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <!-- Distance info row -->
-                                {% if shipment.distance_km %}
-                                <div class="mt-3">
-                                    <small class="text-secondary">
-                                        <i class="bi bi-rulers me-1"></i>
-                                        Route distance:
-                                        <strong>{{ shipment.distance_km|floatformat:0 }} km</strong>
+                            <!-- WEATHER IMPACT BAR — from OpenWeather API data -->
+                            <div class="mt-4">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <small class="text-secondary fw-semibold">
+                                        <i class="bi bi-cloud-lightning me-1"></i>Weather Impact
+                                    </small>
+                                    <small class="text-{{ shipment.prediction_score.weather_bar_color }} fw-semibold">
+                                        {{ shipment.prediction_score.weather_label }}
+                                        ({{ shipment.prediction_score.weather_bar_pct }}%)
                                     </small>
                                 </div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-{{ shipment.prediction_score.weather_bar_color }}"
+                                         style="width:{{ shipment.prediction_score.weather_bar_pct }}%">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ROUTE COMPLEXITY BAR — from Google Maps distance_km -->
+                            <div class="mt-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <small class="text-secondary fw-semibold">
+                                        <i class="bi bi-map me-1"></i>Route Complexity
+                                        {% if shipment.distance_km %}
+                                            <span style="color:#94a3b8;font-weight:400;">
+                                                ({{ shipment.distance_km|floatformat:0 }} km)
+                                            </span>
+                                        {% endif %}
+                                    </small>
+                                    <small class="text-{{ shipment.prediction_score.port_bar_color }} fw-semibold">
+                                        {{ shipment.prediction_score.port_label }}
+                                        ({{ shipment.prediction_score.port_bar_pct }}%)
+                                    </small>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-{{ shipment.prediction_score.port_bar_color }}"
+                                         style="width:{{ shipment.prediction_score.port_bar_pct }}%">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- STATUS STRIP -->
+                            <div class="d-flex align-items-center gap-2 mt-3">
+                                <span style="font-size:11px;color:#94a3b8;">Status:</span>
+                                {% if shipment.status == 'Delivered' %}
+                                    <span class="badge bg-success" style="font-size:10px;">Delivered</span>
+                                {% elif shipment.status == 'At Risk' %}
+                                    <span class="badge bg-danger" style="font-size:10px;">At Risk</span>
+                                {% elif shipment.status == 'In Transit' %}
+                                    <span class="badge bg-warning text-dark" style="font-size:10px;">In Transit</span>
+                                {% elif shipment.status == 'Delayed' %}
+                                    <span class="badge" style="font-size:10px;background:#f97316;">Delayed</span>
+                                {% else %}
+                                    <span class="badge bg-primary" style="font-size:10px;">Pending</span>
                                 {% endif %}
 
-                                <!-- ── AI RECOMMENDATION BOX ── -->
-                                <div class="ai-box mt-4">
+                                {% if shipment.progress > 0 and shipment.progress < 100 %}
+                                    <span style="font-size:11px;color:#94a3b8;">
+                                        &nbsp;·&nbsp; {{ shipment.progress }}% complete
+                                    </span>
+                                {% endif %}
+                            </div>
 
-                                    <small style="font-size:13px;line-height:1.7;">
-                                        <i class="bi bi-shield-check text-primary me-1"></i>
-                                        <strong>AI Recommendation:</strong>
-                                        <!-- Real text from calculate_prediction_score() -->
-                                        {{ shipment.prediction_score.ai_recommendation }}
-                                    </small>
-
-                                    <div class="d-flex justify-content-end gap-2 mt-3">
-
-                                        <a href="{% url 'tracking' %}"
-                                           class="btn btn-light border custom-btn">
-                                            View Route
-                                        </a>
-
-                                        <!-- Only show Take Action for High/Critical -->
-                                        {% if shipment.risk == "High" or shipment.risk == "Critical" %}
-                                        <button class="btn btn-primary custom-btn">
-                                            Take Action
-                                        </button>
-                                        {% else %}
-                                        <button class="btn btn-outline-warning custom-btn">
-                                            Monitor
-                                        </button>
-                                        {% endif %}
-
-                                    </div>
-
+                            <!-- AI RECOMMENDATION BOX -->
+                            <div class="ai-rec-box">
+                                <div style="font-size:12px;font-weight:600;color:#1e3a5f;margin-bottom:6px;">
+                                    <i class="bi bi-robot me-1 text-primary"></i>AI Recommendation
+                                </div>
+                                <div style="font-size:13px;line-height:1.7;color:#374151;">
+                                    {{ shipment.prediction_score.ai_recommendation }}
                                 </div>
 
+                                <div class="d-flex justify-content-end gap-2 mt-3">
+                                    <a href="{% url 'tracking' %}"
+                                       class="btn btn-light border btn-sm"
+                                       style="border-radius:10px;font-size:12px;">
+                                        <i class="bi bi-map me-1"></i>View Route
+                                    </a>
+                                    {% if shipment.risk == "Critical" or shipment.risk == "High" %}
+                                    <button class="btn btn-danger btn-sm" style="border-radius:10px;font-size:12px;">
+                                        <i class="bi bi-lightning-fill me-1"></i>Take Action
+                                    </button>
+                                    {% else %}
+                                    <button class="btn btn-outline-warning btn-sm" style="border-radius:10px;font-size:12px;">
+                                        <i class="bi bi-eye me-1"></i>Monitor
+                                    </button>
+                                    {% endif %}
+                                </div>
                             </div>
 
                         </div>
+                        </div><!-- end border-start div -->
 
                     </div>
-
                 </div>
-
                 {% endfor %}
-
             </div>
 
             {% else %}
 
-            <!-- ── EMPTY STATE — shown when no at-risk shipments exist ── -->
-            <div class="empty-state">
+            <!-- EMPTY STATE -->
+            <div class="empty-state bg-white rounded-4 border" style="border-color:#edf0f5 !important;">
                 <i class="bi bi-shield-check text-success"></i>
-                <h5 class="fw-bold text-dark">All Clear</h5>
-                <p>No high or medium risk shipments at this time.</p>
+                <h5 class="fw-bold text-dark mb-2">All Clear</h5>
+                <p class="mb-0">No high or medium risk shipments at this time.</p>
+                <p style="font-size:12px;color:#94a3b8;margin-top:6px;">
+                    All active shipments are on LOW risk. The system will flag any changes automatically.
+                </p>
             </div>
 
             {% endif %}
 
         </div>
-
     </div>
-
 </div>
 
 <!-- Bootstrap JS -->

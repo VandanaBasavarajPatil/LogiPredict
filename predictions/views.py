@@ -1,50 +1,44 @@
-# predictions/views.py
-
 from django.shortcuts import render
 from django.db.models import Avg
-
 from shipment.models import Shipment
-from shipment.services import calculate_prediction_score
+from shipment.services import update_shipment_telemetry, calculate_prediction_score
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def prediction(request):
-
-    # Update telemetry for all shipments to keep predictions synchronized
-    from shipment.services import update_shipment_telemetry
-    for shipment in Shipment.objects.all():
+    all_shipments = Shipment.objects.all()
+    # Refresh telemetry on load
+    for shipment in all_shipments:
         try:
             update_shipment_telemetry(shipment)
         except Exception as e:
             print(f"[Telemetry Warning] {e}")
-
-    # Fetch High and Medium risk shipments — these are shown in Risk Analysis
-    shipments = Shipment.objects.filter(
-        risk__in=['High', 'Medium', 'Critical']
-    ).order_by('-id')
-
-    # Attach prediction detail dict to each shipment object
-    # This adds .prediction_score attribute so template can use it
-    for shipment in shipments:
+    # Risk Analysis list: Medium or High/Critical risk shipments
+    risky_shipments = Shipment.objects.filter(
+        risk_score__gt=30
+    ).order_by('-risk_score')
+    for shipment in risky_shipments:
         shipment.prediction_score = calculate_prediction_score(shipment)
-
-    # Count shipments where risk is High or Critical
-    high_risk_shipments = Shipment.objects.filter(
-        risk__in=['High', 'Critical']
-    ).count()
-
-    # Average delay: risk_score × 3 days (rough real-world estimate)
-    # e.g. risk_score=0.82 → 0.82 × 3 = 2.46 days delay
-    avg_score = Shipment.objects.filter(
-        risk__in=['High', 'Critical', 'Medium']
-    ).aggregate(avg=Avg('risk_score'))['avg'] or 0
-
-    avg_delay = round(avg_score * 3, 1)  # Convert score → days
-
+    # 1. High Risk Shipments card: count shipments where risk_score >= 50
+    high_risk_count = Shipment.objects.filter(risk_score__gte=50).count()
+    # 2. Avg Predicted Delay: (average of risk_score / 100) * 3 days
+    avg_score = Shipment.objects.filter(risk_score__gt=30).aggregate(avg=Avg('risk_score'))['avg'] or 0.0
+    avg_delay = round((avg_score / 100.0) * 3.0, 1)
+    # 3. Model Confidence: percentage of low-medium risk shipments that are on track (not Delayed)
+    total = all_shipments.count()
+    low_risk_on_track = all_shipments.filter(
+        risk_score__lte=60
+    ).exclude(status__in=['DELAYED', 'Delayed']).count()
+    if total > 0:
+        model_confidence = round((low_risk_on_track / total) * 100, 1)
+        model_confidence = max(70.0, min(model_confidence, 99.0))
+    else:
+        model_confidence = 0.0
     context = {
-        'shipments':          shipments,
-        'high_risk_shipments': high_risk_shipments,
-        'model_confidence':   94.2,   # Static for now — Phase 6 will make this real
-        'avg_delay':          avg_delay,
+        'shipments':           risky_shipments,
+        'high_risk_shipments': high_risk_count,
+        'avg_delay':           avg_delay,
+        'model_confidence':    model_confidence,
+        'total_shipments':     total,
     }
-
     return render(request, 'prediction/prediction.html', context)

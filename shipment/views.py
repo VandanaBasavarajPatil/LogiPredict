@@ -2,6 +2,7 @@
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth.decorators import login_required
 
 from .forms import ShipmentForm
 from .models import Shipment
@@ -14,7 +15,7 @@ from django.conf import settings
 # ==========================================
 # GOOGLE MAPS - GET LATITUDE & LONGITUDE
 # ==========================================
-
+@login_required
 def get_coordinates(city):
     from .maps_service import get_coordinates as get_coords_from_service
     coords = get_coords_from_service(city)

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:#f4f4f4;
+        }
+
+        .register-container{
+            width:420px;
+            background:white;
+            padding:40px;
+            border-radius:20px;
+            box-shadow:0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:10px;
+            font-size:36px;
+        }
+
+        .subtitle{
+            text-align:center;
+            color:gray;
+            margin-bottom:25px;
+        }
+
+        form p{
+            margin-bottom:18px;
+        }
+
+        input{
+            width:100%;
+            padding:14px;
+            border:1px solid #ddd;
+            border-radius:10px;
+            margin-top:8px;
+        }
+
+        .register-btn{
+            width:100%;
+            padding:14px;
+            background:black;
+            color:white;
+            border:none;
+            border-radius:10px;
+            font-size:16px;
+            cursor:pointer;
+            margin-top:15px;
+        }
+
+        .login-link{
+            text-align:center;
+            margin-top:20px;
+        }
+
+        .login-link a{
+            text-decoration:none;
+            font-weight:bold;
+            color:black;
+        }
+
+        ul{
+            padding-left:20px;
+            color:gray;
+            font-size:14px;
+        }
+        label{
+            display:block;
+            margin-top:12px;
+            margin-bottom:1px;
+            font-size:14px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="register-container">
+
+        <h1>Create Account</h1>
+
+        <p class="subtitle">
+            Register to continue
+        </p>
+
+        <form method="POST">
+
+    {% csrf_token %}
+    {% if error %}
+
+<p style="color:red; margin-bottom:15px;">
+    {{ error }}
+</p>
+
+{% endif %}
+
+    <div class="input-group">
+
+        <label>Username</label>
+
+        <input
+            type="text"
+            name="username"
+            placeholder="Enter Username"
+            required
+        >
+
+    </div>
+
+    <div class="input-group">
+
+        <label>Email</label>
+
+        <input
+            type="email"
+            name="email"
+            placeholder="Enter Email"
+            required
+        >
+
+    </div>
+
+    <div class="input-group">
+
+        <label>Password</label>
+
+        <input
+            type="password"
+            name="password1"
+            placeholder="Enter Password"
+            required
+        >
+
+    </div>
+
+    <div class="input-group">
+
+        <label>Confirm Password</label>
+
+        <input
+            type="password"
+            name="password2"
+            placeholder="Confirm Password"
+            required
+        >
+
+    </div>
+
+    <button type="submit" class="register-btn">
+        Register
+    </button>
+
+</form>
+
+        <div class="login-link">
+
+            Already have an account?
+
+            <a href="{% url 'login' %}">
+                Login
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

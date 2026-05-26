@@ -2,52 +2,82 @@ from datetime import timedelta
 from django.utils import timezone
 from .weather_service import get_weather
 from .maps_service import get_route_info
+from .risk_engine import (
+    calculate_weather_risk,
+    calculate_distance_risk,
+    calculate_traffic_risk,
+    calculate_eta_risk,
+    calculate_total_risk,
+    get_risk_label
+)
+def calculate_shipment_status(shipment):
+    # Status Automation Rules:
+    # 1. DELIVERED: progress >= 100 AND current date >= ETA
+    is_delivered = getattr(shipment, 'delivered', False) or shipment.status == 'DELIVERED' or shipment.status == 'Delivered' or (shipment.progress >= 100 and (shipment.eta is None or timezone.now().date() >= shipment.eta))
+    if is_delivered:
+        return "DELIVERED"
+        
+    # 2. AT RISK: risk_score >= 70
+    if shipment.risk_score >= 70:
+        return "AT RISK"
+        
+    # 3. DELAYED: eta < today
+    if shipment.eta and shipment.eta < timezone.now().date():
+        return "DELAYED"
+        
+    # 4. IN TRANSIT: coordinates populated
+    if shipment.current_lat and shipment.current_lng:
+        return "IN TRANSIT"
+        
+    # 5. PENDING: default state
+    return "PENDING"
 def predict_delay(shipment):
-    print(f"[Predict] Starting: {shipment.shipment_id}")
-    # Weather API
+    print(f"[Predict] Refined Starting: {shipment.shipment_id}")
+    
+    # 1. Fetch weather API
     origin_data = get_weather(shipment.origin)
     dest_data   = get_weather(shipment.destination)
-    # Google Maps API
+    
+    # 2. Fetch Google Maps route info
     route_info    = get_route_info(shipment.origin, shipment.destination)
     distance_km   = route_info['distance_km']
     duration_hours = route_info['duration_hours']
     origin_coords = route_info['origin_coords']
     dest_coords   = route_info['dest_coords']
+    
     # Calculate traffic delay hours and level
     traffic_delay_hours, congestion_level = _calculate_traffic_delay(
         origin_data['weather'],
         dest_data['weather'],
         distance_km,
     )
-    # Calculate combined risk
-    weather_score = (origin_data['risk_score'] + dest_data['risk_score']) / 2.0  # max 0.5
-    traffic_score = min(traffic_delay_hours / 5.0, 0.3)  # max 0.3
-    distance_score = min(distance_km / 5000.0, 0.2)  # max 0.2
-    risk_score = min(weather_score + traffic_score + distance_score, 1.0)
-    if risk_score >= 0.70:
-        risk_label = 'Critical'
-    elif risk_score >= 0.50:
-        risk_label = 'High'
-    elif risk_score >= 0.25:
-        risk_label = 'Medium'
-    else:
-        risk_label = 'Low'
+    
+    # Calculate dynamic risk factors
+    weather_factor = (calculate_weather_risk(origin_data['weather']) + calculate_weather_risk(dest_data['weather'])) / 2.0
+    traffic_factor = calculate_traffic_risk(traffic_delay_hours)
+    distance_factor = calculate_distance_risk(distance_km)
+    eta_factor = calculate_eta_risk(traffic_delay_hours)
+    
+    # Refined weighted risk score formula (returned out of 100)
+    risk_score = calculate_total_risk(
+        weather_risk=weather_factor,
+        traffic_risk=traffic_factor,
+        distance_risk=distance_factor,
+        eta_risk=eta_factor
+    )
+    risk_label = get_risk_label(risk_score)
+    
     # Save serialization to 'on' field
     shipment.on = f"duration: {duration_hours:.1f}h | traffic_delay: {traffic_delay_hours:.1f}h | congestion: {congestion_level}"
+    
     # Recalculate ETA (original departure + estimated travel hours + traffic delay hours)
     total_travel_hours = duration_hours + traffic_delay_hours
     eta_datetime = shipment.departure + timedelta(hours=total_travel_hours)
     shipment.eta = eta_datetime.date()
-    # Determine status initially based on departure time
-    now = timezone.now()
-    if shipment.departure > now:
-        new_status = 'Pending'
-    else:
-        new_status = 'At Risk' if risk_label in ['High', 'Critical'] else 'In Transit'
-    # Save initial fields
-    shipment.risk_score          = round(risk_score, 3)
+    
+    # Save all calculated dynamic fields
+    shipment.risk_score          = round(risk_score, 1)
     shipment.risk                = risk_label
-    shipment.status              = new_status
     shipment.distance_km         = distance_km
     shipment.origin_weather      = origin_data['weather']
     shipment.origin_temp         = origin_data['temperature']
@@ -57,34 +87,30 @@ def predict_delay(shipment):
     shipment.origin_lng          = origin_coords['lng']
     shipment.dest_lat            = dest_coords['lat']
     shipment.dest_lng            = dest_coords['lng']
-    shipment.save(update_fields=[
-        'risk_score', 'risk', 'status', 'distance_km',
-        'origin_weather', 'origin_temp',
-        'destination_weather', 'destination_temp',
-        'origin_lat', 'origin_lng',
-        'dest_lat', 'dest_lng',
-        'on', 'eta'
-    ])
+    
+    # Initial status computation and save
+    shipment.status = calculate_shipment_status(shipment)
+    shipment.save()
+    
     # Run telemetry update to interpolate progress and coordinates
     update_shipment_telemetry(shipment)
-    print(f"[Predict] Done: {risk_label} ({risk_score:.0%}), {distance_km}km")
-    print(f"[Predict] Coords: origin=({origin_coords['lat']},{origin_coords['lng']})")
-    # Generate Alerts
-    _create_alerts(shipment, weather_score, traffic_delay_hours, congestion_level)
+    
+    # Generate Alerts dynamically based on refined duplicate-proof alert engine
+    _create_alerts(shipment, weather_factor, traffic_delay_hours, congestion_level)
+    
+    print(f"[Predict] Refined Done: {risk_label} ({risk_score:.1f}%), {distance_km}km")
 def _calculate_traffic_delay(origin_weather, dest_weather, distance_km):
     traffic_delay = 0.0
-    
-    # 1. Weather impact on traffic (Storm adds 3.0h, rain adds 1.5h, fog adds 1.0h)
     for w in [origin_weather.lower(), dest_weather.lower()]:
-        if any(kw in w for kw in ['thunder', 'storm', 'squall', 'tornado', 'heavy rain']):
+        if any(kw in w for kw in ['thunder', 'storm', 'squall', 'tornado', 'heavy rain', 'flood']):
             traffic_delay += 3.0
         elif any(kw in w for kw in ['rain', 'drizzle', 'shower', 'snow']):
             traffic_delay += 1.5
         elif any(kw in w for kw in ['fog', 'haze', 'mist', 'smoke']):
             traffic_delay += 1.0
-    # 2. Distance accumulation (e.g., 0.5 hours for every 500 km)
+            
     traffic_delay += (distance_km / 500.0) * 0.5
-    # Determine congestion level
+    
     if traffic_delay >= 5.0:
         level = 'Severe'
     elif traffic_delay >= 3.0:
@@ -93,73 +119,65 @@ def _calculate_traffic_delay(origin_weather, dest_weather, distance_km):
         level = 'Moderate'
     else:
         level = 'Low'
+        
     return round(traffic_delay, 1), level
-def _create_alerts(shipment, weather_score, traffic_delay, congestion_level):
+def _add_alert_if_not_exists(shipment, title, message, level):
     from alerts.models import Alert
+    existing = Alert.objects.filter(
+        shipment_id_ref=shipment.shipment_id,
+        message=message,
+        acknowledged=False
+    ).exists()
     
-    # 1. Weather Alerts
-    weather_desc = f"{shipment.origin_weather} (Origin) / {shipment.destination_weather} (Destination)"
+    if not existing:
+        Alert.objects.create(
+            shipment_id_ref=shipment.shipment_id,
+            title=title,
+            message=message,
+            level=level,
+            ai_action="Dynamic route adjustment and dispatcher contact recommended."
+        )
+def _create_alerts(shipment, weather_score, traffic_delay, congestion_level):
+    delay_prob = max(5, int(shipment.risk_score * 0.8))
+    
+    # Weather Alerts (storms, floods)
     origin_w = shipment.origin_weather.lower()
     dest_w = shipment.destination_weather.lower()
     
-    if any(kw in origin_w or kw in dest_w for kw in ['thunder', 'storm', 'squall', 'tornado', 'heavy rain']):
-        Alert.objects.get_or_create(
-            shipment_id_ref=shipment.shipment_id,
-            title=f"Severe Storm Alert - {shipment.shipment_id}",
-            defaults={
-                'message': f"Severe storm conditions detected along route. Weather: {weather_desc}.",
-                'level': 'critical',
-                'ai_action': "High delay risk. Advise driver to park in a safe zone until the storm subsides."
-            }
-        )
-    elif any(kw in origin_w or kw in dest_w for kw in ['rain', 'drizzle', 'shower', 'snow']):
-        Alert.objects.get_or_create(
-            shipment_id_ref=shipment.shipment_id,
-            title=f"Rain Warning - {shipment.shipment_id}",
-            defaults={
-                'message': f"Rain conditions detected. Weather: {weather_desc}.",
-                'level': 'warning',
-                'ai_action': "Reduce transit speed. Monitor wet road conditions."
-            }
-        )
-    if shipment.origin_temp > 40 or shipment.destination_temp > 40:
-        Alert.objects.get_or_create(
-            shipment_id_ref=shipment.shipment_id,
-            title=f"Extreme Heat Warning - {shipment.shipment_id}",
-            defaults={
-                'message': f"Extreme heat detected along route: {weather_desc}. Origin temp: {shipment.origin_temp}°C, Destination temp: {shipment.destination_temp}°C.",
-                'level': 'warning',
-                'ai_action': "Ensure temperature-controlled cargo storage is operational."
-            }
-        )
-    # 2. Traffic Congestion Alerts
-    if congestion_level in ['Heavy', 'Severe']:
-        Alert.objects.get_or_create(
-            shipment_id_ref=shipment.shipment_id,
-            title=f"Traffic Congestion Alert - {shipment.shipment_id}",
-            defaults={
-                'message': f"High congestion ({congestion_level}) detected along route, causing {traffic_delay:.1f} hours delay.",
-                'level': 'critical' if congestion_level == 'Severe' else 'warning',
-                'ai_action': "Dynamic routing recommended to bypass urban bottleneck zones."
-            }
-        )
-    # 3. AI Risk Alerts
-    if shipment.risk in ['High', 'Critical']:
-        Alert.objects.get_or_create(
-            shipment_id_ref=shipment.shipment_id,
-            title=f"High Risk Alert - {shipment.shipment_id}",
-            defaults={
-                'message': f"Shipment {shipment.shipment_id} is flagged at {shipment.risk} risk. Risk Score: {shipment.risk_score:.0%}.",
-                'level': 'critical' if shipment.risk == 'Critical' else 'warning',
-                'ai_action': "Dispatching backup route recommendations. Contact operator."
-            }
-        )
+    is_storm = any(kw in origin_w or kw in dest_w for kw in ['thunder', 'storm', 'squall', 'tornado', 'heavy rain'])
+    is_flood = any(kw in origin_w or kw in dest_w for kw in ['flood', 'drown', 'submerge'])
+    
+    alert_lvl = "critical" if shipment.risk_score >= 75 else "warning"
+    
+    if is_storm:
+        msg = f"Severe storm conditions detected along route for {shipment.shipment_id}."
+        _add_alert_if_not_exists(shipment, "Severe Storm Alert", msg, alert_lvl)
+    elif is_flood:
+        msg = f"Potential flooding along the route for {shipment.shipment_id}."
+        _add_alert_if_not_exists(shipment, "Flooding Warning", msg, alert_lvl)
+        
+    # Congestion Alerts (extreme congestion)
+    if congestion_level in ['Heavy', 'Severe'] or traffic_delay >= 5.0:
+        msg = f"Extreme traffic congestion detected along route, causing {traffic_delay:.1f} hours delay."
+        _add_alert_if_not_exists(shipment, "Extreme Congestion Alert", msg, alert_lvl)
+        
+    # Severe delay probability alerts
+    if delay_prob >= 75:
+        msg = f"High probability of late delivery ({delay_prob}% delay chance) for shipment {shipment.shipment_id}."
+        _add_alert_if_not_exists(shipment, "High Delay Risk Alert", msg, "critical")
+        
+    # Base risk score alerts (>=75: CRITICAL, >=50: WARNING)
+    if shipment.risk_score >= 75:
+        msg = f"Shipment {shipment.shipment_id} is flagged at CRITICAL risk. Risk Score: {shipment.risk_score:.1f}%."
+        _add_alert_if_not_exists(shipment, f"Critical Risk Alert - {shipment.shipment_id}", msg, "critical")
+    elif shipment.risk_score >= 50:
+        msg = f"Shipment {shipment.shipment_id} is flagged at WARNING risk. Risk Score: {shipment.risk_score:.1f}%."
+        _add_alert_if_not_exists(shipment, f"High Risk Alert - {shipment.shipment_id}", msg, "warning")
 def update_shipment_telemetry(shipment):
-    # Only simulate progress if shipment is not delivered
-    if shipment.status == 'Delivered' or shipment.progress >= 100:
-        return
-    # Extract duration and traffic delay from the serialized 'on' field
-    duration_hours = 30.0
+    from django.utils import timezone
+    now = timezone.now()
+    
+    duration_hours = 0.0
     traffic_delay = 0.0
     if shipment.on and "duration:" in shipment.on:
         try:
@@ -170,62 +188,62 @@ def update_shipment_telemetry(shipment):
                 elif 'traffic_delay:' in part:
                     traffic_delay = float(part.split(':')[1].strip().replace('h', ''))
         except Exception as e:
-            print(f"[Telemetry] Parse error for shipment {shipment.shipment_id}: {e}")
+            print(f"[Telemetry] Parse error: {e}")
+            
     total_travel_hours = duration_hours + traffic_delay
     if total_travel_hours <= 0:
         total_travel_hours = 1.0
-    now = timezone.now()
-    departure = shipment.departure
-    elapsed_time = now - departure
+        
+    elapsed_time = now - shipment.departure
     elapsed_hours = elapsed_time.total_seconds() / 3600.0
+    
     if elapsed_hours < 0:
-        # Future shipment
-        shipment.progress = 0
-        shipment.current_lat = shipment.origin_lat
-        shipment.current_lng = shipment.origin_lng
-        shipment.status = 'Pending'
-        shipment.save(update_fields=['progress', 'current_lat', 'current_lng', 'status'])
-        return
-    progress = min(int((elapsed_hours / total_travel_hours) * 100), 100)
+        progress = 0
+    else:
+        progress = min(int((elapsed_hours / total_travel_hours) * 100), 100)
+        
     shipment.progress = progress
+    
     if progress >= 100:
         shipment.current_lat = shipment.dest_lat
         shipment.current_lng = shipment.dest_lng
-        shipment.status = 'Delivered'
     else:
         fraction = progress / 100.0
         shipment.current_lat = shipment.origin_lat + (shipment.dest_lat - shipment.origin_lat) * fraction
         shipment.current_lng = shipment.origin_lng + (shipment.dest_lng - shipment.origin_lng) * fraction
         
-        # If in-progress, assign status dynamically
-        shipment.status = 'At Risk' if shipment.risk in ['High', 'Critical'] else 'In Transit'
-    shipment.save(update_fields=['progress', 'current_lat', 'current_lng', 'status'])
+    # Automatic status updating using standard logic
+    shipment.status = calculate_shipment_status(shipment)
+    shipment.save()
 def calculate_prediction_score(shipment) -> dict:
-    delay_pct = round(shipment.risk_score * 100)
+    delay_pct = max(5, int(shipment.risk_score * 0.8))
     weather   = shipment.origin_weather.lower() if shipment.origin_weather else ''
-    if 'thunder' in weather or 'storm' in weather:
-        w_label, w_pct, w_color = 'Critical', 95, 'danger'
-    elif 'rain' in weather or 'snow' in weather:
-        w_label, w_pct, w_color = 'High', 78, 'warning'
-    elif 'cloud' in weather or 'mist' in weather or 'haze' in weather:
+    
+    if any(x in weather for x in ['storm', 'thunder', 'flood', 'rain', 'drizzle', 'shower', 'snow']):
+        w_label, w_pct, w_color = 'High', 85, 'danger'
+    elif any(x in weather for x in ['hot', 'heat', 'sunny', 'warm']):
         w_label, w_pct, w_color = 'Medium', 45, 'warning'
     else:
         w_label, w_pct, w_color = 'Low', 15, 'success'
-    dist = shipment.distance_km or 2000
-    if dist > 8000:      p_label, p_pct, p_color = 'Critical', 90, 'danger'
-    elif dist > 4000:    p_label, p_pct, p_color = 'High',     65, 'warning'
-    elif dist > 1500:    p_label, p_pct, p_color = 'Medium',   40, 'warning'
-    else:                p_label, p_pct, p_color = 'Low',      18, 'success'
-    if shipment.risk in ['Critical', 'High']:
-        ai_rec = "Immediate route diversion recommended."
-    elif shipment.risk == 'Medium':
-        ai_rec = "Monitor shipment. Consider backup route."
+        
+    dist = shipment.distance_km
+    if dist > 800:
+        p_label, p_pct, p_color = 'High',     85, 'danger'
+    elif dist > 200:
+        p_label, p_pct, p_color = 'Medium',   50, 'warning'
     else:
-        ai_rec = "Shipment on track. No action needed."
+        p_label, p_pct, p_color = 'Low',      15, 'success'
+        
+    if shipment.risk_score >= 70:
+        ai_rec = "Immediate route diversion recommended due to high risk."
+    elif shipment.risk_score >= 31:
+        ai_rec = "Monitor shipment closely and prepare alternative routing."
+    else:
+        ai_rec = "Shipment on track. Standard routing active."
+        
     return {
         'delay_probability_pct': delay_pct,
         'weather_label': w_label, 'weather_bar_pct': w_pct, 'weather_bar_color': w_color,
         'port_label': p_label,   'port_bar_pct': p_pct,    'port_bar_color': p_color,
         'ai_recommendation': ai_rec,
     }
-    

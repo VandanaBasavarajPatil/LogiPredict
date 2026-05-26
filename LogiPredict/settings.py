@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'login',
     'dashboard',
     'shipment',
     'predictions',
@@ -144,6 +145,12 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
+
+LOGIN_URL = 'login'
+
+LOGIN_REDIRECT_URL = 'dashboard'
+
+LOGOUT_REDIRECT_URL = 'login'
 
 GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
 OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
