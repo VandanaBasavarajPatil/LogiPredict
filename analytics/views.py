@@ -1,44 +1,91 @@
+# analytics/views.py  — FIXED
+# Changes:
+#   1. delivered query matches actual STATUS_CHOICES ("Delivered" only)
+#   2. delayed uses status="Delayed" not risk_score threshold
+#   3. risk distribution uses correct label-based queries matching RISK_CHOICES
+#   4. context now passes normal/medium/at_risk AS PERCENTAGES for the donut chart
+
 from django.shortcuts import render
 from shipment.models import Shipment
 from django.db.models import Count
 from shipment.services import update_shipment_telemetry
 from django.contrib.auth.decorators import login_required
 
+
 @login_required
 def analytics_dashboard(request):
-    # Refresh telemetry on load
+
+    # --- Telemetry refresh ---
     for shipment in Shipment.objects.all():
         try:
             update_shipment_telemetry(shipment)
         except Exception as e:
             print(f"[Telemetry Warning] {e}")
-    # Total shipments count
+
     total_shipments = Shipment.objects.count()
-    # On-Time count: status == "DELIVERED"
-    delivered_shipments = Shipment.objects.filter(status__in=["DELIVERED", "Delivered"]).count()
-    # Delayed count: delay_probability >= 50 (since delay_probability = max(5, int(risk_score * 0.8)), this matches risk_score >= 62.5)
-    delayed_shipments = Shipment.objects.filter(risk_score__gte=62.5).count()
-    # Risk Distribution (LOW: 0-30, MEDIUM: 31-60, HIGH: 61-100)
-    normal_shipments = Shipment.objects.filter(risk_score__lte=30).count()  # LOW
-    medium_shipments = Shipment.objects.filter(risk_score__gt=30, risk_score__lte=60).count()  # MEDIUM
-    at_risk_shipments = Shipment.objects.filter(risk_score__gt=60).count()  # HIGH
-    # Carrier statistics
-    carrier_stats = Shipment.objects.values('carrier').annotate(total=Count('id')).order_by('-total')
-    # Top Route statistics
-    route_stats = Shipment.objects.values('origin', 'destination').annotate(total=Count('id')).order_by('-total')
-    # Delay percentage for the red bar chart
+
+    # FIX 1: Match exact STATUS_CHOICES — "Delivered" (not "DELIVERED")
+    delivered_shipments = Shipment.objects.filter(status="Delivered").count()
+
+    # FIX 2: Delayed = status is Delayed (not a risk score threshold)
+    delayed_shipments = Shipment.objects.filter(status="Delayed").count()
+
+    # FIX 3: Risk distribution — match RISK_CHOICES labels exactly
+    # Low  (0–30 risk_score, label="Low")
+    # Medium (31–60, label="Medium")
+    # High/Critical (61+, label="High" or "Critical")
+    low_shipments      = Shipment.objects.filter(risk="Low").count()
+    medium_shipments   = Shipment.objects.filter(risk="Medium").count()
+    high_shipments     = Shipment.objects.filter(risk__in=["High", "Critical"]).count()
+    at_risk_shipments  = high_shipments  # alias for existing template variable
+
+    # --- Percentage calculations for donut chart ---
     if total_shipments > 0:
-        delay_percentage = int((delayed_shipments / total_shipments) * 100)
+        low_pct    = round((low_shipments    / total_shipments) * 100)
+        medium_pct = round((medium_shipments / total_shipments) * 100)
+        high_pct   = 100 - low_pct - medium_pct   # ensure it adds to 100
     else:
-        delay_percentage = 0
+        low_pct, medium_pct, high_pct = 0, 0, 0
+
+    # --- Bar chart: on-time vs delayed ---
+    if total_shipments > 0:
+        # delivered % used for green bar
+        delivered_pct  = min(int((delivered_shipments / total_shipments) * 100), 100)
+        # at-risk % used for red bar
+        delay_percentage = min(int((at_risk_shipments / total_shipments) * 100), 100)
+    else:
+        delivered_pct, delay_percentage = 0, 0
+
+    # --- Carrier and route stats ---
+    carrier_stats = (
+        Shipment.objects
+        .values("carrier")
+        .annotate(total=Count("id"))
+        .order_by("-total")
+    )
+    route_stats = (
+        Shipment.objects
+        .values("origin", "destination")
+        .annotate(total=Count("id"))
+        .order_by("-total")
+    )
+
     context = {
-        'total_shipments': total_shipments,
-        'delivered_shipments': delivered_shipments,
-        'at_risk_shipments': at_risk_shipments,
-        'normal_shipments': normal_shipments,
-        'medium_shipments': medium_shipments,
-        'delay_percentage': delay_percentage,
-        'carrier_stats': carrier_stats,
-        'route_stats': route_stats,
+        "total_shipments":    total_shipments,
+        "delivered_shipments": delivered_shipments,
+        "delayed_shipments":  delayed_shipments,
+        "at_risk_shipments":  at_risk_shipments,
+        "low_shipments":      low_shipments,
+        "medium_shipments":   medium_shipments,
+        "high_shipments":     high_shipments,
+        # Percentages for charts
+        "low_pct":            low_pct,
+        "medium_pct":         medium_pct,
+        "high_pct":           high_pct,
+        "delivered_pct":      delivered_pct,
+        "delay_percentage":   delay_percentage,
+        # Table data
+        "carrier_stats":      carrier_stats,
+        "route_stats":        route_stats,
     }
-    return render(request, 'analytics/analytics.html', context)
+    return render(request, "analytics/analytics.html", context)
