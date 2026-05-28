@@ -12,53 +12,52 @@ from .risk_engine import (
 )
 def calculate_shipment_status(shipment):
     # Status Automation Rules:
-    # 1. DELIVERED: progress >= 100 AND current date >= ETA
+    # DELIVERED: progress >= 100 AND current date >= ETA
     is_delivered = getattr(shipment, 'delivered', False) or shipment.status == 'DELIVERED' or shipment.status == 'Delivered' or (shipment.progress >= 100 and (shipment.eta is None or timezone.now().date() >= shipment.eta))
     if is_delivered:
         return "DELIVERED"
         
-    # 2. AT RISK: risk_score >= 70
+    # AT RISK: risk_score >= 70
     if shipment.risk_score >= 70:
         return "AT RISK"
         
-    # 3. DELAYED: eta < today
+    # DELAYED: eta < today
     if shipment.eta and shipment.eta < timezone.now().date():
         return "DELAYED"
         
-    # 4. IN TRANSIT: coordinates populated
+    # IN TRANSIT: coordinates populated
     if shipment.current_lat and shipment.current_lng:
         return "IN TRANSIT"
         
-    # 5. PENDING: default state
+    # PENDING: default state
     return "PENDING"
 def predict_delay(shipment):
     print(f"[Predict] Refined Starting: {shipment.shipment_id}")
     
-    # 1. Fetch weather API
+   
     origin_data = get_weather(shipment.origin)
     dest_data   = get_weather(shipment.destination)
     
-    # 2. Fetch Google Maps route info
+ 
     route_info    = get_route_info(shipment.origin, shipment.destination)
     distance_km   = route_info['distance_km']
     duration_hours = route_info['duration_hours']
     origin_coords = route_info['origin_coords']
     dest_coords   = route_info['dest_coords']
     
-    # Calculate traffic delay hours and level
+
     traffic_delay_hours, congestion_level = _calculate_traffic_delay(
         origin_data['weather'],
         dest_data['weather'],
         distance_km,
     )
-    
-    # Calculate dynamic risk factors
+
     weather_factor = (calculate_weather_risk(origin_data['weather']) + calculate_weather_risk(dest_data['weather'])) / 2.0
     traffic_factor = calculate_traffic_risk(traffic_delay_hours)
     distance_factor = calculate_distance_risk(distance_km)
     eta_factor = calculate_eta_risk(traffic_delay_hours)
     
-    # Refined weighted risk score formula (returned out of 100)
+
     risk_score = calculate_total_risk(
         weather_risk=weather_factor,
         traffic_risk=traffic_factor,
@@ -67,15 +66,14 @@ def predict_delay(shipment):
     )
     risk_label = get_risk_label(risk_score)
     
-    # Save serialization to 'on' field
+
     shipment.on = f"duration: {duration_hours:.1f}h | traffic_delay: {traffic_delay_hours:.1f}h | congestion: {congestion_level}"
     
-    # Recalculate ETA (original departure + estimated travel hours + traffic delay hours)
+
     total_travel_hours = duration_hours + traffic_delay_hours
     eta_datetime = shipment.departure + timedelta(hours=total_travel_hours)
     shipment.eta = eta_datetime.date()
     
-    # Save all calculated dynamic fields
     shipment.risk_score          = round(risk_score, 1)
     shipment.risk                = risk_label
     shipment.distance_km         = distance_km
@@ -88,15 +86,19 @@ def predict_delay(shipment):
     shipment.dest_lat            = dest_coords['lat']
     shipment.dest_lng            = dest_coords['lng']
     
-    # Initial status computation and save
+
     shipment.status = calculate_shipment_status(shipment)
     shipment.save()
     
-    # Run telemetry update to interpolate progress and coordinates
+
     update_shipment_telemetry(shipment)
     
-    # Generate Alerts dynamically based on refined duplicate-proof alert engine
-    _create_alerts(shipment, weather_factor, traffic_delay_hours, congestion_level)
+
+    try:
+        from alerts.services import generate_alerts_for_shipment
+        generate_alerts_for_shipment(shipment)
+    except Exception as e:
+        print(f"[Alerts] Generation error: {e}")
     
     print(f"[Predict] Refined Done: {risk_label} ({risk_score:.1f}%), {distance_km}km")
 def _calculate_traffic_delay(origin_weather, dest_weather, distance_km):
@@ -140,7 +142,7 @@ def _add_alert_if_not_exists(shipment, title, message, level):
 def _create_alerts(shipment, weather_score, traffic_delay, congestion_level):
     delay_prob = max(5, int(shipment.risk_score * 0.8))
     
-    # Weather Alerts (storms, floods)
+
     origin_w = shipment.origin_weather.lower()
     dest_w = shipment.destination_weather.lower()
     
@@ -156,17 +158,17 @@ def _create_alerts(shipment, weather_score, traffic_delay, congestion_level):
         msg = f"Potential flooding along the route for {shipment.shipment_id}."
         _add_alert_if_not_exists(shipment, "Flooding Warning", msg, alert_lvl)
         
-    # Congestion Alerts (extreme congestion)
+
     if congestion_level in ['Heavy', 'Severe'] or traffic_delay >= 5.0:
         msg = f"Extreme traffic congestion detected along route, causing {traffic_delay:.1f} hours delay."
         _add_alert_if_not_exists(shipment, "Extreme Congestion Alert", msg, alert_lvl)
         
-    # Severe delay probability alerts
+
     if delay_prob >= 75:
         msg = f"High probability of late delivery ({delay_prob}% delay chance) for shipment {shipment.shipment_id}."
         _add_alert_if_not_exists(shipment, "High Delay Risk Alert", msg, "critical")
         
-    # Base risk score alerts (>=75: CRITICAL, >=50: WARNING)
+
     if shipment.risk_score >= 75:
         msg = f"Shipment {shipment.shipment_id} is flagged at CRITICAL risk. Risk Score: {shipment.risk_score:.1f}%."
         _add_alert_if_not_exists(shipment, f"Critical Risk Alert - {shipment.shipment_id}", msg, "critical")
@@ -212,9 +214,16 @@ def update_shipment_telemetry(shipment):
         shipment.current_lat = shipment.origin_lat + (shipment.dest_lat - shipment.origin_lat) * fraction
         shipment.current_lng = shipment.origin_lng + (shipment.dest_lng - shipment.origin_lng) * fraction
         
-    # Automatic status updating using standard logic
+
     shipment.status = calculate_shipment_status(shipment)
     shipment.save()
+
+    # Re-generate alerts after telemetry update (catches overdue/status changes)
+    try:
+        from alerts.services import generate_alerts_for_shipment
+        generate_alerts_for_shipment(shipment)
+    except Exception as e:
+        print(f"[Alerts] Telemetry alert error: {e}")
 def calculate_prediction_score(shipment) -> dict:
     delay_pct = max(5, int(shipment.risk_score * 0.8))
     weather   = shipment.origin_weather.lower() if shipment.origin_weather else ''

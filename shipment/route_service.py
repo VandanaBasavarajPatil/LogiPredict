@@ -83,7 +83,7 @@ def calculate_route_distance(origin, destination):
     if google_distance:
         return google_distance
 
-    # OSRM Fallback
+   
     osrm_distance = _query_osrm_distance(
         origin_coords,
         dest_coords
@@ -92,13 +92,13 @@ def calculate_route_distance(origin, destination):
     if osrm_distance:
         return osrm_distance
 
-    # Final fallback (approximation)
+  
     haversine = _calculate_haversine_distance(
         origin_coords,
         dest_coords
     )
 
-    # Road distance approximation
+
     return round(haversine * 1.20, 1)
 
 
@@ -110,24 +110,24 @@ def update_shipment_route_data(shipment):
     origin_coords = geocode_city(shipment.origin)
     dest_coords = geocode_city(shipment.destination)
 
-    # Save origin coordinates
+
     if origin_coords:
         shipment.origin_lat = origin_coords["lat"]
         shipment.origin_lng = origin_coords["lng"]
 
-        # Current position starts at origin
+       
         if shipment.current_lat == 0:
             shipment.current_lat = origin_coords["lat"]
 
         if shipment.current_lng == 0:
             shipment.current_lng = origin_coords["lng"]
 
-    # Save destination coordinates
+
     if dest_coords:
         shipment.dest_lat = dest_coords["lat"]
         shipment.dest_lng = dest_coords["lng"]
 
-    # Calculate route distance
+
     shipment.distance_km = calculate_route_distance(
         shipment.origin,
         shipment.destination

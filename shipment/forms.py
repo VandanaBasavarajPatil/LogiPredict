@@ -1,5 +1,3 @@
-# shipment/forms.py — REPLACE ENTIRE FILE
-
 from django import forms
 from .models import Shipment
 
@@ -9,9 +7,7 @@ class ShipmentForm(forms.ModelForm):
     class Meta:
         model = Shipment
 
-        # CRITICAL: risk and status are NOT here
-        # They are set automatically by predict_delay()
-        # User should never type these manually
+   
         fields = [
             'shipment_id',
             'origin',

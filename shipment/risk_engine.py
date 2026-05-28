@@ -19,7 +19,7 @@ def calculate_distance_risk(distance):
         return 0.50
     return 0.15
 def calculate_traffic_risk(delay_hours):
-    # Heavy congestion strongly increases risk
+  
     if delay_hours > 6:
         return 0.90
     elif delay_hours > 3:
@@ -40,11 +40,11 @@ def calculate_total_risk(weather_risk, traffic_risk, distance_risk, eta_risk):
         distance_risk * 0.30 +
         eta_risk * 0.15
     )
-    # Return as percentage (0 - 100) to keep templates and views accurate
+
     return round(score_fraction * 100, 1)
 def get_risk_label(score):
     pct = round(score)
-    # Risk Classification: 0-30 = LOW, 31-60 = MEDIUM, 61-100 = HIGH
+
     if pct <= 30:
         return "Low"
     elif pct <= 60:

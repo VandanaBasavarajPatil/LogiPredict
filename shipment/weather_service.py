@@ -41,7 +41,7 @@ def _calculate_risk(temp, humidity, wind_speed, rain_mm, weather_main, descripti
     desc_lower = description.lower()
     weather_lower = weather_main.lower()
     
-    # 1. Weather Severity (Condition checking)
+
     is_storm = any(kw in desc_lower or kw in weather_lower for kw in ['thunderstorm', 'squall', 'tornado', 'storm', 'heavy rain'])
     is_rain = any(kw in desc_lower or kw in weather_lower for kw in ['rain', 'drizzle', 'shower', 'snow']) and not is_storm
     is_fog = any(kw in desc_lower or kw in weather_lower for kw in ['fog', 'haze', 'mist', 'smoke'])
@@ -56,19 +56,19 @@ def _calculate_risk(temp, humidity, wind_speed, rain_mm, weather_main, descripti
     elif is_heavy_clouds:
         score += 0.08
         
-    # 2. Wind Speed
+    # Wind Speed
     if wind_speed > 15:
         score += 0.10
     elif wind_speed > 8:
         score += 0.05
         
-    # 3. Temperature & Heat
+    # Temperature & Heat
     if temp > 40 or temp < -10:
         score += 0.08
     elif temp > 35 or temp < 0:
         score += 0.04
         
-    # 4. Humidity
+    # Humidity
     if humidity > 90:
         score += 0.05
         

@@ -29,7 +29,7 @@ class Shipment(models.Model):
     on          = models.CharField(max_length=200, blank=True)
     progress    = models.IntegerField(default=0)
 
-    # NEW fields — added for API integration
+
     risk_score          = models.FloatField(default=0.0)
     distance_km         = models.FloatField(default=0.0)
     origin_weather      = models.CharField(max_length=100, blank=True)

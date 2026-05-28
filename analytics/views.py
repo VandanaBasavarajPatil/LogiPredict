@@ -1,10 +1,3 @@
-# analytics/views.py  — FIXED
-# Changes:
-#   1. delivered query matches actual STATUS_CHOICES ("Delivered" only)
-#   2. delayed uses status="Delayed" not risk_score threshold
-#   3. risk distribution uses correct label-based queries matching RISK_CHOICES
-#   4. context now passes normal/medium/at_risk AS PERCENTAGES for the donut chart
-
 from django.shortcuts import render
 from shipment.models import Shipment
 from django.db.models import Count
@@ -24,16 +17,12 @@ def analytics_dashboard(request):
 
     total_shipments = Shipment.objects.count()
 
-    # FIX 1: Match exact STATUS_CHOICES — "Delivered" (not "DELIVERED")
+    # Match exact STATUS_CHOICES — "Delivered" (not "DELIVERED")
     delivered_shipments = Shipment.objects.filter(status="Delivered").count()
 
-    # FIX 2: Delayed = status is Delayed (not a risk score threshold)
+    # Delayed = status is Delayed (not a risk score threshold)
     delayed_shipments = Shipment.objects.filter(status="Delayed").count()
 
-    # FIX 3: Risk distribution — match RISK_CHOICES labels exactly
-    # Low  (0–30 risk_score, label="Low")
-    # Medium (31–60, label="Medium")
-    # High/Critical (61+, label="High" or "Critical")
     low_shipments      = Shipment.objects.filter(risk="Low").count()
     medium_shipments   = Shipment.objects.filter(risk="Medium").count()
     high_shipments     = Shipment.objects.filter(risk__in=["High", "Critical"]).count()
@@ -56,7 +45,7 @@ def analytics_dashboard(request):
     else:
         delivered_pct, delay_percentage = 0, 0
 
-    # --- Carrier and route stats ---
+  
     carrier_stats = (
         Shipment.objects
         .values("carrier")

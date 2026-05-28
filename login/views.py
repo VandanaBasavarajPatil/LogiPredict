@@ -1,5 +1,3 @@
-# login/views.py
-
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -7,14 +5,6 @@ from .forms import RegisterForm
 
 
 def login_view(request):
-    """
-    GET:  Show login form.
-    POST: Validate credentials → login → redirect to dashboard.
-
-    If user is already logged in → redirect to dashboard immediately.
-    """
-
-    # KEY FIX 1: Already logged in? Skip login page entirely.
     if request.user.is_authenticated:
         return redirect('dashboard')
 
@@ -31,7 +21,7 @@ def login_view(request):
 
             if user is not None:
                 login(request, user)
-                # Redirect to 'next' param if present (from @login_required redirect)
+              
                 next_url = request.GET.get('next', 'dashboard')
                 return redirect(next_url)
             else:
@@ -41,14 +31,7 @@ def login_view(request):
 
 
 def register_view(request):
-    """
-    GET:  Show registration form.
-    POST: Validate → create user in MySQL → auto login → redirect to dashboard.
 
-    If user is already logged in → redirect to dashboard immediately.
-    """
-
-    # KEY FIX 2: Already logged in? Skip register page.
     if request.user.is_authenticated:
         return redirect('dashboard')
 
@@ -58,15 +41,15 @@ def register_view(request):
         form = RegisterForm(request.POST)
 
         if form.is_valid():
-            # Save user to MySQL auth_user table
+
             user = form.save()
 
-            # Auto-login after registration
+
             login(request, user)
 
             return redirect('dashboard')
         else:
-            # KEY FIX 3: Extract specific field errors so user knows exactly what's wrong
+
             for field, field_errors in form.errors.items():
                 if field == 'username':
                     errors['username'] = field_errors[0]
@@ -87,10 +70,6 @@ def register_view(request):
         'errors': errors,
     })
 
-
-# KEY FIX 4: Remove @login_required from logout
-# If session expires and user tries to logout, it should just redirect
-# instead of crashing with a redirect loop
 def logout_view(request):
     logout(request)
     return redirect('login')

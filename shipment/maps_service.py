@@ -71,7 +71,7 @@ def get_route_info(origin: str, destination: str) -> dict:
     dest_coords = geocode_city(destination) or {'lat': 0.0, 'lng': 0.0}
     distance_km = calculate_route_distance(origin, destination)
     
-    # Estimate travel duration based on truck avg speed of 55 km/h
+ 
     duration_hours = round(distance_km / 55.0, 1)
     
     mid_lat = (origin_coords['lat'] + dest_coords['lat']) / 2

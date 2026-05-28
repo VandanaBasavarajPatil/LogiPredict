@@ -19,12 +19,12 @@ def prediction(request):
     ).order_by('-risk_score')
     for shipment in risky_shipments:
         shipment.prediction_score = calculate_prediction_score(shipment)
-    # 1. High Risk Shipments card: count shipments where risk_score >= 50
+    # High Risk Shipments card
     high_risk_count = Shipment.objects.filter(risk_score__gte=50).count()
-    # 2. Avg Predicted Delay: (average of risk_score / 100) * 3 days
+    # Avg Predicted Delay
     avg_score = Shipment.objects.filter(risk_score__gt=30).aggregate(avg=Avg('risk_score'))['avg'] or 0.0
     avg_delay = round((avg_score / 100.0) * 3.0, 1)
-    # 3. Model Confidence: percentage of low-medium risk shipments that are on track (not Delayed)
+    #Model Confidence
     total = all_shipments.count()
     low_risk_on_track = all_shipments.filter(
         risk_score__lte=60
