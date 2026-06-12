@@ -277,64 +277,25 @@
     const DEST_NAME   = "{{ active_shipment.destination }}";
     const SHIP_ID     = "{{ active_shipment.shipment_id }}";
 
-    function initMap() {
-        // Geocoder defined safely after Google script loaded
-        const geocoder = new google.maps.Geocoder();
+// templates/tracking/tracking.html — REPLACE the whole initMap/getLatLng section
 
-        function getLatLng(address, defaultLat, defaultLng) {
-            return new Promise((resolve) => {
-                if (defaultLat !== 0 && defaultLng !== 0) {
-                    resolve(new google.maps.LatLng(defaultLat, defaultLng));
-                    return;
-                }
-                geocoder.geocode({ address: address }, (results, status) => {
-                    if (status === 'OK' && results[0]) {
-                        resolve(results[0].geometry.location);
-                    } else {
-                        const fallbacks = {
-                            "mumbai": { lat: 19.0760, lng: 72.8777 },
-                            "delhi": { lat: 28.7041, lng: 77.1025 },
-                            "dehli": { lat: 28.7041, lng: 77.1025 },
-                            "bangalore": { lat: 12.9716, lng: 77.5946 },
-                            "bengaluru": { lat: 12.9716, lng: 77.5946 },
-                            "chennai": { lat: 13.0827, lng: 80.2707 },
-                            "kolkata": { lat: 22.5726, lng: 88.3639 },
-                            "hyderabad": { lat: 17.3850, lng: 78.4867 },
-                            "pune": { lat: 18.5204, lng: 73.8567 },
-                            "ahmedabad": { lat: 23.0225, lng: 72.5714 }
-                        };
-                        const key = address.toLowerCase().trim();
-                        if (fallbacks[key]) {
-                            resolve(new google.maps.LatLng(fallbacks[key].lat, fallbacks[key].lng));
-                        } else {
-                            resolve(new google.maps.LatLng(20.5937, 78.9629)); // Center of India
-                        }
-                    }
-                });
-            });
-        }
+function initMap() {
+    const resolvedOrigin = new google.maps.LatLng(ORIGIN_LAT, ORIGIN_LNG);
+    const resolvedDest   = new google.maps.LatLng(DEST_LAT, DEST_LNG);
 
-        Promise.all([
-            getLatLng(ORIGIN_NAME, ORIGIN_LAT, ORIGIN_LNG),
-            getLatLng(DEST_NAME, DEST_LAT, DEST_LNG)
-        ]).then((resolvedCoords) => {
-            const resolvedOrigin = resolvedCoords[0];
-            const resolvedDest = resolvedCoords[1];
-
-            let resolvedCurrent = null;
-            if (CURRENT_LAT !== 0 && CURRENT_LNG !== 0) {
-                resolvedCurrent = new google.maps.LatLng(CURRENT_LAT, CURRENT_LNG);
-            } else {
-                // Synthesize position dynamically based on 45% midpoint along resolved route
-                const progressFraction = 0.45;
-                const lat = resolvedOrigin.lat() + (resolvedDest.lat() - resolvedOrigin.lat()) * progressFraction;
-                const lng = resolvedOrigin.lng() + (resolvedDest.lng() - resolvedOrigin.lng()) * progressFraction;
-                resolvedCurrent = new google.maps.LatLng(lat, lng);
-            }
-
-            drawMap(resolvedOrigin, resolvedDest, resolvedCurrent);
-        });
+    let resolvedCurrent;
+    if (CURRENT_LAT !== 0 && CURRENT_LNG !== 0) {
+        resolvedCurrent = new google.maps.LatLng(CURRENT_LAT, CURRENT_LNG);
+    } else {
+        const f = 0.45;
+        resolvedCurrent = new google.maps.LatLng(
+            ORIGIN_LAT + (DEST_LAT - ORIGIN_LAT) * f,
+            ORIGIN_LNG + (DEST_LNG - ORIGIN_LNG) * f
+        );
     }
+
+    drawMap(resolvedOrigin, resolvedDest, resolvedCurrent);
+}
 
     function drawMap(resolvedOrigin, resolvedDest, resolvedCurrent) {
         currentPos = { lat: resolvedCurrent.lat(), lng: resolvedCurrent.lng() };

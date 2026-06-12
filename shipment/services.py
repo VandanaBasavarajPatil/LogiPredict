@@ -81,10 +81,6 @@ def predict_delay(shipment):
     shipment.origin_temp         = origin_data['temperature']
     shipment.destination_weather = dest_data['weather']
     shipment.destination_temp    = dest_data['temperature']
-    shipment.origin_lat          = origin_coords['lat']
-    shipment.origin_lng          = origin_coords['lng']
-    shipment.dest_lat            = dest_coords['lat']
-    shipment.dest_lng            = dest_coords['lng']
     
 
     shipment.status = calculate_shipment_status(shipment)
